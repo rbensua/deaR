@@ -37,39 +37,38 @@ targets <- function(deasol) {
   
   if (is.dea(deasol)) {
     
-    if (any(grepl("target", names(deasol$DMU[[1]])))) {
-      
-      target_input <- NULL
-      if ("target_input" %in% names(deasol$DMU[[1]])) {
-        target_input <- do.call(rbind, lapply(deasol$DMU, function(x)
-          x$target_input))
-      }
-      
-      target_output <- NULL
-      if ("target_output" %in% names(deasol$DMU[[1]])) {
-        target_output <- do.call(rbind, lapply(deasol$DMU, function(x)
-          x$target_output))
-      }
-      
-      if (modelname %in% c("addsupereff", "sbmsupereff")) {
-        
-        project_input <- do.call(rbind, lapply(deasol$DMU, function(x)
-          x$project_input))
-        project_output <- do.call(rbind, lapply(deasol$DMU, function(x)
-          x$project_output))
-        
-        targetlist <- list(project_input = project_input,
-                           project_output = project_output,
-                           target_input = target_input,
-                           target_output = target_output)
-        
-      } else {
-        targetlist <- list(target_input = target_input,
-                           target_output = target_output)
-      }
+    target_input <- NULL
+    if ("target_input" %in% names(deasol$DMU[[1]])) {
+      target_input <- do.call(rbind, lapply(deasol$DMU, function(x)
+        x$target_input))
+    }
+    
+    target_output <- NULL
+    if ("target_output" %in% names(deasol$DMU[[1]])) {
+      target_output <- do.call(rbind, lapply(deasol$DMU, function(x)
+        x$target_output))
+    }
+    
+    
+    project_input <- NULL
+    project_output <- NULL
+    if (modelname %in% c("addsupereff", "sbmsupereff")) {
+      project_input <- do.call(rbind, lapply(deasol$DMU, function(x)
+        x$project_input))
+      project_output <- do.call(rbind, lapply(deasol$DMU, function(x)
+        x$project_output))
+      targetlist <- list(project_input = project_input,
+                         project_output = project_output,
+                         target_input = target_input,
+                         target_output = target_output)
       
     } else {
-      stop("No target parameters in this solution!")
+      targetlist <- list(target_input = target_input,
+                         target_output = target_output)
+    }
+    
+    if(is.null(target_input) && is.null(target_output) && is.null(project_input) && is.null(project_output)) {
+      stop("No target/project parameters in this solution!")
     }
     
   } else if (is.dea_fuzzy(deasol)) {

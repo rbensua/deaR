@@ -36,8 +36,6 @@ slacks <- function(deasol) {
   slacklist <- NULL 
   
   if (is.dea(deasol)) {
-    
-    if (any(grepl("slack", names(deasol$DMU[[1]])))) {
       
       #dmunames_eval <- deasol$data$dmunames[deasol$dmu_eval]
       #inputnames <- rownames(deasol$data$input)
@@ -59,11 +57,28 @@ slacks <- function(deasol) {
       #rownames(slack_output) <- dmunames_eval
       #colnames(slack_output) <- outputnames
       
-      slacklist <- list(slack_input = round(slack_input, 4),
-                        slack_output = round(slack_output, 4))
       
-    } else {
-      stop("No slack parameters in this solution!")
+      t_input <- NULL
+      t_output <- NULL
+      if (modelname %in% c("addsupereff", "sbmsupereff")) {
+        
+        t_input <- do.call(rbind, lapply(deasol$DMU, function(x)
+          x$t_input))
+        t_output <- do.call(rbind, lapply(deasol$DMU, function(x)
+          x$t_output))
+        
+        slacklist <- list(superslack_input = t_input,
+                          superslack_output = t_output,
+                          slack_input = slack_input,
+                          slack_output = slack_output)
+        
+      } else {
+        slacklist <- list(slack_input = slack_input,
+                          slack_output = slack_output)
+      }
+      
+    if(is.null(slack_input) && is.null(slack_output) && is.null(t_input) && is.null(t_output)) {
+      stop("No slack/superslack parameters in this solution!")
     }
     
   } else if (is.dea_fuzzy(deasol)) {
