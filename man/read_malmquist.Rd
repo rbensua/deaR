@@ -4,7 +4,11 @@
 \alias{read_malmquist}
 \title{read_malmquist}
 \usage{
-read_data(datadea, nper, percol, arrangement = c("horizontal", "vertical"), ...)
+read_data(datadea, 
+             nper, 
+             percol, 
+             arrangement = c("horizontal", "vertical"),
+             ...)
 }
 \arguments{
 \item{datadea}{Data frame with DEA data.}
@@ -17,8 +21,7 @@ read_data(datadea, nper, percol, arrangement = c("horizontal", "vertical"), ...)
 
 \item{no}{Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).}
 
-\item{dmus}{Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL.
-# If not specified, DMUs are in the first column.}
+\item{dmus}{Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.}
 
 \item{inputs}{Columns (numbers or names) of inputs (optional). It prevails over \code{ni}.}
 

@@ -7,7 +7,7 @@
 \format{Data frame with 20 rows and 11 columns. Definition of inputs (X) and outputs (Y): 
 \describe{
   \item{x1 = Staff}{Average Full Time Academic Staff 82/3-84/5)}
-  \item{x2 = Salaries}{1984-5 Salaries Academics and Relat (in pounds))}
+  \item{x2 = Salaries}{1984-5 Salaries Academics and Related (in pounds))}
   \item{x3 = Other_Exp}{1984-5 Other Expenses (in pounds)}
   \item{y1 = Undergrad}{Average Number Undergraduates 82/3-84/5}
   \item{y2 = Research_post}{Research Postgraduates }
@@ -27,13 +27,14 @@ data("Departments")
 Data from 20 University accounting departments in the UK.
 }
 \examples{
-# Example. Replication of results DEA1 in Tomkins and Green (1988)
+# Example.
+# Replication of results DEA1 in Tomkins and Green (1988)
 data("Departments")
 # Calculate Total income
 Departments$Total_income <- Departments[,5]+Departments[,6]+Departments[,7] 
 data_example <- read_data(Departments,
-                       inputs=9,
-                       outputs=c(2,3,4,12))
+                          inputs=9,
+                          outputs=c(2,3,4,12))
 result <- model_basic(data_example,
                       orientation="io",
                       rts="crs")

@@ -16,3 +16,15 @@ Returns \code{TRUE} if its argument is a dea_fuzzy object (that is, has "dea_fuz
 \description{
 Checks wether an R object is of dea_fuzzy class or not.
 }
+\author{
+\strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
+\emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+
+\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\emph{Department of Business Mathematics}
+
+\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\emph{Department of Business Mathematics}
+
+University of Valencia (Spain)
+}

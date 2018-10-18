@@ -4,25 +4,26 @@
 \alias{references}
 \title{References}
 \usage{
-references(deasol, thr = 1e-4)
+references(deasol,
+                  thr = 1e-4)
 }
 \arguments{
-\item{deasol}{Object of class dea obtained with some of the dea functions.}
+\item{deasol}{Object of class \code{dea} obtained with some of the DEA model functions.}
 }
 \description{
-Extract the reference set for each DMU from a dea model
+Extract the reference set for each DMU (inefficient DMUs and efficicent DMUs that are combination of other efficient DMUs) from a DEA model solution.
 }
 \examples{
 # Example. Replication results DEA1 in Tomkins and Green (1988).
 data("Departments")
 # Calculate Total income
-Departments$Total_income <- Departments[,5]+Departments[,6]+Departments[,7] 
+Departments$Total_income <- Departments[, 5] + Departments[, 6]+Departments[, 7] 
 data_DEA1 <- read_data(Departments,
-                       inputs=9,
-                       outputs=c(2,3,4,12))
+                       inputs = 9,
+                       outputs = c(2, 3, 4, 12))
 result <- model_basic(data_DEA1, 
-                      orientation="io",
-                      rts="crs")
+                      orientation = "io",
+                      rts = "crs")
 references(result) # Table 3 (p.157)
 
 }
