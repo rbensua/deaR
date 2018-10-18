@@ -46,7 +46,7 @@ with weights to outputs corresponding to the relative importance of items.}
 Calculate the SBM model proposed by Tone (2001).
 }
 \examples{
-# Example. Replication of results in Tone (2001, p.505)
+# Replication of results in Tone (2001, p.505)
 data("Tone2001")
 data_example <- read_data(Tone2001, 
                           ni = 2, 

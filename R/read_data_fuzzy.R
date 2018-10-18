@@ -43,7 +43,7 @@
 #'  
 #' @examples
 #' 
-#' Example 1. If inputs and/or outputs are symmetric triangular fuzzy numbers
+#' # Example 1. If inputs and/or outputs are symmetric triangular fuzzy numbers
 #' data("Leon2003")
 #' data_example <- read_data_fuzzy(datadea = Leon2003, 
 #'                                 dmus = 1,
@@ -51,7 +51,7 @@
 #'                                 inputs.dL = 3,
 #'                                 outputs.mL = 4,
 #'                                 outputs.dL = 5)
-#' Example 2. If inputs and/or outputs are non-symmetric triangular fuzzy numbers
+#' # Example 2. If inputs and/or outputs are non-symmetric triangular fuzzy numbers
 #' data("Kao_Liu_2003")
 #' data_example <- read_data_fuzzy(Kao_Liu_2003, 
 #'                                 dmus = 1, 

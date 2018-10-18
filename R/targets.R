@@ -38,21 +38,17 @@ targets <- function(deasol) {
   if (is.dea(deasol)) {
     
     target_input <- NULL
+    target_output <- NULL
     if ("target_input" %in% names(deasol$DMU[[1]])) {
       target_input <- do.call(rbind, lapply(deasol$DMU, function(x)
         x$target_input))
-    }
-    
-    target_output <- NULL
-    if ("target_output" %in% names(deasol$DMU[[1]])) {
       target_output <- do.call(rbind, lapply(deasol$DMU, function(x)
         x$target_output))
     }
     
-    
     project_input <- NULL
     project_output <- NULL
-    if (modelname %in% c("addsupereff", "sbmsupereff")) {
+    if (deasol$modelname %in% c("addsupereff", "sbmsupereff")) {
       project_input <- do.call(rbind, lapply(deasol$DMU, function(x)
         x$project_input))
       project_output <- do.call(rbind, lapply(deasol$DMU, function(x)
@@ -67,7 +63,7 @@ targets <- function(deasol) {
                          target_output = target_output)
     }
     
-    if(is.null(target_input) && is.null(target_output) && is.null(project_input) && is.null(project_output)) {
+    if(is.null(target_input) && is.null(project_input)) {
       stop("No target/project parameters in this solution!")
     }
     
@@ -85,45 +81,85 @@ targets <- function(deasol) {
     
     if (grepl("kaoliu", deasol$modelname)) {
       
-      if (any(grepl("target", names(deasol$alphacut[[1]]$DMU$Worst[[1]])))) {
+      target_input.W <- NULL
+      target_input.B <- NULL
+      target_output.W <- NULL
+      target_output.B <- NULL
+      if ("target_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
         
-        target_input.W <- NULL
-        target_input.B <- NULL
-        if ("target_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
+        target_input.W <- array(0,
+                                dim = c(nde, ni, nalpha),
+                                dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+        target_input.B <- target_input.W
+        
+        for (i in 1:nalpha) {
+          target_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$target_input))
+          target_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$target_input))
+        }
+        
+        target_output.W <- array(0,
+                                 dim = c(nde, no, nalpha),
+                                 dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+        target_output.B <- target_output.W
+        
+        for (i in 1:nalpha) {
+          target_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$target_output))
+          target_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$target_output))
+        }
+        
+        project_input.W <- NULL
+        project_output.W <- NULL
+        project_input.B <- NULL
+        project_output.B <- NULL
+        if (grepl("addsupereff", deasol$modelname) || grepl("sbmsupereff", deasol$modelname)) {
           
-          target_input.W <- array(0,
-                                  dim = c(nde, ni, nalpha),
-                                  dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
-          target_input.B <- target_input.W
+          project_input.W <- array(0,
+                                   dim = c(nde, ni, nalpha),
+                                   dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+          project_input.B <- project_input.W
           
           for (i in 1:nalpha) {
-            target_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
-              x$target_input))
-            target_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
-              x$target_input))
+            project_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+              x$project_input))
+            project_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+              x$project_input))
           }
           
-          target_output.W <- array(0,
-                                   dim = c(nde, no, nalpha),
-                                   dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
-          target_output.B <- target_output.W
+          project_output.W <- array(0,
+                                    dim = c(nde, no, nalpha),
+                                    dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+          project_output.B <- project_output.W
           
           for (i in 1:nalpha) {
-            target_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
-              x$target_output))
-            target_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
-              x$target_output))
+            project_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+              x$project_output))
+            project_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+              x$project_output))
           }
-          
-          targetlist <- list(target_input.W = target_input.W,
+          targetlist <- list(project_input.W = project_input.W,
+                             project_input.B = project_input.B,
+                             project_output.W = project_output.W,
+                             project_output.B = project_output.B,
+                             target_input.W = target_input.W,
                              target_input.B = target_input.B,
                              target_output.W = target_output.W,
                              target_output.B = target_output.B)
           
+        } else {
+          targetlist <- list(target_input.W = target_input.W,
+                             target_input.B = target_input.B,
+                             target_output.W = target_output.W,
+                             target_output.B = target_output.B)
         }
         
-      } else {
-        stop("No target parameters in this solution!")
+      }
+      
+      if(is.null(target_input.W) && is.null(project_input.W)) {
+        stop("No target/project parameters in this solution!")
       }
       
     } else if (grepl("possibilistic", deasol$modelname)) {

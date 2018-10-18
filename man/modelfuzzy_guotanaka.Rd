@@ -34,7 +34,8 @@ The (crisp) relative efficiencies and multipliers for the case \code{alpha} = 1 
 The optimal solution of model (16) is not unique.
 }
 \examples{
-Example 1. Replication results in Guo and Tanaka (2001, p. 159). 
+# Example 1.
+# Replication results in Guo and Tanaka (2001, p. 159). 
 # In deaR is implemented the LP poblem given by the model 16 in Guo and Tanaka (2001, p. 155).
 # The fuzzy efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001,p.155).
 data("Guo_Tanaka_2001")
@@ -49,7 +50,7 @@ result <- modelfuzzy_guotanaka(data_example,
                                orientation = "io")
 efficiencies(result)
  
-Example 2. 
+# Example 2. 
 data("Guo_Tanaka_2001")
 data_example <- read_data_fuzzy(Guo_Tanaka_2001, 
                                 dmus = 1, 

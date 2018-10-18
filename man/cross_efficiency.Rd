@@ -45,7 +45,8 @@ Computes arbitrary, benevolent and aggressive formulation of cross-efficiency un
 (2) The multiplier model can have alternate optimal solutions (see note 1 in model_multiplier). So, depending on the optimal weights selected we can obtain different cross-efficinecy scores.
 }
 \examples{
-# Example 1. Arbitrary formulation. Input-oriented model under constant returns-to-scale.
+# Example 1.
+# Arbitrary formulation. Input-oriented model under constant returns-to-scale.
 data("Golany_Roll_1989")
 data_example <- read_data(datadea = Golany_Roll_1989, 
                           dmus = 1, 
@@ -58,7 +59,8 @@ result <- cross_efficiency(data_example,
 result$Arbitrary$cross_eff
 result$Arbitrary$e
 
-# Example 2. Benevolent formulation (method II). Input-oriented.
+# Example 2.
+# Benevolent formulation (method II). Input-oriented.
 data("Golany_Roll_1989")
 data_example <- read_data(datadea = Golany_Roll_1989, 
                           dmus = 1, 
@@ -70,7 +72,8 @@ result <- cross_efficiency(data_example,
 result$M2_ben$cross_eff
 result$M2_ben$e
 
-# Example 3. Benevolent formulation (method III). Input-oriented.
+# Example 3.
+# Benevolent formulation (method III). Input-oriented.
 data("Golany_Roll_1989")
 data_example <- read_data(datadea = Golany_Roll_1989, 
                           dmus = 1, 
@@ -82,7 +85,8 @@ result <- cross_efficiency(data_example,
 result$M3_ben$cross_eff
 result$M3_ben$e
   
-# Example 4. Arbitrary formulation. Output-oriented.
+# Example 4.
+# Arbitrary formulation. Output-oriented.
 data("Golany_Roll_1989")
 data_example <- read_data(datadea = Golany_Roll_1989,
                           dmus = 1, 
@@ -94,7 +98,8 @@ result <- cross_efficiency(data_example,
 result$Arbitrary$cross_eff
 result$Arbitrary$e
 
-# Example 5. Arbitrary formulation. Input-oriented model under vrs returns-to-scale.
+# Example 5.
+# Arbitrary formulation. Input-oriented model under vrs returns-to-scale.
 data("Lim_Zhu_2015")
 data_example <- read_data(Lim_Zhu_2015,
                           dmus = 1, 

@@ -44,7 +44,8 @@
 #' Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85, \url{https://doi.org/10.1016/S0925-5273(03)00026-4}
 #' 
 #' @examples 
-#' # Example 1. Replication of results in Boscá, Liern, Sala and Martínez (2011, p.125)
+#' # Example 1. 
+#' # Replication of results in Boscá, Liern, Sala and Martínez (2011, p.125)
 #' data("Leon2003")
 #' data_example <- read_data_fuzzy(datadea = Leon2003,
 #'                                 dmus = 1, 
@@ -59,7 +60,8 @@
 #'                             rts = "vrs")
 #' efficiencies(result)
 #' 
-#' # Example 2. Replication of results in Kao and Liu (2003, p.152)
+#' # Example 2.
+#' # Replication of results in Kao and Liu (2003, p.152)
 #' data("Kao_Liu_2003")
 #' data_example <- read_data_fuzzy(Kao_Liu_2003, 
 #'                                 dmus = 1, 

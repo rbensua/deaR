@@ -20,10 +20,10 @@
 #' University of Valencia (Spain)
 #'
 #' @examples 
-#' # Example. Replication results DEA1 in Tomkins and Green (1988).
+#' # Replication results model DEA1 in Tomkins and Green (1988).
 #' data("Departments")
 #' # Calculate Total income
-#' Departments$Total_income <- Departments[, 5] + Departments[, 6]+Departments[, 7] 
+#' Departments$Total_income <- Departments[,5] + Departments[,6]+Departments[,7] 
 #' data_DEA1 <- read_data(Departments,
 #'                        inputs = 9,
 #'                        outputs = c(2, 3, 4, 12))

@@ -45,7 +45,7 @@ If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m}
 Non-radial DEA model allows for non-proportional reductions in each input or augmentations in each output.
 }
 \examples{
-# Example. Replication of results in Wu, Tsai and Zhou (2011)
+# Replication of results in Wu, Tsai and Zhou (2011)
 data("Hotels")
 data_hotels <- read_data(Hotels, 
                          dmus = 1, 

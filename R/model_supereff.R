@@ -32,7 +32,8 @@
 #' Tone, K. (2002). "A slacks-based measure of super-efficiency in data envelopment analysis", European Journal of Operational Research, 143, 32-41. \url{https://doi.org/10.1016/S0377-2217(01)00324-1}  
 #' 
 #' @examples
-#' # Example 1. Replication of results in Tone (2002, p.38)
+#' # Example 1.
+#' # Replication of results in Tone (2002, p.38)
 #' data("Power_plants")
 #' data_example <- read_data(Power_plants, 
 #'                           ni = 4, 
@@ -42,7 +43,8 @@
 #'                          rts = "crs") 
 #' eff <- efficiencies(result)
 #'  
-#' # Example 2. Results of Super-efficiency with vrs returns to scale show infeasibility solutions 
+#' # Example 2. 
+#' # Results of Super-efficiency with vrs returns to scale show infeasibility solutions 
 #' # for DMUs D4 and D6 (these DMUs are not shown in deaR results).
 #' data("Power_plants")
 #' data_example2 <- read_data(Power_plants, 

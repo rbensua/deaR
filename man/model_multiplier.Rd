@@ -49,7 +49,8 @@ Solve input-oriented and output-oriented basic DEA  models (multiplicative form)
 (3) Epsilon is usually set equal to \10^-6. However, if epsilon is not set correctly, the multiplier model can be infeasible (Zhu,2014:49).
 }
 \examples{
-# Example 1. Replication of results in Golany and Roll (1989).
+# Example 1.
+# Replication of results in Golany and Roll (1989).
 data("Golany_Roll_1989")
 data_example <- read_data(datadea = Golany_Roll_1989[1:10, ],
                           dmus = 1, 
@@ -62,19 +63,20 @@ result <- model_multiplier(data_example,
 efficiencies(result)
 multipliers(result)
 
-# Example 2. Multiplier model with infeasible solutions (See note).
+# Example 2.
+# Multiplier model with infeasible solutions (See note).
 data("Fortune500")
 data_Fortune <- read_data(datadea = Fortune500, 
                           dmus = 1, 
                           inputs = 2:4, 
                           outputs = 5:6) 
-result <- model_multiplier(data_Fortune, 
+result2 <- model_multiplier(data_Fortune, 
                            epsilon = 1e-6, 
                            orientation = "io", 
                            rts = "crs") 
 # Results for General Motors and Ford Motor are not shown by deaR 
 # because the solution is infeasible.
-efficiencies(result)
+efficiencies(result2)
 multipliers(result)
 
 }

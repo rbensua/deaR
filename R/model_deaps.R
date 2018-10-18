@@ -71,7 +71,7 @@ model_deaps <-
            dmu_eval = NULL,
            dmu_ref = NULL,
            weight_eff = 1,
-           orientation = c("io", "oo"), 
+           orientation = c("io", "oo"),
            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
            L = 1,
            U = 1,

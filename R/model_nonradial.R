@@ -50,7 +50,7 @@
 #' Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal of the Operational Research Society, 47(1), 136. DOI: 10.2307/2584258  
 #' 
 #' @examples 
-#' # Example. Replication of results in Wu, Tsai and Zhou (2011)
+#' # Replication of results in Wu, Tsai and Zhou (2011)
 #' data("Hotels")
 #' data_hotels <- read_data(Hotels, 
 #'                          dmus = 1, 

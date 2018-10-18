@@ -13,7 +13,7 @@ efficiencies(deasol)
 Extract the efficiencies of the DMUs from a dea or dea_fuzzy solution.
 }
 \examples{
-Example. Replication results DEA1 in Tomkins and Green (1988)
+# Replication results model DEA1 in Tomkins and Green (1988)
 data("Departments")
 # Calculate Total income
 Departments$Total_income <- Departments[,5]+Departments[,6]+Departments[,7] 

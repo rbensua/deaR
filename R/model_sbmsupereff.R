@@ -47,14 +47,10 @@
 #' Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis. A Comprehensive Text with Models, Applications, References and DEA-Solver Software. 2nd Edition. Springer, New York. \url{https://doi.org/10.1007/978-0-387-45283-8}
 #' 
 #' @examples 
-#' # Example. Replication of results in Tone(2002, p.39)
+#' # Replication of results in Tone(2002, p.39)
 #' data("Power_plants")
-#' data_example <- read_data(Power_plants, 
-#'                           ni = 4, 
-#'                           no = 2)
-#' result <- model_sbmsupereff(data_example, 
-#'                             orientation = "io", 
-#'                             rts = "crs") 
+#' data_example <- read_data(Power_plants, ni = 4, no = 2)
+#' result <- model_sbmsupereff(data_example, orientation = "io", rts = "crs") 
 #' efficiencies(result)
 #' slacks(result)$input
 #' references(result)

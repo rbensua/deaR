@@ -45,14 +45,10 @@ if the slacks are not numerically zero (i.e. this DMU is inefficient).}
 Slack based measure of superefficiency model (Tone 2002) with n DMUs, m inputs, s outputs...
 }
 \examples{
-# Example. Replication of results in Tone(2002, p.39)
+# Replication of results in Tone(2002, p.39)
 data("Power_plants")
-data_example <- read_data(Power_plants, 
-                          ni = 4, 
-                          no = 2)
-result <- model_sbmsupereff(data_example, 
-                            orientation = "io", 
-                            rts = "crs") 
+data_example <- read_data(Power_plants, ni = 4, no = 2)
+result <- model_sbmsupereff(data_example, orientation = "io", rts = "crs") 
 efficiencies(result)
 slacks(result)$input
 references(result)

@@ -28,7 +28,7 @@ An object of class \code{deadata_fuzzy}.
 Solve the possibilistic fuzzy DEA model by León et. al (2003).
 }
 \examples{
-# Example. Replication of results in Leon et. al (2003, p. 416)
+# Replication of results in Leon et. al (2003, p. 416)
 data("Leon2003")
 data_example <- read_data_fuzzy(Leon2003,
                                 dmus = 1, 

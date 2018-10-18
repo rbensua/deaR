@@ -60,7 +60,7 @@ slacks <- function(deasol) {
       
       t_input <- NULL
       t_output <- NULL
-      if (modelname %in% c("addsupereff", "sbmsupereff")) {
+      if (deasol$modelname %in% c("addsupereff", "sbmsupereff")) {
         
         t_input <- do.call(rbind, lapply(deasol$DMU, function(x)
           x$t_input))
@@ -95,45 +95,88 @@ slacks <- function(deasol) {
     
     if (grepl("kaoliu", deasol$modelname)) {
       
-      if (any(grepl("slack", names(deasol$alphacut[[1]]$DMU$Worst[[1]])))) {
+      slack_input.W <- NULL
+      slack_input.B <- NULL
+      if ("slack_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
         
-        slack_input.W <- NULL
-        slack_input.B <- NULL
-        if ("slack_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
-          
-          slack_input.W <- array(0,
-                          dim = c(nde, ni, nalpha),
-                          dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
-          slack_input.B <- slack_input.W
-          
-          for (i in 1:nalpha) {
-            slack_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
-              x$slack_input))
-            slack_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
-              x$slack_input))
-          }
-          
-          slack_output.W <- array(0,
-                                 dim = c(nde, no, nalpha),
-                                 dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
-          slack_output.B <- slack_output.W
-          
-          for (i in 1:nalpha) {
-            slack_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
-              x$slack_output))
-            slack_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
-              x$slack_output))
-          }
-          
-          slacklist <- list(slack_input.W = slack_input.W,
-                            slack_input.B = slack_input.B,
-                            slack_output.W = slack_output.W,
-                            slack_output.B = slack_output.B)
-          
+        slack_input.W <- array(0,
+                               dim = c(nde, ni, nalpha),
+                               dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+        slack_input.B <- slack_input.W
+        
+        for (i in 1:nalpha) {
+          slack_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$slack_input))
+          slack_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$slack_input))
+        }
+      }
+      
+      slack_output.W <- NULL
+      slack_output.B <- NULL
+      if ("slack_output" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
+        
+        slack_output.W <- array(0,
+                                dim = c(nde, no, nalpha),
+                                dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+        slack_output.B <- slack_output.W
+        
+        for (i in 1:nalpha) {
+          slack_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$slack_output))
+          slack_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$slack_output))
         }
         
+      }
+      
+      t_input.W <- NULL
+      t_output.W <- NULL
+      t_input.B <- NULL
+      t_output.B <- NULL
+      if (grepl("addsupereff", deasol$modelname) || grepl("sbmsupereff", deasol$modelname)) {
+        
+        t_input.W <- array(0,
+                           dim = c(nde, ni, nalpha),
+                           dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+        t_input.B <- t_input.W
+        
+        for (i in 1:nalpha) {
+          t_input.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$t_input))
+          t_input.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$t_input))
+        }
+        t_output.W <- array(0,
+                            dim = c(nde, no, nalpha),
+                            dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+        t_output.B <- t_output.W
+        
+        for (i in 1:nalpha) {
+          t_output.W[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Worst, function(x)
+            x$t_output))
+          t_output.B[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU$Best, function(x)
+            x$t_output))
+        }
+        
+        slacklist <- list(superslack_input.W = t_input.W,
+                          superslack_input.B = t_input.B,
+                          superslack_output.W = t_output.W,
+                          superslack_output.B = t_output.B,
+                          slack_input.W = slack_input.W,
+                          slack_input.B = slack_input.B,
+                          slack_output.W = slack_output.W,
+                          slack_output.B = slack_output.B)
+        
       } else {
-        stop("No slack parameters in this solution!")
+        slacklist <- list(slack_input.W = slack_input.W,
+                          slack_input.B = slack_input.B,
+                          slack_output.W = slack_output.W,
+                          slack_output.B = slack_output.B)
+      }
+      
+      if(is.null(slack_input.W) && is.null(slack_output.W) && is.null(t_input.W) && is.null(t_output.W)) {
+        stop("No slack/superslack parameters in this solution!")
       }
       
     } else if (grepl("possibilistic", deasol$modelname)) {

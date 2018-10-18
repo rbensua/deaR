@@ -49,9 +49,9 @@
 #'                        dmus = 1, 
 #'                        inputs = 5:6, 
 #'                        outputs = 7:8)
-#' result <- model_fdh(data_fdh2, 
+#' result2 <- model_fdh(data_fdh2, 
 #'                     orientation = "oo")
-#' efficiencies(result)
+#' efficiencies(result2)
 #'  
 #' @import lpSolve
 #' 

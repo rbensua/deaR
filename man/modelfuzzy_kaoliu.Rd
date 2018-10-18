@@ -30,7 +30,8 @@ An object of class \code{deadata_fuzzy}.
 Solve the fuzzy DEA model by Kao and Liu (2000)
 }
 \examples{
-# Example 1. Replication of results in Boscá, Liern, Sala and Martínez (2011, p.125)
+# Example 1. 
+# Replication of results in Boscá, Liern, Sala and Martínez (2011, p.125)
 data("Leon2003")
 data_example <- read_data_fuzzy(datadea = Leon2003,
                                 dmus = 1, 
@@ -45,7 +46,8 @@ result <- modelfuzzy_kaoliu(data_example,
                             rts = "vrs")
 efficiencies(result)
 
-# Example 2. Replication of results in Kao and Liu (2003, p.152)
+# Example 2.
+# Replication of results in Kao and Liu (2003, p.152)
 data("Kao_Liu_2003")
 data_example <- read_data_fuzzy(Kao_Liu_2003, 
                                 dmus = 1, 

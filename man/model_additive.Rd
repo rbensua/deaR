@@ -45,8 +45,8 @@ Solve the additive model of Charnes et. al (1985). With the current version of d
 Besides, the user can set weights for the input slacks and/or output slacks. So, it is also possible to solve weighted additive models. For example: Measure of Inefficiency Proportions (MIP), Range Adjusted Measure (RAM), etc.
 }
 \examples{
-# Example 1. Replication of results in Charnes et. al (1994, p. 27)
-# data from Charnes et. al (1994, p. 25)
+# Example 1. 
+# Replication of results in Charnes et. al (1994, p. 27)
 x <- c(2, 3, 6, 9, 5, 4, 10) 
 y <- c(2, 5, 7, 8, 3, 1, 7)
 data_example <- data.frame(dmus = letters[1:7], x, y)
@@ -59,8 +59,8 @@ efficiencies(result)
 slacks(result)
 lambdas(result)
 
-# Example 2. Measure of Inefficiency Proportions (MIP).
-# data from Charnes et. al (1994, p. 25)
+# Example 2.
+# Measure of Inefficiency Proportions (MIP).
 x <- c(2, 3, 6, 9, 5, 4, 10) 
 y <- c(2, 5, 7, 8, 3, 1, 7)
 data_example <- data.frame(dmus = letters[1:7], x, y)
@@ -70,8 +70,8 @@ result2 <- model_additive(data_example, rts = "vrs",
                           weight_slack_o = 1 / data_example[["output"]])
 slacks(result2)
 
-# Example 3. Range Adjusted Measure of Inefficiencies (RAM).
-# data from Charnes et. al (1994, p. 25)
+# Example 3.
+# Range Adjusted Measure of Inefficiencies (RAM).
 x <- c(2, 3, 6, 9, 5, 4, 10) 
 y <- c(2, 5, 7, 8, 3, 1, 7)
 data_example <- data.frame(dmus=letters[1:7], x, y)

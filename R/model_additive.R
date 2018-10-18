@@ -49,8 +49,8 @@
 #' Cooper, W.W.; Park, K.S.; Pastor, J.T. (1999). "RAM: A Range Adjusted Measure of Inefficiencies for Use with Additive Models, and Relations to Other Models and Measures in DEA". Journal of Productivity Analysis, 11, p. 5-42. \url{https://doi.org/10.1023/A:1007701304281}
 #' 
 #' @examples 
-#' # Example 1. Replication of results in Charnes et. al (1994, p. 27)
-#' # data from Charnes et. al (1994, p. 25)
+#' # Example 1. 
+#' # Replication of results in Charnes et. al (1994, p. 27)
 #' x <- c(2, 3, 6, 9, 5, 4, 10) 
 #' y <- c(2, 5, 7, 8, 3, 1, 7)
 #' data_example <- data.frame(dmus = letters[1:7], x, y)
@@ -63,8 +63,8 @@
 #' slacks(result)
 #' lambdas(result)
 #' 
-#' # Example 2. Measure of Inefficiency Proportions (MIP).
-#' # data from Charnes et. al (1994, p. 25)
+#' # Example 2.
+#' # Measure of Inefficiency Proportions (MIP).
 #' x <- c(2, 3, 6, 9, 5, 4, 10) 
 #' y <- c(2, 5, 7, 8, 3, 1, 7)
 #' data_example <- data.frame(dmus = letters[1:7], x, y)
@@ -74,8 +74,8 @@
 #'                           weight_slack_o = 1 / data_example[["output"]])
 #' slacks(result2)
 #' 
-#' # Example 3. Range Adjusted Measure of Inefficiencies (RAM).
-#' # data from Charnes et. al (1994, p. 25)
+#' # Example 3.
+#' # Range Adjusted Measure of Inefficiencies (RAM).
 #' x <- c(2, 3, 6, 9, 5, 4, 10) 
 #' y <- c(2, 5, 7, 8, 3, 1, 7)
 #' data_example <- data.frame(dmus=letters[1:7], x, y)
