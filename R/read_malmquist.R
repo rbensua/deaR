@@ -1,0 +1,107 @@
+#' @title read_malmquist
+#'  
+#' @description This function creates, from a data frame, a list \code{deadata},
+#'
+#' @usage read_data(datadea, 
+#'              nper, 
+#'              percol, 
+#'              arrangement = c("horizontal", "vertical"),
+#'              ...)
+#'              
+#' @param datadea Data frame with DEA data.
+#' @param nper Number of time periods (with dataset in wide format).
+#' @param percol Column of time period (with dataset in long format)
+#' @param ni Number of inputs, if inputs are in columns 2:(\code{ni} + 1) (if DMUs are in the first column) or 1:\code{ni} (no DMUs column).
+#' @param no Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).
+#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.
+#' @param inputs Columns (numbers or names) of inputs (optional). It prevails over \code{ni}. 
+#' @param outputs Columns (numbers or names) of outputs (optional). It prevails over \code{no}.
+#' @param nc_inputs A numeric vector containing non-controllable inputs.
+#' @param nc_outputs A numeric vector containing non-controllable outputs.
+#' @param nd_inputs A numeric vector containing non-discretionary inputs.
+#' @param nd_outputs A numeric vector containing non-discretionary outputs.
+#'
+#' @return An object of class \code{deadata}
+#' 
+#' @author 
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+#' 
+#' \strong{Vicente Bolós} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benítez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
+#'   
+#' @examples
+#' # Example 1. If you have a dataset in wide format.
+#' data("Economy")
+#' data_example <- read_malmquist(datadea = Economy, 
+#'                                nper = 5, 
+#'                                arrangement = "horizontal",
+#'                                ni = 2, 
+#'                                no = 1)
+#' # This is the same as:
+#' data_example <- read_malmquist(datadea = Economy,
+#'                                nper = 5, 
+#'                                arrangement = "horizontal",
+#'                                inputs = 2:3, 
+#'                                outputs = 4)
+#' # Example 2. If you have a dataset in long format.
+#' data("EconomyLong")
+#' data_example2 <- read_malmquist(EconomyLong,
+#'                                 percol = 2, 
+#'                                 arrangement = "vertical",
+#'                                 inputs = 3:4, 
+#'                                 outputs = 5)
+#'
+#' @export
+
+read_malmquist <- function(datadea,
+                           nper = NULL,
+                           percol = NULL,
+                           arrangement  = c("horizontal","vertical"),
+                           ...) 
+  {
+  
+  # Checking datadea
+  if(!is.data.frame(datadea)){
+    stop("Invalid input data (should be a data frame)!")
+  }
+
+  
+  arrangement <- tolower(arrangement)
+  arrangement <- match.arg(arrangement)
+  
+  if(arrangement == "horizontal"){
+    if(is.null(nper)){
+      stop("nper must be specified with horizontal arrangement!")
+    }
+    
+    Nio <- ncol(datadea) - 1 # Number of total i/o columns
+    NioPeriod <- Nio / nper # Number of i/o columns per period
+    datalist <- list()
+    for (i in 1:nper){
+      datalist[[i]] <- datadea[,c(1,(2+(i-1)*NioPeriod):(i*NioPeriod +1))]
+      names(datalist)[i] <- paste("Period",i,sep = ".")
+    }
+    datalist %>% lapply( function(x) read_data(x, ...)) -> dealist
+  }else {
+    if(is.null(percol)){
+      stop("percol must be supplied with vertical arrangement!")
+    }
+    periods <- unique(datadea[,percol])
+    nper <- length(periods)
+    dealist <- list()
+    
+    for(i in 1:nper){
+      data_temp <- datadea[datadea[,percol] == periods[i],]
+      dealist[[i]] <- read_data(datadea = data_temp, ...)
+      names(dealist)[i] <- periods[i]
+    }
+  }
+ 
+  return(dealist)
+}
