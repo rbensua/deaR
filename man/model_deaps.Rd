@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_deaps.R
 \name{model_deaps}
 \alias{model_deaps}
-\title{Non-radial model with preference structure...}
+\title{Preference Structure DEA model.}
 \usage{
 model_deaps(datadea,
             dmu_eval = NULL,
@@ -47,7 +47,7 @@ If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m}
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
 }
 \description{
-Non-radial dea model with preference structure, n DMUs, m inputs, s outputs...
+With this non-radial DEA model (Zhu, 1996), the user can specify the preference input (or output) weigths that reflect the relative degree of desirability of the adjustments of the current input (or output) levels.
 }
 \examples{
  data("Fortune500")

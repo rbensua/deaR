@@ -1,6 +1,6 @@
 #' @title Bootstrapping DEA
 #'   
-#' @description Currently, for bootstrapping 
+#' @description To bootstrap efficiency scores, deaR uses the algorithm proposed by Simar and Wilson (1998). For now, the function bootstrap_basic can only be used with basic DEA models (input- and output-oriented under constant and variable returns-to-scale).
 #' 
 #' @usage bootstrap_basic(datadea,
 #'             orientation = c("io", "oo"),
@@ -18,7 +18,7 @@
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param B Number of bootstrap iterations.
-#' @param h Bandwith or smoothing window.
+#' @param h Bandwith or smoothing window. By default h=0.014 (You can set h to any other value). The optimal bandwidth factor can also be calculated following the proposals of Silverman (1986) and Dario y Simar (2007). So, h="h1" is the optimal h referred as "robust normal-reference rule" (Dario and Simar, 2007 p.60), h="h2" is the value of h1 but instead of the factor 1.06 with the factor 0.9, and h="h3" is the value of h1 adjusted for scale and sample size (Dario and Simar, 2007 p.61). 
 #' @param alpha Between 0 and 1 (for confidence intervals).
 #'   
 #' @author 
@@ -54,10 +54,12 @@
 #' data_example <- read_data(Electric_plants, 
 #'                           ni = 3, 
 #'                           no = 1)
-#' bootstrap <- bootstrap_basic(datadea = data_example,
+#' result <- bootstrap_basic(datadea = data_example,
 #'                              orientation="io",
 #'                              rts="vrs",
 #'                              B=100)
+#' result$score_bc
+#' result$CI
 #' 
 #' @import lpSolve stats
 #' 
@@ -181,7 +183,7 @@ bootstrap_basic <- function(datadea,
     
     if (h %in% c("h1", "h2", "h3")) {
       
-      score_h <- score[score_sp > 1]
+      score_h <- score[score_sp > 1.000001]
       
       if(length(score_h) == nd) { # Daraio and Simar (2007, p.60)
         stop("It is not possible to calculate h. The number of inefficient DMUs must be less than the total number of DMUs.")
@@ -192,28 +194,29 @@ bootstrap_basic <- function(datadea,
       sd_new_set <- sd(new_set)
       iqr_new_set <- IQR(new_set)
       
-      if(sd_new_set > iqr_new_set * 1.34) {
-        desviation <- iqr_new_set * 1.34
+      # Silverman (1986, equation 3.30, p.47)
+      if(sd_new_set > iqr_new_set / 1.34) {
+        desviation <- iqr_new_set / 1.34
       } else{
         desviation <- sd_new_set
       }
       
       # Implementado eq. 3.29 silverman (en Daraio y simar es 1.06)
       if (h == "h1") {
-        h <- 1.26 * desviation * length(new_set) ^ (-1/5)
+        h <- 1.06 * desviation * length(new_set) ^ (-1/5)
       } else if (h == "h2") {
         h <- 0.9 * desviation * length(new_set) ^ (-1/5)
-      } else {
-        ### ?ajustar hopt (eq. 3.26 de Daraio y Simar (2007) y Simar y Wilson 2006a?
-        h <- (0.9 * desviation * nd ^ (-1/5)) * (sd(score_sp) / sd(new_set))
-      }
+      } else { 
+        # ?ajustar hopt (eq. 3.26 de Daraio y Simar (2007) y Simar y Wilson 2006a?
+        h <- (1.06 * desviation * length(new_set) ^ (-1/5)) * (length(new_set) / nd)* (sd(score_sp) / sd(new_set))
+      } 
       
     } else {
       stop("Incorrect bandwidth argument h.")
     }
     
   } 
-  
+
   # algoritmo de Simar y Wilson (1998, p.56-57)
   estimates_bootstrap <- matrix(nrow = B, ncol = nd) # EFICIENCIA DE LAS DMUS PARA CADA REPETICION bootstrapp
   colnames(estimates_bootstrap) <- dmunames
@@ -225,16 +228,28 @@ bootstrap_basic <- function(datadea,
   for (b in 1:B) {
     
     beta <- sample(score, nd, replace = TRUE)   
-    
+
     epsilon <- rnorm(nd)
-    
-    for (i in 1:nd) {  
-      if (beta[i] + h * epsilon[i] <= 1) {
-        thetatilde[i] <- beta[i] + h * epsilon[i] # hopt calculated following Silverman
-      } 
-      else {
-        thetatilde[i] <- 2 - beta[i] - h * epsilon[i]
+  
+    if (orientation == "io") { 
+      for (i in 1:nd) {  
+        if (beta[i] + h * epsilon[i] <= 1) {
+          thetatilde[i] <- beta[i] + h * epsilon[i] # hopt calculated following Silverman
+        } 
+        else {
+          thetatilde[i] <- 2 - beta[i] - h * epsilon[i]
+        }
       }
+    } 
+    if (orientation ==  "oo") {
+        for (i in 1:nd) {  
+          if (beta[i] + h * epsilon[i] >= 1) {
+            thetatilde[i] <- beta[i] + h * epsilon[i] # hopt calculated following Silverman
+          } 
+          else {
+            thetatilde[i] <- 2 - (beta[i] + h * epsilon[i])
+          }
+        }
     }
     
     seq_bootstrap = mean(beta) + (thetatilde - mean(beta)) / sqrt(1 + h ^ 2 / sigma_score)

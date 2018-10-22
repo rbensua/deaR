@@ -27,12 +27,12 @@ bootstrap_basic(datadea,
 
 \item{B}{Number of bootstrap iterations.}
 
-\item{h}{Bandwith or smoothing window.}
+\item{h}{Bandwith or smoothing window. By default h=0.014 (You can set h to any other value). The optimal bandwidth factor can also be calculated following the proposals of Silverman (1986) and Dario y Simar (2007). So, h="h1" is the optimal h referred as "robust normal-reference rule" (Dario and Simar, 2007 p.60), h="h2" is the value of h1 but instead of the factor 1.06 with the factor 0.9, and h="h3" is the value of h1 adjusted for scale and sample size (Dario and Simar, 2007 p.61).}
 
 \item{alpha}{Between 0 and 1 (for confidence intervals).}
 }
 \description{
-Currently, for bootstrapping
+To bootstrap efficiency scores, deaR uses the algorithm proposed by Simar and Wilson (1998). For now, the function bootstrap_basic can only be used with basic DEA models (input- and output-oriented under constant and variable returns-to-scale).
 }
 \examples{
 # To replicate the results in Simar y Wilson (1998, p. 58) you have to
@@ -41,10 +41,12 @@ data("Electric_plants")
 data_example <- read_data(Electric_plants, 
                           ni = 3, 
                           no = 1)
-bootstrap <- bootstrap_basic(datadea = data_example,
+result <- bootstrap_basic(datadea = data_example,
                              orientation="io",
                              rts="vrs",
                              B=100)
+result$score_bc
+result$CI
 
 }
 \references{

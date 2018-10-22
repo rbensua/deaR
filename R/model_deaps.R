@@ -1,7 +1,6 @@
-#' @title Non-radial model with preference structure...
+#' @title Preference Structure DEA model.
 #'   
-#' @description Non-radial dea model with preference structure, n DMUs, m inputs, s outputs...
-#' 
+#' @description With this non-radial DEA model (Zhu, 1996), the user can specify the preference input (or output) weigths that reflect the relative degree of desirability of the adjustments of the current input (or output) levels.
 #' @usage model_deaps(datadea,
 #'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
