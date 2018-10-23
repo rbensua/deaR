@@ -112,9 +112,16 @@ read_data_fuzzy <- function(datadea,
   ni <- length(inputs.mL) # Number of inputs
   no <- length(outputs.mL) # Number of outputs
   
+  if(!is.character(inputs.mL)){
   inputnames <- colnames(datadea)[inputs.mL]
+  }else {
+     inputnames <- inputs.mL
+   }
+  if(!is.character(outputs.mL)){
   outputnames <- colnames(datadea)[outputs.mL]
-
+  }else{
+  outputnames <- outputs.mL
+  }
   input.mL <- t(datadea[, inputs.mL])
   output.mL <- t(datadea[, outputs.mL])
   colnames(input.mL) <- dmunames
