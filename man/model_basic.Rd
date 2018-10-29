@@ -20,7 +20,8 @@ model_basic(datadea,
             vtrans_o = NULL,
             compute_target = TRUE,
             compute_multiplier = FALSE,
-            returnlp = FALSE)
+            returnlp = FALSE,
+            ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}

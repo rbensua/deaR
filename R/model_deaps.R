@@ -12,12 +12,14 @@
 #'             maxslack = TRUE,
 #'             weight_slack = 1,
 #'             compute_target = TRUE,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,
+#'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
-#' @param weight_eff Preference weights. If input-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+#' @param weight_eff Preference weights. If input-oriented, it is a value, vector of length \code{
+#' m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
 #'                   with the weights applied to the input efficiencies.
 #'                   If output-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} with the weights applied to the output efficiencies.
 #' @param orientation A string, equal to "io" (input-oriented) or "oo" (output-oriented).
@@ -77,7 +79,8 @@ model_deaps <-
            maxslack = TRUE,
            weight_slack = 1,
            compute_target = TRUE,
-           returnlp = FALSE) {
+           returnlp = FALSE,
+           ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {

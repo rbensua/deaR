@@ -26,7 +26,8 @@
 #'             vtrans_o = NULL,
 #'             compute_target = TRUE,
 #'             compute_multiplier = FALSE,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,
+#'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -167,7 +168,8 @@ model_basic <-
            vtrans_o = NULL,
            compute_target = TRUE,
            compute_multiplier = FALSE,
-           returnlp = FALSE) {
+           returnlp = FALSE,
+           ...) {
  
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {

@@ -12,7 +12,8 @@
 #'             maxslack = TRUE,
 #'             weight_slack = 1,
 #'             compute_target = TRUE,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,
+#'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -78,7 +79,8 @@ model_nonradial <-
            maxslack = TRUE,
            weight_slack = 1,
            compute_target = TRUE,
-           returnlp = FALSE) {
+           returnlp = FALSE,
+           ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
@@ -159,6 +161,9 @@ model_nonradial <-
   }
   
   # Checking weights
+  if(is.null(weight_slack)){
+    weight_slack  <- 1
+  }
   if (is.matrix(weight_slack)) {
     if ((nrow(weight_slack) != no) || (ncol(weight_slack) != nde)) {
       stop("Invalid slack weights matrix (number of inputs (io) or outputs (oo) x number of evaluated DMUs).")

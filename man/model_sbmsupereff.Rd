@@ -14,7 +14,7 @@ model_sbmsupereff(datadea,
             compute_target = TRUE,
             compute_rho = FALSE,
             thr = 1e-6,
-            returnlp = FALSE)
+            returnlp = FALSE,...)
 }
 \arguments{
 \item{datadea}{The data, including DMUs, inputs and outputs.}

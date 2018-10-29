@@ -15,7 +15,8 @@ model_deaps(datadea,
             maxslack = TRUE,
             weight_slack = 1,
             compute_target = TRUE,
-            returnlp = FALSE)
+            returnlp = FALSE,
+            ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
@@ -24,9 +25,10 @@ model_deaps(datadea,
 
 \item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
 
-\item{weight_eff}{Preference weights. If input-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-with the weights applied to the input efficiencies.
-If output-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} with the weights applied to the output efficiencies.}
+\item{weight_eff}{Preference weights. If input-oriented, it is a value, vector of length \code{
+m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+                  with the weights applied to the input efficiencies.
+                  If output-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} with the weights applied to the output efficiencies.}
 
 \item{orientation}{A string, equal to "io" (input-oriented) or "oo" (output-oriented).}
 

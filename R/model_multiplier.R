@@ -17,7 +17,8 @@
 #'             L = 1,
 #'             U = 1,
 #'             returnlp = FALSE,
-#'             compute_lambda = TRUE)
+#'             compute_lambda = TRUE,
+#'             ...)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -103,7 +104,8 @@ model_multiplier <-
            L = 1,
            U = 1,
            returnlp = FALSE,
-           compute_lambda = TRUE) {
+           compute_lambda = TRUE,
+           ...) {
  
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {

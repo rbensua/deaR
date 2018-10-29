@@ -14,7 +14,8 @@ model_nonradial(datadea,
             maxslack = TRUE,
             weight_slack = 1,
             compute_target = TRUE,
-            returnlp = FALSE)
+            returnlp = FALSE,
+            ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}

@@ -80,7 +80,7 @@ model_sbmeff <-
            L = 1,
            U = 1,
            compute_target = TRUE,
-           returnlp = FALSE) {
+           returnlp = FALSE,...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {

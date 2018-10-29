@@ -13,7 +13,8 @@
 #'             L = 1,
 #'             U = 1,
 #'             compute_target = TRUE,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,
+#'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -105,7 +106,8 @@ model_additive <-
            L = 1,
            U = 1,
            compute_target = TRUE,
-           returnlp = FALSE) {
+           returnlp = FALSE,
+           ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) { 

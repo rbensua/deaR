@@ -13,7 +13,8 @@ model_multiplier(datadea,
             L = 1,
             U = 1,
             returnlp = FALSE,
-            compute_lambda = TRUE)
+            compute_lambda = TRUE,
+            ...)
 }
 \arguments{
 \item{datadea}{The data, including DMUs, inputs and outputs.}

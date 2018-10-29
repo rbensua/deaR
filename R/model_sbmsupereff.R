@@ -12,7 +12,7 @@
 #'             compute_target = TRUE,
 #'             compute_rho = FALSE,
 #'             thr = 1e-6,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,...)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -72,7 +72,8 @@ model_sbmsupereff <-
            compute_target = TRUE,
            compute_rho = FALSE,
            thr = 1e-6,
-           returnlp = FALSE) {
+           returnlp = FALSE,
+           ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
