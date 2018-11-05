@@ -5,8 +5,8 @@
 \title{Basic (radial) DEA model.}
 \usage{
 model_basic(datadea,
-            dmu_eval = NULL,
             dmu_ref = NULL,
+            dmu_eval = NULL,
             orientation = c("io", "oo", "dir"),
             dir_input = NULL,
             dir_output = NULL,

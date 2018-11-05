@@ -34,7 +34,7 @@
 #' data_example <- read_data_fuzzy(Leon2003,
 #'                                 dmus = 1, 
 #'                                 inputs.mL = 2, 
-#'                                 inputs.dL=3, 
+#'                                 inputs.dL = 3, 
 #'                                 outputs.mL = 4, 
 #'                                 outputs.dL = 5)
 #' result <- modelfuzzy_possibilistic(data_example, 

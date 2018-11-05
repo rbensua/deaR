@@ -7,8 +7,8 @@
 model_addsupereff(datadea,
             dmu_eval = NULL,
             dmu_ref = NULL,
-            weight_t_i = NULL,
-            weight_t_o = NULL,
+            weight_slack_i = NULL,
+            weight_slack_o = NULL,
             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
             L = 1,
             U = 1,
@@ -23,13 +23,13 @@ model_addsupereff(datadea,
 
 \item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
 
-\item{weight_t_i}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+\item{weight_slack_i}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
 with the weights of the input superslacks (\code{t_input}).
-If \code{weight_t_i} is the matrix of the inverses of inputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
+If \code{weight_slack_i} is the matrix of the inverses of inputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
 
-\item{weight_t_o}{A value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+\item{weight_slack_o}{A value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
 with the weights of the output superslacks (\code{t_output}).
-If \code{weight_t_o} is the matrix of the inverses of outputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
+If \code{weight_slack_o} is the matrix of the inverses of outputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
 
 \item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant),
 "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).}

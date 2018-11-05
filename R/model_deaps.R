@@ -79,7 +79,7 @@ model_deaps <-
            maxslack = TRUE,
            weight_slack = 1,
            compute_target = TRUE,
-           returnlp = FALSE,
+           returnlp = FALSE, weight_slack_i = NULL, weight_slack_o = NULL,weight = NULL,
            ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  
@@ -250,7 +250,7 @@ model_deaps <-
     f.obj <- c(weight_eff[, i] / sumwi[i], rep(0, ndr))
     
     # Matriz técnica stage 1
-    f.con.1 <- cbind(-diag(input[, ii]), inputref)
+    f.con.1 <- cbind(-diag(input[, ii], nrow = ni), inputref)
     f.con.w0 <- cbind(diag(ni), matrix(0, nrow = ni, ncol = ndr))
     f.con.w0 <- f.con.w0[w0, ]
     f.con <- rbind(f.con.1, f.con.2, f.con.w0, f.con.rs)

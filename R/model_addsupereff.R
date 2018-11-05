@@ -5,8 +5,8 @@
 #' @usage model_addsupereff(datadea,
 #'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
-#'             weight_t_i = NULL,
-#'             weight_t_o = NULL,
+#'             weight_slack_i = NULL,
+#'             weight_slack_o = NULL,
 #'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
 #'             L = 1,
 #'             U = 1,
@@ -17,12 +17,12 @@
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
-#' @param weight_t_i A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+#' @param weight_slack_i A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
 #'                   with the weights of the input superslacks (\code{t_input}).
-#'                   If \code{weight_t_i} is the matrix of the inverses of inputs (of DMUS in \code{dmu_eval}), the model is unit invariant.
-#' @param weight_t_o A value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+#'                   If \code{weight_slack_i} is the matrix of the inverses of inputs (of DMUS in \code{dmu_eval}), the model is unit invariant.
+#' @param weight_slack_o A value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
 #'                   with the weights of the output superslacks (\code{t_output}).
-#'                   If \code{weight_t_o} is the matrix of the inverses of outputs (of DMUS in \code{dmu_eval}), the model is unit invariant.
+#'                   If \code{weight_slack_o} is the matrix of the inverses of outputs (of DMUS in \code{dmu_eval}), the model is unit invariant.
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
 #'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
@@ -67,8 +67,8 @@ model_addsupereff <-
   function(datadea,
            dmu_eval = NULL,
            dmu_ref = NULL,
-           weight_t_i = NULL,
-           weight_t_o = NULL,
+           weight_slack_i = NULL,
+           weight_slack_o = NULL,
            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
            L = 1,
            U = 1,
@@ -147,39 +147,39 @@ model_addsupereff <-
   nnco <- length(nc_outputs)
   
   # Checking weights
-  if (is.null(weight_t_i)) {
-    weight_t_i <- matrix(1 / input[, dmu_eval], nrow = ni) / (ni + no - nnci - nnco)
+  if (is.null(weight_slack_i)) {
+    weight_slack_i <- matrix(1 / input[, dmu_eval], nrow = ni) / (ni + no - nnci - nnco)
   } else {
-    if (is.matrix(weight_t_i)) {
-      if ((nrow(weight_t_i) != ni) || (ncol(weight_t_i) != nde)) {
+    if (is.matrix(weight_slack_i)) {
+      if ((nrow(weight_slack_i) != ni) || (ncol(weight_slack_i) != nde)) {
         stop("Invalid matrix of weights of the input slacks (number of inputs x number of evaluated DMUs).")
       }
-    } else if ((length(weight_t_i) == 1) || (length(weight_t_i) == ni)) {
-      weight_t_i <- matrix(weight_t_i, nrow = ni, ncol = nde)
+    } else if ((length(weight_slack_i) == 1) || (length(weight_slack_i) == ni)) {
+      weight_slack_i <- matrix(weight_slack_i, nrow = ni, ncol = nde)
     } else {
       stop("Invalid vector of weights of the input slacks.")
     }
   }
-  weight_t_i[nc_inputs, ] <- 0
-  rownames(weight_t_i) <- inputnames
-  colnames(weight_t_i) <- dmunames[dmu_eval]
+  weight_slack_i[nc_inputs, ] <- 0
+  rownames(weight_slack_i) <- inputnames
+  colnames(weight_slack_i) <- dmunames[dmu_eval]
   
-  if (is.null(weight_t_o)) {
-    weight_t_o <- matrix(1 / output[, dmu_eval], nrow = no) / (ni + no - nnci - nnco)
+  if (is.null(weight_slack_o)) {
+    weight_slack_o <- matrix(1 / output[, dmu_eval], nrow = no) / (ni + no - nnci - nnco)
   } else {
-    if (is.matrix(weight_t_o)) {
-      if ((nrow(weight_t_o) != no) || (ncol(weight_t_o) != nde)) {
+    if (is.matrix(weight_slack_o)) {
+      if ((nrow(weight_slack_o) != no) || (ncol(weight_slack_o) != nde)) {
         stop("Invalid matrix of weights of the output slacks (number of outputs x number of evaluated DMUs).")
       }
-    } else if ((length(weight_t_o) == 1) || (length(weight_t_o) == no)) {
-      weight_t_o <- matrix(weight_t_o, nrow = no, ncol = nde)
+    } else if ((length(weight_slack_o) == 1) || (length(weight_slack_o) == no)) {
+      weight_slack_o <- matrix(weight_slack_o, nrow = no, ncol = nde)
     } else {
       stop("Invalid vector of weights of the output slacks.")
     }
   }
-  weight_t_o[nc_outputs, ] <- 0
-  rownames(weight_t_o) <- outputnames
-  colnames(weight_t_o) <- dmunames[dmu_eval]
+  weight_slack_o[nc_outputs, ] <- 0
+  rownames(weight_slack_o) <- outputnames
+  colnames(weight_slack_o) <- dmunames[dmu_eval]
   
   target_input <- NULL
   target_output <- NULL
@@ -223,13 +223,13 @@ model_addsupereff <-
     
     ii <- dmu_eval[i]
     
-    w0i <- which(weight_t_i[, i] == 0)
+    w0i <- which(weight_slack_i[, i] == 0)
     nw0i <- length(w0i)
-    w0o <- which(weight_t_o[, i] == 0)
+    w0o <- which(weight_slack_o[, i] == 0)
     nw0o <- length(w0o)
     
     # Vector de coeficientes de la función objetivo
-    f.obj <- c(rep(0, ndr), weight_t_i[, i], weight_t_o[, i])
+    f.obj <- c(rep(0, ndr), weight_slack_i[, i], weight_slack_o[, i])
     
     # Matriz técnica
     f.con.se <- rep(0, ndr)
@@ -332,8 +332,8 @@ model_addsupereff <-
                     data = datadea,
                     dmu_eval = dmu_eval,
                     dmu_ref = dmu_ref,
-                    weight_t_i = weight_t_i,
-                    weight_t_o = weight_t_o)
+                    weight_slack_i = weight_slack_i,
+                    weight_slack_o = weight_slack_o)
   
   return(structure(deaOutput, class = "dea"))
   

@@ -11,8 +11,8 @@
 #' (2) With undesirable inputs use input-oriented BCC model, and with undesirable outputs use output-oriented BCC model. Alternatively, you can also treat the undesirable outputs as inputs and the apply the input-oriented BCC model (similarly with undesirable inputs).
 #' 
 #' @usage model_basic(datadea,
-#'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
+#'             dmu_eval = NULL,
 #'             orientation = c("io", "oo", "dir"),
 #'             dir_input = NULL,
 #'             dir_output = NULL,
@@ -30,8 +30,8 @@
 #'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
-#' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
+#' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param orientation A string, equal to "io" (input oriented), "oo" (output oriented), or "dir" (directional).
 #' @param dir_input A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval}) with the input directions.
 #'                  If \code{dir_input} == input matrix (of DMUS in \code{dmu_eval}) and \code{dir_output} == 0, it is equivalent to input oriented (\code{beta} = 1 - \code{efficiency}).

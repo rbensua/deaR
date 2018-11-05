@@ -176,6 +176,14 @@ model_additive <-
   nnco <- length(nc_outputs)
   
   # Checking weights
+  if(is.null(weight_slack_i)){
+    weight_slack_i <- 1
+  }
+  if(is.null(weight_slack_o)){
+    weight_slack_o <- 1
+  }
+  
+  
   if (is.matrix(weight_slack_i)) {
     if ((nrow(weight_slack_i) != ni) || (ncol(weight_slack_i) != nde)) {
       stop("Invalid weight input matrix (number of inputs x number of evaluated DMUs).")

@@ -8,12 +8,13 @@
 #'              arrangement = c("horizontal", "vertical"),
 #'              ...)
 #'              
-#' @param datadea Data frame with DEA data.
+#' @param datadea Dataframe with DEA data.
 #' @param nper Number of time periods (with dataset in wide format).
-#' @param percol Column of time period (with dataset in long format)
+#' @param percol Column of time period (with dataset in long format).
+#' @param arrangement Horizontal with data in wide format. Vertical with data in long format.
+#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.
 #' @param ni Number of inputs, if inputs are in columns 2:(\code{ni} + 1) (if DMUs are in the first column) or 1:\code{ni} (no DMUs column).
 #' @param no Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).
-#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.
 #' @param inputs Columns (numbers or names) of inputs (optional). It prevails over \code{ni}. 
 #' @param outputs Columns (numbers or names) of outputs (optional). It prevails over \code{no}.
 #' @param nc_inputs A numeric vector containing non-controllable inputs.

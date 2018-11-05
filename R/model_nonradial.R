@@ -240,7 +240,7 @@ model_nonradial <-
     ii <- dmu_eval[i]
     
     # Matriz técnica stage 1
-    f.con.1 <- cbind(-diag(input[, ii]), inputref)
+    f.con.1 <- cbind(-diag(input[, ii], nrow = ni), inputref)
     f.con <- rbind(f.con.1, f.con.2, f.con.3, f.con.rs)
     
     # Vector de dirección de restricciones stage 1

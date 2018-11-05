@@ -4,9 +4,9 @@
 #' \code{input}, \code{output}, \code{dmunames}, \code{nc_inputs}, \code{nc_outputs}, \code{nd_inputs}, \code{nd_outputs}.
 #'
 #' @usage read_data(datadea,
+#'              dmus = 1,
 #'              ni = NULL,
 #'              no = NULL,
-#'              dmus = 1,
 #'              inputs = NULL,
 #'              outputs = NULL,
 #'              nc_inputs = NULL,
@@ -17,9 +17,9 @@
 #'              ud_outputs = NULL)
 #'              
 #' @param datadea Data frame with DEA data.
+#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be \code{NULL}.
 #' @param ni Number of inputs, if inputs are in columns 2:(\code{ni} + 1) (if DMUs are in the first column) or 1:\code{ni} (no DMUs column).
 #' @param no Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).
-#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be \code{NULL}.
 #' If not specified, DMUs are in the first column.
 #' @param inputs Columns (numbers or names) of inputs (optional). It prevails over \code{ni}. 
 #' @param outputs Columns (numbers or names) of outputs (optional). It prevails over \code{no}.
