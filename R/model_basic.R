@@ -439,8 +439,8 @@ model_basic <-
             multiplier_output <- orient * res$duals[(ni + 1) : (ni + no)]
             names(multiplier_output) <- outputnames
           } else {
-            multiplier_input <- NULL
-            multiplier_output <- NULL
+            multiplier_input <- NA
+            multiplier_output <- NA
           }
           
         } else {
@@ -506,12 +506,14 @@ model_basic <-
           
         } else {
           
-          efficiency <- NULL
-          lambda <- NULL
-          slack_input <- NULL
-          slack_output <- NULL
-          target_input <- NULL
-          target_output <- NULL
+          efficiency <- NA
+          lambda <- NA
+          slack_input <- NA
+          slack_output <- NA
+          if (compute_target) {
+            target_input <- NA
+            target_output <- NA
+          }
           
         }
         
@@ -641,12 +643,14 @@ model_basic <-
           
         } else {
           
-          beta <- NULL
-          lambda <- NULL
-          slack_input <- NULL
-          slack_output <- NULL
-          target_input <- NULL
-          target_output <- NULL
+          beta <- NA
+          lambda <- NA
+          slack_input <- NA
+          slack_output <- NA
+          if (compute_target) {
+            target_input <- NA
+            target_output <- NA
+          }
           
         }
         

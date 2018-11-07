@@ -297,12 +297,14 @@ model_additive <-
         
       } else {
         
-        objval <- NULL
-        lambda <- NULL
-        slack_input <- NULL
-        slack_output <- NULL
-        target_input <- NULL
-        target_output <- NULL
+        objval <- NA
+        lambda <- NA
+        slack_input <- NA
+        slack_output <- NA
+        if (compute_target) {
+          target_input <- NA
+          target_output <- NA
+        }
         
       }
 

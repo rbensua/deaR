@@ -298,17 +298,19 @@ model_addsupereff <-
         
       } else {
         
-        delta <- NULL
-        objval <- NULL
-        lambda <- NULL
-        t_input <- NULL
-        t_output <- NULL
-        target_input <- NULL
-        target_output <- NULL
-        project_input <- NULL
-        project_output <- NULL
-        slack_input <- NULL
-        slack_output <- NULL
+        delta <- NA
+        objval <- NA
+        lambda <- NA
+        t_input <- NA
+        t_output <- NA
+        if (compute_target) {
+          target_input <- NA
+          target_output <- NA
+          project_input <- NA
+          project_output <- NA
+          slack_input <- NA
+          slack_output <- NA
+        }
         
       }
 

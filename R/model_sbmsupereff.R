@@ -326,18 +326,22 @@ model_sbmsupereff <-
         
       } else {
         
-        delta <- NULL
-        lambda <- NULL
-        project_input <- NULL
-        project_output <- NULL
-        target_input <- NULL
-        target_output <- NULL
-        t_input <- NULL
-        t_output <- NULL
-        slack_input <- NULL
-        slack_output <- NULL
-        rho <- NULL
-        mix <- NULL
+        delta <- NA
+        lambda <- NA
+        project_input <- NA
+        project_output <- NA
+        if (compute_target || compute_rho) {
+          target_input <- NA
+          target_output <- NA
+          t_input <- NA
+          t_output <- NA
+          slack_input <- NA
+          slack_output <- NA
+        }
+        if (compute_rho) {
+          rho <- NA
+          mix <- NA
+        }
         
       }
       

@@ -49,7 +49,7 @@
 #'                                 inputs.mL = 2:3, 
 #'                                 inputs.dL = 4:5, 
 #'                                 outputs.mL = 6:7,
-#'                                 outputs.dL=8:9)
+#'                                 outputs.dL =8:9)
 #' result <- modelfuzzy_guotanaka(data_example, 
 #'                                alpha = c(0, 0.5, 0.75, 1), 
 #'                                orientation = "io")
@@ -64,7 +64,7 @@
 #'                                 outputs.mL = 6:7, 
 #'                                 outputs.dL = 8:9)
 #' result2 <- modelfuzzy_guotanaka(data_example, 
-#'                                 alpha= seq(0, 1, by = 0.1), 
+#'                                 alpha = seq(0, 1, by = 0.1), 
 #'                                 orientation = "io")
 #' efficiencies(result2)
 #' 

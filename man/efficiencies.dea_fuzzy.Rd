@@ -10,7 +10,7 @@ efficiencies(deasol)
 \item{deasol}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
 }
 \description{
-Extract the efficiencies of the DMUs from a dea or dea_fuzzy solution.
+Extract the efficiencies of the DMUs from a dea_fuzzy solution.
 }
 \examples{
 # Replication results model DEA1 in Tomkins and Green (1988)

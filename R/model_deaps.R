@@ -325,12 +325,14 @@ model_deaps <-
         
       } else {
         
-        mean_eff <- NULL
-        eff <- NULL
-        lambda <- NULL
-        slack_output <- NULL
-        target_input <- NULL
-        target_output <- NULL
+        mean_eff <- NA
+        eff <- NA
+        lambda <- NA
+        slack_output <- NA
+        if (compute_target) {
+          target_input <- NA
+          target_output <- NA
+        }
         
       }
       

@@ -270,12 +270,12 @@ model_multiplier <-
           
         } else {
           
-          efficiency <- NULL
-          lambda <- NULL
-          target_input <- NULL
-          target_output <- NULL
-          slack_input <- NULL
-          slack_output <- NULL
+          efficiency <- NA
+          lambda <- NA
+          target_input <- NA
+          target_output <- NA
+          slack_input <- NA
+          slack_output <- NA
           
         }
         
@@ -286,7 +286,7 @@ model_multiplier <-
         if (res$status == 0) {
           efficiency <- orient * res$objval
         } else {
-          efficiency <- NULL
+          efficiency <- NA
         }
         
       }
@@ -312,9 +312,9 @@ model_multiplier <-
         }
         
       } else {
-        multiplier_input <- NULL
-        multiplier_output <- NULL
-        multiplier_rts <- NULL
+        multiplier_input <- NA
+        multiplier_output <- NA
+        multiplier_rts <- NA
       }
 
       if (compute_lambda) {

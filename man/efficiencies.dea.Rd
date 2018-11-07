@@ -10,10 +10,10 @@ efficiencies(deasol)
 \item{deasol}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
 }
 \description{
-Extract the efficiencies of the DMUs from a dea or dea_fuzzy solution.
+Extract the efficiencies of the DMUs from a dea solution.
 }
 \examples{
-# Replication results DEA1 in Tomkins and Green (1988)
+# Replication results model DEA1 in Tomkins and Green (1988)
 data("Departments")
 # Calculate Total income
 Departments$Total_income <- Departments[,5]+Departments[,6]+Departments[,7] 
