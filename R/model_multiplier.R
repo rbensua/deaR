@@ -86,7 +86,7 @@
 #' # Results for General Motors and Ford Motor are not shown by deaR 
 #' # because the solution is infeasible.
 #' efficiencies(result2)
-#' multipliers(result)
+#' multipliers(result2)
 #' 
 #' @seealso \code{\link{model_basic}}, \code{\link{cross_efficiency}}
 #' 

@@ -78,7 +78,7 @@ result2 <- model_multiplier(data_Fortune,
 # Results for General Motors and Ford Motor are not shown by deaR 
 # because the solution is infeasible.
 efficiencies(result2)
-multipliers(result)
+multipliers(result2)
 
 }
 \references{

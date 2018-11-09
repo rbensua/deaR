@@ -7,6 +7,8 @@
 model_sbmsupereff(datadea,
             dmu_eval = NULL,
             dmu_ref = NULL,
+            weight_input = 1,
+            weight_output = 1,
             orientation = c("no", "io", "oo"),
             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
             L = 1,
@@ -14,7 +16,7 @@ model_sbmsupereff(datadea,
             compute_target = TRUE,
             compute_rho = FALSE,
             thr = 1e-6,
-            returnlp = FALSE,...)
+            returnlp = FALSE)
 }
 \arguments{
 \item{datadea}{The data, including DMUs, inputs and outputs.}
@@ -22,6 +24,12 @@ model_sbmsupereff(datadea,
 \item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
 
 \item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+
+\item{weight_input}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+with weights to inputs corresponding to the relative importance of items.}
+
+\item{weight_output}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+with weights to outputs corresponding to the relative importance of items.}
 
 \item{orientation}{A string, equal to "no" (non-oriented), "io" (input-oriented) or "oo" (output-oriented).}
 
@@ -50,7 +58,7 @@ data("Power_plants")
 data_example <- read_data(Power_plants, ni = 4, no = 2)
 result <- model_sbmsupereff(data_example, orientation = "io", rts = "crs") 
 efficiencies(result)
-slacks(result)$input
+slacks(result)$slack_input
 references(result)
 
 }

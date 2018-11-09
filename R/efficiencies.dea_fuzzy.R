@@ -75,14 +75,26 @@ efficiencies.dea_fuzzy <-
           eff.B <- eff.W
           
           for (k in 1:nalpha) {
-            for (i in 1:nde) {
-              for (j in 1:neff) {
-                eff.W[i, j, k] <- deasol$alphacut[[k]]$DMU$Worst[[i]]$efficiency[j]
-                eff.B[i, j, k] <- deasol$alphacut[[k]]$DMU$Best[[i]]$efficiency[j]
-              }
-              eff.W[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU$Worst[[i]]$mean_efficiency
-              eff.B[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU$Best[[i]]$mean_efficiency
-            }
+            eff.W[, , k]  <- cbind(
+              do.call(rbind, lapply(deasol$alphacut[[k]]$DMU$Worst, function(x)
+              x$efficiency)),
+              unlist(lapply(deasol$alphacut[[k]]$DMU$Worst, function(x)
+                x$mean_efficiency))
+            )
+            eff.B[, , k]  <- cbind(
+              do.call(rbind, lapply(deasol$alphacut[[k]]$DMU$Best, function(x)
+                x$efficiency)),
+              unlist(lapply(deasol$alphacut[[k]]$DMU$Best, function(x)
+                x$mean_efficiency))
+            )
+            #for (i in 1:nde) {
+            #  for (j in 1:neff) {
+            #    eff.W[i, j, k] <- deasol$alphacut[[k]]$DMU$Worst[[i]]$efficiency[j]
+            #    eff.B[i, j, k] <- deasol$alphacut[[k]]$DMU$Best[[i]]$efficiency[j]
+            #  }
+            #  eff.W[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU$Worst[[i]]$mean_efficiency
+            #  eff.B[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU$Best[[i]]$mean_efficiency
+            #}
           }
           
         }
@@ -95,10 +107,14 @@ efficiencies.dea_fuzzy <-
         eff.B <- eff.W
         
         for (j in 1:nalpha) {
-          for (i in 1:nde) {
-            eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$beta
-            eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$beta
-          }
+          eff.W[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Worst, function(x)
+            x$beta))
+          eff.B[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Best, function(x)
+            x$beta))
+          #for (i in 1:nde) {
+          #  eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$beta
+          #  eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$beta
+          #}
         }
         
       } else if ("delta" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
@@ -109,10 +125,14 @@ efficiencies.dea_fuzzy <-
         eff.B <- eff.W
         
         for (j in 1:nalpha) {
-          for (i in 1:nde) {
-            eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$delta
-            eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$delta
-          }
+          eff.W[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Worst, function(x)
+            x$delta))
+          eff.B[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Best, function(x)
+            x$delta))
+          #for (i in 1:nde) {
+          #  eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$delta
+          #  eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$delta
+          #}
         }
         
       } else if ("objval" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
@@ -123,10 +143,14 @@ efficiencies.dea_fuzzy <-
         eff.B <- eff.W
         
         for (j in 1:nalpha) {
-          for (i in 1:nde) {
-            eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$objval
-            eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$objval
-          }
+          eff.W[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Worst, function(x)
+            x$objval))
+          eff.B[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU$Best, function(x)
+            x$objval))
+          #for (i in 1:nde) {
+          #  eff.W[i, j] <- deasol$alphacut[[j]]$DMU$Worst[[i]]$objval
+          #  eff.B[i, j] <- deasol$alphacut[[j]]$DMU$Best[[i]]$objval
+          #}
         }
         
       } else {
@@ -148,9 +172,11 @@ efficiencies.dea_fuzzy <-
           colnames(eff) <- names(deasol$alphacut)
           
           for (j in 1:nalpha) {
-            for (i in 1:nde) {
-              eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$efficiency
-            }
+            eff[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU, function(x)
+              x$efficiency))
+            #for (i in 1:nde) {
+            #  eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$efficiency
+            #}
           }
           
         } else {
@@ -162,12 +188,18 @@ efficiencies.dea_fuzzy <-
                                        names(deasol$alphacut)))
           
           for (k in 1:nalpha) {
-            for (i in 1:nde) {
-              for (j in 1:neff) {
-                eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
-              }
-              eff[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU[[i]]$mean_efficiency
-            }
+            eff[, , k]  <- cbind(
+              do.call(rbind, lapply(deasol$alphacut[[k]]$DMU, function(x)
+                x$efficiency)),
+              unlist(lapply(deasol$alphacut[[k]]$DMU, function(x)
+                x$mean_efficiency))
+            )
+            #for (i in 1:nde) {
+            #  for (j in 1:neff) {
+            #    eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
+            #  }
+            #  eff[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU[[i]]$mean_efficiency
+            #}
           }
           
         }
@@ -179,9 +211,11 @@ efficiencies.dea_fuzzy <-
         colnames(eff) <- names(deasol$alphacut)
         
         for (j in 1:nalpha) {
-          for (i in 1:nde) {
-            eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$beta
-          }
+          eff[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU, function(x)
+            x$beta))
+          #for (i in 1:nde) {
+          #  eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$beta
+          #}
         }
       
       } else {
@@ -199,14 +233,16 @@ efficiencies.dea_fuzzy <-
                                    names(deasol$alphacut)))
       
       for (k in 1:nalpha) {
-        for (i in 1:nde) {
-          for (j in 1:3) {
-            eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
-          }
-        }
+        eff[, , k]  <- do.call(rbind, lapply(deasol$alphacut[[k]]$DMU, function(x)
+            x$efficiency))
+        #for (i in 1:nde) {
+        #  for (j in 1:3) {
+        #    eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
+        #  }
+        #}
       }
       
-      return(round(eff,5))
+      return(round(eff, 5))
       
     }
   

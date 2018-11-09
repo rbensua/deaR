@@ -5,6 +5,8 @@
 #' @usage model_sbmsupereff(datadea,
 #'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
+#'             weight_input = 1,
+#'             weight_output = 1,
 #'             orientation = c("no", "io", "oo"),
 #'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
 #'             L = 1,
@@ -12,11 +14,15 @@
 #'             compute_target = TRUE,
 #'             compute_rho = FALSE,
 #'             thr = 1e-6,
-#'             returnlp = FALSE,...)
+#'             returnlp = FALSE)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
+#' @param weight_input A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+#'                     with weights to inputs corresponding to the relative importance of items.
+#' @param weight_output A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
+#'                      with weights to outputs corresponding to the relative importance of items.
 #' @param orientation A string, equal to "no" (non-oriented), "io" (input-oriented) or "oo" (output-oriented).
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
 #'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
@@ -52,7 +58,7 @@
 #' data_example <- read_data(Power_plants, ni = 4, no = 2)
 #' result <- model_sbmsupereff(data_example, orientation = "io", rts = "crs") 
 #' efficiencies(result)
-#' slacks(result)$input
+#' slacks(result)$slack_input
 #' references(result)
 #' 
 #' @seealso \code{\link{model_sbmeff}}, \code{\link{model_supereff}}, \code{\link{model_addsupereff}}
@@ -65,6 +71,8 @@ model_sbmsupereff <-
   function(datadea,
            dmu_eval = NULL,
            dmu_ref = NULL,
+           weight_input = 1,
+           weight_output = 1,
            orientation = c("no", "io", "oo"),
            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
            L = 1,
@@ -72,8 +80,7 @@ model_sbmsupereff <-
            compute_target = TRUE,
            compute_rho = FALSE,
            thr = 1e-6,
-           returnlp = FALSE,
-           ...) {
+           returnlp = FALSE) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
@@ -159,6 +166,41 @@ model_sbmsupereff <-
     obj <- "min"
   }
   
+  # Checking weights
+  if (is.matrix(weight_input)) {
+    if ((nrow(weight_input) != ni) || (ncol(weight_input) != nde)) {
+      stop("Invalid input weights matrix (number of inputs x number of evaluated DMUs).")
+    }
+  } else if ((length(weight_input) == 1) || (length(weight_input) == ni)) {
+    weight_input <- matrix(weight_input, nrow = ni, ncol = nde)
+  } else {
+    stop("Invalid input weights vector (number of inputs).")
+  }
+  weight_input[nc_inputs, ] <- 0
+  sumwi <- colSums(weight_input)
+  if (any(sumwi == 0)) {
+    stop("A sum of input weights is 0.")
+  }
+  rownames(weight_input) <- inputnames
+  colnames(weight_input) <- dmunames[dmu_eval]
+  
+  if (is.matrix(weight_output)) {
+    if ((nrow(weight_output) != no) || (ncol(weight_output) != nde)) {
+      stop("Invalid output weights matrix (number of outputs x number of evaluated DMUs).")
+    }
+  } else if ((length(weight_output) == 1) || (length(weight_output) == no)) {
+    weight_output <- matrix(weight_output, nrow = no, ncol = nde)
+  } else {
+    stop("Invalid output weights vector (number of outputs).")
+  }
+  weight_output[nc_outputs, ] <- 0
+  sumwo <- colSums(weight_output)
+  if (any(sumwo == 0)) {
+    stop("A sum of output weights is 0.")
+  }
+  rownames(weight_output) <- outputnames
+  colnames(weight_output) <- dmunames[dmu_eval]
+  
   target_input <- NULL
   target_output <- NULL
   t_input <- NULL
@@ -204,15 +246,15 @@ model_sbmsupereff <-
     
     # Vector de coeficientes de la función objetivo, Matriz técnica y Vector de dirección de restricciones
     if (orientation == "no") {
-      f.obj <- c(0, rep(0, ndr), 1 / ((ni - nnci) * input[, ii]), rep(0, no))
-      f.con.0 <- c(0, rep(0, ndr), rep(0, ni), 1 / ((no - nnco) * output[, ii]))
+      f.obj <- c(0, rep(0, ndr), weight_input[, i] / (sumwi[i] * input[, ii]), rep(0, no))
+      f.con.0 <- c(0, rep(0, ndr), rep(0, ni), weight_output[, i] / (sumwo[i] * output[, ii]))
       f.dir <- c("=", rep("<=", ni), rep (">=", no + ni), rep("<=", no))
     } else if (orientation == "io") {
-      f.obj <- c(0, rep(0, ndr), 1 / ((ni - nnci) * input[, ii]), rep(0, no))
+      f.obj <- c(0, rep(0, ndr), weight_input[, i] / (sumwi[i] * input[, ii]), rep(0, no))
       f.con.0 <- c(1, rep(0, ndr + ni + no))
       f.dir <- c("=", rep("<=", ni), rep (">=", no + ni), rep("=", no))
     } else {
-      f.obj <- c(0, rep(0, ndr), rep(0, ni), 1 / ((no - nnco) * output[, ii]))
+      f.obj <- c(0, rep(0, ndr), rep(0, ni), weight_output[, i] / (sumwo[i] * output[, ii]))
       f.con.0 <- c(1, rep(0, ndr + ni + no))
       f.dir <- c("=", rep("<=", ni), rep (">=", no), rep("=", ni), rep("<=", no))
     }
@@ -308,8 +350,8 @@ model_sbmsupereff <-
             deasol <- model_sbmeff(datadea = datadea2,
                                    dmu_eval = 1,
                                    dmu_ref = dmu_ref,
-                                   weight_input = 1,
-                                   weight_output = 1,
+                                   weight_input = weight_input,
+                                   weight_output = weight_output,
                                    orientation = orientation,
                                    rts = rts,
                                    L = L,
@@ -367,7 +409,9 @@ model_sbmsupereff <-
                     DMU = DMU,
                     data = datadea,
                     dmu_eval = dmu_eval,
-                    dmu_ref = dmu_ref)
+                    dmu_ref = dmu_ref,
+                    weight_input = weight_input,
+                    weight_output = weight_output)
   
   return(structure(deaOutput, class = "dea"))
   

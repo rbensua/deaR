@@ -8,9 +8,11 @@ rts(deamodel, thr = 1e-4)
 }
 \arguments{
 \item{deamodel}{Object of class dea obtained with some of the dea functions.}
+
+\item{thr}{Threshold for}
 }
 \description{
-Extract the returns to scale
+Extract the returns to scale.
 }
 \examples{
  data("Coll_Blasco_2006")
