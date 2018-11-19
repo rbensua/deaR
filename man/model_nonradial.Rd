@@ -41,6 +41,8 @@ If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m}
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets of the max slack solution.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 Non-radial DEA model allows for non-proportional reductions in each input or augmentations in each output.

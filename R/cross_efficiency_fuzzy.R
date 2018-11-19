@@ -3,7 +3,7 @@
 #' @description Computes the cross-efficiency fuzzy table from dea data or a Guo-Tanaka dea model solution.
 #' The (crisp) relative efficiencies for the case \code{alpha} = 1 are obtained from the CCR model (\code{model_multiplier}).
 #' 
-#' @usage cross_efficiency(datadea,
+#' @usage cross_efficiency_fuzzy(datadea,
 #'             orientation = c("io", "oo"),
 #'             alpha = 1,
 #'             selfapp = TRUE)

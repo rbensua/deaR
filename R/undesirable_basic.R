@@ -4,15 +4,11 @@
 #' deadata or deadata_fuzzy class with good inputs and/or outputs, and bad (undesirable) inputs and/or outputs.
 #' Onwards, it is recommended to use a dea model with variable returns to scale (vrs).
 #'
-#' @usage undesirable_io(datadea,
-#'                       ud_inputs = NULL,
-#'                       ud_outputs = NULL,
+#' @usage undesirable_basic(datadea,
 #'                       vtrans_i = NULL,
 #'                       vtrans_o = NULL)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
-#' @param ud_inputs Undesirable inputs.
-#' @param ud_outputs Undesirable outputs.
 #' @param vtrans_i Numeric vector of translation for undesirable inputs. If \code{vtrans_i[i]} is
 #'  \code{NA}, then it applies the "max + 1" translation to the i-th undesirable input. If \code{vtrans_i} is
 #'  a constant, then it applies the same translation to all undesirable inputs. If \code{vtrans_i} is \code{NULL},

@@ -41,6 +41,8 @@ If \code{weight_slack_o} is the matrix of the inverses of outputs (of DMUS in \c
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets, projections and slacks.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 Solve the additive super-efficiency model proposed by Du, Liang and Zhu (2010). It is an extension of the SBM super-efficiency to the additive DEA model.

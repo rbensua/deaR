@@ -4,7 +4,7 @@
 \alias{cross_efficiency_fuzzy}
 \title{Cross efficiency fuzzy tables}
 \usage{
-cross_efficiency(datadea,
+cross_efficiency_fuzzy(datadea,
             orientation = c("io", "oo"),
             alpha = 1,
             selfapp = TRUE)

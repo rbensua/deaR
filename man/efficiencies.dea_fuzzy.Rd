@@ -4,10 +4,12 @@
 \alias{efficiencies.dea_fuzzy}
 \title{Efficiencies}
 \usage{
-efficiencies(deasol)
+\method{efficiencies}{dea_fuzzy}(x, ...)
 }
 \arguments{
-\item{deasol}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
+\item{x}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
+
+\item{...}{Other options (for compatibiliy)}
 }
 \description{
 Extract the efficiencies of the DMUs from a dea_fuzzy solution.

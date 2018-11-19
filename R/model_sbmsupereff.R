@@ -148,12 +148,17 @@ model_sbmsupereff <-
   outputnames <- rownames(output)
   ni <- nrow(input) # number of  inputs
   no <- nrow(output) # number of outputs
+  
+  # Zeros in input and output data. Case 2 (Tone 2001)
+  nzimin <- apply(input, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  nzomin <- apply(output, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  for (ii in dmu_eval) {
+    input[which(input[, ii] == 0), ii] <- nzimin[which(input[, ii] == 0)]
+    output[which(output[, ii] == 0), ii] <- nzomin[which(output[, ii] == 0)]
+  }
+  
   inputref <- matrix(input[, dmu_ref], nrow = ni) 
   outputref <- matrix(output[, dmu_ref], nrow = no)
-  
-  if ((any(input == 0)) || (any(output == 0))) {
-    stop("No zero inputs/outputs supported for the moment.")
-  }
   
   nc_inputs <- datadea$nc_inputs
   nc_outputs <- datadea$nc_outputs
@@ -350,8 +355,8 @@ model_sbmsupereff <-
             deasol <- model_sbmeff(datadea = datadea2,
                                    dmu_eval = 1,
                                    dmu_ref = dmu_ref,
-                                   weight_input = weight_input,
-                                   weight_output = weight_output,
+                                   weight_input = weight_input[, i],
+                                   weight_output = weight_output[, i],
                                    orientation = orientation,
                                    rts = rts,
                                    L = L,

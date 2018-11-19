@@ -5,8 +5,8 @@
 \title{Basic (radial) DEA model.}
 \usage{
 model_basic(datadea,
-            dmu_ref = NULL,
             dmu_eval = NULL,
+            dmu_ref = NULL,
             orientation = c("io", "oo", "dir"),
             dir_input = NULL,
             dir_output = NULL,
@@ -68,6 +68,8 @@ then it applies the "max + 1" translation to all undesirable inputs.}
 \item{compute_multiplier}{Logical. If it is \code{TRUE}, it computes multipliers (dual solution) when \code{orientation} is "io" or "oo".}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 Solve input and output oriented basic DEA  models (envelopment form) under constant (CCR DEA model), variable (BCC DEA model), non-increasing, non-decreasing or generalized returns to scale. By default, models are solved in a two-stage process (DEA slacks are maximized).  

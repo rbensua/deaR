@@ -37,6 +37,8 @@ model_multiplier(datadea,
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
 
 \item{compute_lambda}{Logical. If it is \code{TRUE}, it computes the dual problem and lambdas.}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 Solve input-oriented and output-oriented basic DEA  models (multiplicative form) under constant (CCR DEA model), variable (BCC DEA model), non-increasing, non-decreasing or generalized returns to scale.

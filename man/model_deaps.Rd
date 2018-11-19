@@ -16,6 +16,9 @@ model_deaps(datadea,
             weight_slack = 1,
             compute_target = TRUE,
             returnlp = FALSE,
+            weight_slack_i = NULL, 
+            weight_slack_o = NULL,
+            weight = NULL,
             ...)
 }
 \arguments{
@@ -47,6 +50,14 @@ If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m}
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets of the max slack solution.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
+
+\item{weight_slack_i}{This input is not used (it is only for compatibility issues)}
+
+\item{weight_slack_o}{This input is not used (it is only for compatibility issues)}
+
+\item{weight}{This input is not used (it is only for compatibility issues)}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 With this non-radial DEA model (Zhu, 1996), the user can specify the preference input (or output) weigths that reflect the relative degree of desirability of the adjustments of the current input (or output) levels.

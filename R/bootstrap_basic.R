@@ -61,7 +61,8 @@
 #' result$score_bc
 #' result$CI
 #' 
-#' @import lpSolve stats
+#' @import lpSolve 
+#' @importFrom stats IQR median quantile rnorm runif sd var
 #' 
 #' @export
   

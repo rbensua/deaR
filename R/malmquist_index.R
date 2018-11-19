@@ -246,7 +246,7 @@ malmquist_index <- function(datadealist,
   pech <- effvrs[-1, ]/effvrs[-nt, ]
   sech <- ec / pech
   
-  return(list(mi = mi,
+  deaOutput <- list(mi = mi,
               ec = ec,
               tc = tc,
               pech = pech,
@@ -258,6 +258,8 @@ malmquist_index <- function(datadealist,
               datadealist = datadealist,
               dmu_eval = dmu_eval,
               dmu_ref = dmu_ref,
-              orientation = orientation))
+              orientation = orientation,
+              modelname = "malmquist")
+  return(structure(deaOutput, class = "dea"))
   
 }

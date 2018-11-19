@@ -4,11 +4,8 @@
 \alias{read_malmquist}
 \title{read_malmquist}
 \usage{
-read_data(datadea, 
-             nper, 
-             percol, 
-             arrangement = c("horizontal", "vertical"),
-             ...)
+read_malmquist(datadea,
+nper = NULL, percol = NULL,arrangement  = c("horizontal","vertical"),...)
 }
 \arguments{
 \item{datadea}{Dataframe with DEA data.}
@@ -19,23 +16,7 @@ read_data(datadea,
 
 \item{arrangement}{Horizontal with data in wide format. Vertical with data in long format.}
 
-\item{dmus}{Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.}
-
-\item{ni}{Number of inputs, if inputs are in columns 2:(\code{ni} + 1) (if DMUs are in the first column) or 1:\code{ni} (no DMUs column).}
-
-\item{no}{Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).}
-
-\item{inputs}{Columns (numbers or names) of inputs (optional). It prevails over \code{ni}.}
-
-\item{outputs}{Columns (numbers or names) of outputs (optional). It prevails over \code{no}.}
-
-\item{nc_inputs}{A numeric vector containing non-controllable inputs.}
-
-\item{nc_outputs}{A numeric vector containing non-controllable outputs.}
-
-\item{nd_inputs}{A numeric vector containing non-discretionary inputs.}
-
-\item{nd_outputs}{A numeric vector containing non-discretionary outputs.}
+\item{...}{Other options to be passed to the read_data function}
 }
 \value{
 An object of class \code{deadata}

@@ -9,7 +9,7 @@ rts(deamodel, thr = 1e-4)
 \arguments{
 \item{deamodel}{Object of class dea obtained with some of the dea functions.}
 
-\item{thr}{Threshold for}
+\item{thr}{Threshold for the tolerance for considering something = 1. Defults to 1e-4.}
 }
 \description{
 Extract the returns to scale.

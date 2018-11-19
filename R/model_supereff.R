@@ -101,6 +101,14 @@ model_supereff <-
   supereff_modelname <- match.arg(supereff_modelname)
   model_modelname <- paste("model", supereff_modelname, sep = "_")
   
+  # Zeros in input and output data. Case 2 (Tone 2001)
+  nzimin <- apply(datadea$input, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  nzomin <- apply(datadea$output, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  for (ii in dmu_eval) {
+    datadea$input[which(datadea$input[, ii] == 0), ii] <- nzimin[which(datadea$input[, ii] == 0)]
+    datadea$output[which(datadea$output[, ii] == 0), ii] <- nzomin[which(datadea$output[, ii] == 0)]
+  }
+  
   DMU <- vector(mode = "list", length = nde)
   names(DMU) <- dmunames[dmu_eval]
   

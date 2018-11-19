@@ -14,7 +14,8 @@ model_sbmeff(datadea,
             L = 1,
             U = 1,
             compute_target = TRUE,
-            returnlp = FALSE)
+            returnlp = FALSE,
+            ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
@@ -41,6 +42,8 @@ with weights to outputs corresponding to the relative importance of items.}
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
+
+\item{...}{Other options (currently not implemented)}
 }
 \description{
 Calculate the SBM model proposed by Tone (2001).

@@ -5,15 +5,9 @@
 #' 
 #' (2) The multiplier model can have alternate optimal solutions (see note 1 in model_multiplier). So, depending on the optimal weights selected we can obtain different cross-efficinecy scores.
 #' 
-#' @usage cross_efficiency(datadea,
-#'             dmu_eval = NULL,
-#'             dmu_ref = NULL,
-#'             epsilon = 0,
-#'             orientation = c("io", "oo"),
-#'             rts = c("crs", "vrs"),
-#'             selfapp = TRUE,
-#'             M2 = TRUE,
-#'             M3 = TRUE)
+#' @usage cross_efficiency(datadea, dmu_eval = NULL, dmu_ref = NULL, epsilon = 0, 
+#' orientation = c("io", "oo"), rts = c("crs", "vrs"), selfapp = TRUE, M2 = TRUE,
+#'  M3 = TRUE)
 #' 
 #' @param datadea An object of class \code{dea} or \code{deadata}. If it is of class \code{dea} it must have
 #'                been obtained with some of the multiplier DEA models.
@@ -602,7 +596,7 @@ cross_efficiency <- function(datadea,
   
   ########## Return ##########
   
-  return(list(orientation = orientation,
+  deaOutput <- list(orientation = orientation,
               rts = rts,
               selfapp = selfapp,
               Arbitrary = Arbitrary,
@@ -613,6 +607,9 @@ cross_efficiency <- function(datadea,
               data = datadea,
               dmu_eval = dmu_eval,
               dmu_ref = dmu_ref,
-              epsilon = epsilon))
+              epsilon = epsilon,
+              modelname = "cross_efficiency")
+  return(structure(deaOutput, class = "dea"))
+  
   
 }

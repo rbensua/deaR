@@ -4,9 +4,7 @@
 \alias{undesirable_basic}
 \title{Undesirable inputs and outputs for basic DEA model.}
 \usage{
-undesirable_io(datadea,
-                      ud_inputs = NULL,
-                      ud_outputs = NULL,
+undesirable_basic(datadea,
                       vtrans_i = NULL,
                       vtrans_o = NULL)
 }
@@ -20,10 +18,6 @@ then it applies the "max + 1" translation to all undesirable inputs.}
 
 \item{vtrans_o}{Numeric vector of translation for undesirable outputs, analogous to
 \code{vtrans_i}, but applied to outputs.}
-
-\item{ud_inputs}{Undesirable inputs.}
-
-\item{ud_outputs}{Undesirable outputs.}
 }
 \value{
 An object of class \code{deadata} or \code{deadata_fuzzy}.

@@ -4,17 +4,9 @@
 #' \code{input}, \code{output}, \code{dmunames}, \code{nc_inputs}, \code{nc_outputs}, \code{nd_inputs}, \code{nd_outputs}.
 #'
 #' @usage read_data(datadea,
-#'              dmus = 1,
-#'              ni = NULL,
-#'              no = NULL,
-#'              inputs = NULL,
-#'              outputs = NULL,
-#'              nc_inputs = NULL,
-#'              nc_outputs = NULL,
-#'              nd_inputs = NULL,
-#'              nd_outputs = NULL,
-#'              ud_inputs = NULL,
-#'              ud_outputs = NULL)
+#' ni = NULL, no = NULL, dmus = 1, inputs = NULL, outputs = NULL, nc_inputs = NULL,
+#' nc_outputs = NULL, nd_inputs = NULL, nd_outputs = NULL, ud_inputs = NULL, 
+#' ud_outputs = NULL)
 #'              
 #' @param datadea Data frame with DEA data.
 #' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be \code{NULL}.

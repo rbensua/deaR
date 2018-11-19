@@ -29,6 +29,7 @@
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets. 
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
+#' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).

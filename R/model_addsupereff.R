@@ -29,6 +29,7 @@
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets, projections and slacks. 
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
+#' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -138,6 +139,15 @@ model_addsupereff <-
   outputnames <- rownames(output)
   ni <- nrow(input) # number of  inputs
   no <- nrow(output) # number of outputs
+  
+  # Zeros in input and output data. Case 2 (Tone 2001)
+  nzimin <- apply(input, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  nzomin <- apply(output, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  for (ii in dmu_eval) {
+    input[which(input[, ii] == 0), ii] <- nzimin[which(input[, ii] == 0)]
+    output[which(output[, ii] == 0), ii] <- nzomin[which(output[, ii] == 0)]
+  }
+  
   inputref <- matrix(input[, dmu_ref], nrow = ni) 
   outputref <- matrix(output[, dmu_ref], nrow = no)
   

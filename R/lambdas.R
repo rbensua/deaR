@@ -91,6 +91,9 @@ lambdas <-
         stop("No lambda parameters in this solution!")
       }
       
+    }else{
+      stop("Guo-Tanaka model does not have lambdas!")
+      
     }
     
   } else {

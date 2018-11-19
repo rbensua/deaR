@@ -11,8 +11,8 @@
 #' (2) With undesirable inputs use input-oriented BCC model, and with undesirable outputs use output-oriented BCC model. Alternatively, you can also treat the undesirable outputs as inputs and the apply the input-oriented BCC model (similarly with undesirable inputs).
 #' 
 #' @usage model_basic(datadea,
-#'             dmu_ref = NULL,
 #'             dmu_eval = NULL,
+#'             dmu_ref = NULL,
 #'             orientation = c("io", "oo", "dir"),
 #'             dir_input = NULL,
 #'             dir_output = NULL,
@@ -57,6 +57,7 @@
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets of the max slack solution. 
 #' @param compute_multiplier Logical. If it is \code{TRUE}, it computes multipliers (dual solution) when \code{orientation} is "io" or "oo".
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.
+#' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).

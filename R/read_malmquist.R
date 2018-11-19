@@ -2,25 +2,14 @@
 #'  
 #' @description This function creates, from a data frame, a list \code{deadata},
 #'
-#' @usage read_data(datadea, 
-#'              nper, 
-#'              percol, 
-#'              arrangement = c("horizontal", "vertical"),
-#'              ...)
+#' @usage read_malmquist(datadea,
+#' nper = NULL, percol = NULL,arrangement  = c("horizontal","vertical"),...) 
 #'              
 #' @param datadea Dataframe with DEA data.
 #' @param nper Number of time periods (with dataset in wide format).
 #' @param percol Column of time period (with dataset in long format).
 #' @param arrangement Horizontal with data in wide format. Vertical with data in long format.
-#' @param dmus Column (number or name) of DMUs (optional). If there is not any DMU column, then it must be NULL. If not specified, DMUs are in the first column.
-#' @param ni Number of inputs, if inputs are in columns 2:(\code{ni} + 1) (if DMUs are in the first column) or 1:\code{ni} (no DMUs column).
-#' @param no Number of outputs, if outputs are in columns (\code{ni} + 2):(\code{ni} + \code{no} + 1) (if DMUs are in the first column) or (\code{ni} + 1):(\code{ni} + \code{no}) (no DMUs column).
-#' @param inputs Columns (numbers or names) of inputs (optional). It prevails over \code{ni}. 
-#' @param outputs Columns (numbers or names) of outputs (optional). It prevails over \code{no}.
-#' @param nc_inputs A numeric vector containing non-controllable inputs.
-#' @param nc_outputs A numeric vector containing non-controllable outputs.
-#' @param nd_inputs A numeric vector containing non-discretionary inputs.
-#' @param nd_outputs A numeric vector containing non-discretionary outputs.
+#' @param ... Other options to be passed to the read_data function
 #'
 #' @return An object of class \code{deadata}
 #' 

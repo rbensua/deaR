@@ -112,20 +112,22 @@ read_data_fuzzy <- function(datadea,
   ni <- length(inputs.mL) # Number of inputs
   no <- length(outputs.mL) # Number of outputs
   
-  if(!is.character(inputs.mL)){
-  inputnames <- colnames(datadea)[inputs.mL]
-  }else {
-     inputnames <- inputs.mL
-   }
-  if(!is.character(outputs.mL)){
-  outputnames <- colnames(datadea)[outputs.mL]
-  }else{
-  outputnames <- outputs.mL
+  if(!is.character(inputs.mL)) {
+    inputnames <- colnames(datadea)[inputs.mL]
+  } else {
+    inputnames <- inputs.mL
+  }
+  if(!is.character(outputs.mL)) {
+    outputnames <- colnames(datadea)[outputs.mL]
+  } else {
+    outputnames <- outputs.mL
   }
   input.mL <- t(datadea[, inputs.mL])
   output.mL <- t(datadea[, outputs.mL])
   colnames(input.mL) <- dmunames
   colnames(output.mL) <- dmunames
+  rownames(input.mL) <- inputnames
+  rownames(output.mL) <- outputnames
 
   if (is.null(inputs.mR)) {
     input.mR <- input.mL
@@ -212,7 +214,6 @@ read_data_fuzzy <- function(datadea,
   if (!is.null(ud_outputs)) {
     names(ud_outputs) <- outputnames[ud_outputs]
   }
-  
   
   res <- list(
     input = list(

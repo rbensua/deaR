@@ -31,6 +31,7 @@
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
 #' @param compute_lambda Logical. If it is \code{TRUE}, it computes the dual problem and lambdas.
+#' @param ... Ignored, for compatibility issues.
 #'      
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).

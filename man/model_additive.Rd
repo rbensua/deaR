@@ -39,6 +39,8 @@ with the weights of the output slacks. If 0, input-oriented.}
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
+
+\item{...}{Ignored, for compatibility issues.}
 }
 \description{
 Solve the additive model of Charnes et. al (1985). With the current version of deaR, it is possible to solve input-oriented, output-oriented, and non-oriented additive dea model under constant and non-constants returns-to-scale.

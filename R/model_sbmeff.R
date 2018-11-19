@@ -12,7 +12,8 @@
 #'             L = 1,
 #'             U = 1,
 #'             compute_target = TRUE,
-#'             returnlp = FALSE)
+#'             returnlp = FALSE,
+#'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -28,6 +29,7 @@
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets. 
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
+#' @param ... Other options (currently not implemented)
 #' 
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -148,12 +150,15 @@ model_sbmeff <-
   outputnames <- rownames(output)
   ni <- nrow(input) # number of  inputs
   no <- nrow(output) # number of outputs
+  
+  # Zeros in output data. Case 2 (Tone 2001)
+  nzomin <- apply(output, MARGIN = 1, function(x) min(x[x > 0])) / 100
+  for (ii in dmu_eval) {
+    output[which(output[, ii] == 0), ii] <- nzomin[which(output[, ii] == 0)]
+  }
+  
   inputref <- matrix(input[, dmu_ref], nrow = ni) 
   outputref <- matrix(output[, dmu_ref], nrow = no)
-  
-  if ((any(input == 0)) || (any(output == 0))) {
-    stop("No zero inputs/outputs supported for the moment.")
-  }
   
   nc_inputs <- datadea$nc_inputs
   nc_outputs <- datadea$nc_outputs
@@ -246,8 +251,18 @@ model_sbmeff <-
     
     ii <- dmu_eval[i]
     
+    # Zeros in input data
+    zero_inputs <- which(input[, ii] == 0)
+    nzinput <- input[, ii]
+    nzinput[zero_inputs] <- 1 # zero inputs become 1
+    weight_input[zero_inputs, i] <- 0 # weights corresponding to zero inputs become 0
+    nzi_sumwi <- sum(weight_input[, i])
+    if (nzi_sumwi == 0) {
+      stop("A sum of nonzero-input weights is 0.")
+    }
+    
     # Vector de coeficientes de la función objetivo
-    f.obj <- c(1, rep(0, ndr), -aux_i * weight_input[, i] / (sumwi[i] * input[, ii]), rep(0, no))
+    f.obj <- c(1, rep(0, ndr), -aux_i * weight_input[, i] / (nzi_sumwi * nzinput), rep(0, no))
       
     # Matriz técnica
     f.con.0 <- c(1, rep(0, ndr + ni), aux_o * weight_output[, i] / (sumwo[i] * output[, ii]))
@@ -266,7 +281,7 @@ model_sbmeff <-
       tslack_output <- rep(0, no)
       names(tslack_output) <- outputnames
       var <- list(t = t, tlambda = tlambda, tslack_input = tslack_input, tslack_output = tslack_output)
-      DMU[[i]] <- list(direction = obj, objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
+      DMU[[i]] <- list(direction = f.dir, objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
                        var)
       
     } else {

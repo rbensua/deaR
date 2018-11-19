@@ -13,6 +13,9 @@
 #'             weight_slack = 1,
 #'             compute_target = TRUE,
 #'             returnlp = FALSE,
+#'             weight_slack_i = NULL, 
+#'             weight_slack_o = NULL,
+#'             weight = NULL,
 #'             ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
@@ -32,6 +35,10 @@
 #'                     If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} with the weights of the input slacks for the max slack solution.
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets of the max slack solution. 
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.
+#' @param weight_slack_i This input is not used (it is only for compatibility issues)
+#' @param weight_slack_o This input is not used (it is only for compatibility issues)
+#' @param weight This input is not used (it is only for compatibility issues)
+#' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -79,7 +86,10 @@ model_deaps <-
            maxslack = TRUE,
            weight_slack = 1,
            compute_target = TRUE,
-           returnlp = FALSE, weight_slack_i = NULL, weight_slack_o = NULL,weight = NULL,
+           returnlp = FALSE,
+           weight_slack_i = NULL, 
+           weight_slack_o = NULL,
+           weight = NULL,
            ...) {
     
   # Cheking whether datadea is of class "deadata" or not...  

@@ -5,7 +5,7 @@
 
 #' @usage rts(deamodel, thr = 1e-4)
 #' @param deamodel Object of class dea obtained with some of the dea functions.
-#' @param thr Threshold for 
+#' @param thr Threshold for the tolerance for considering something = 1. Defults to 1e-4.
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
 #' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}

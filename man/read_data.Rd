@@ -5,17 +5,9 @@
 \title{read_data}
 \usage{
 read_data(datadea,
-             dmus = 1,
-             ni = NULL,
-             no = NULL,
-             inputs = NULL,
-             outputs = NULL,
-             nc_inputs = NULL,
-             nc_outputs = NULL,
-             nd_inputs = NULL,
-             nd_outputs = NULL,
-             ud_inputs = NULL,
-             ud_outputs = NULL)
+ni = NULL, no = NULL, dmus = 1, inputs = NULL, outputs = NULL, nc_inputs = NULL,
+nc_outputs = NULL, nd_inputs = NULL, nd_outputs = NULL, ud_inputs = NULL, 
+ud_outputs = NULL)
 }
 \arguments{
 \item{datadea}{Data frame with DEA data.}

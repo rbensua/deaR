@@ -28,6 +28,7 @@
 #'                     If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} with the weights of the input slacks for the max slack solution.
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets of the max slack solution. 
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.
+#' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).

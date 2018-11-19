@@ -2,9 +2,9 @@
 #'   
 #' @description Extract the efficiencies of the DMUs from a dea solution.
 #' 
-#' @usage efficiencies(deasol)
 #' 
-#' @param deasol Object of class dea or dea_fuzzy obtained with some of the dea model functions.
+#' @param x Object of class dea or dea_fuzzy obtained with some of the dea model functions.
+#' @param ... Other options (for compatibility reasons)
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -35,8 +35,8 @@
 
 
 efficiencies.dea <-
-  function(deasol) {
-    
+  function(x, ...) {
+    deasol <- x
     if ("efficiency" %in% names(deasol$DMU[[1]])) {
       eff <- unlist(lapply(deasol$DMU, function(x)
         x$efficiency))

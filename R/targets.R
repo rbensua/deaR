@@ -71,8 +71,8 @@ targets <- function(deasol) {
     
     dmunames_eval <- names(deasol$dmu_eval)
     dmunames_ref <- names(deasol$dmu_ref)
-    inputnames <- names(deasol$data$input$mL[, 1])
-    outputnames <- names(deasol$data$output$mL[, 1])
+    inputnames <- rownames(deasol$data$input$mL)
+    outputnames <- rownames(deasol$data$output$mL)
     nde <- length(deasol$dmu_eval)
     ndr <- length(deasol$dmu_ref)
     ni <- length(deasol$data$input$mL[, 1])

@@ -4,15 +4,9 @@
 \alias{cross_efficiency}
 \title{Cross efficiency tables}
 \usage{
-cross_efficiency(datadea,
-            dmu_eval = NULL,
-            dmu_ref = NULL,
-            epsilon = 0,
-            orientation = c("io", "oo"),
-            rts = c("crs", "vrs"),
-            selfapp = TRUE,
-            M2 = TRUE,
-            M3 = TRUE)
+cross_efficiency(datadea, dmu_eval = NULL, dmu_ref = NULL, epsilon = 0, 
+orientation = c("io", "oo"), rts = c("crs", "vrs"), selfapp = TRUE, M2 = TRUE,
+ M3 = TRUE)
 }
 \arguments{
 \item{datadea}{An object of class \code{dea} or \code{deadata}. If it is of class \code{dea} it must have
