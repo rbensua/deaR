@@ -185,6 +185,10 @@ modelfuzzy_possibilistic <-
         }
       }
       
+      #if (poss_modelname == "basic") {
+
+      #}
+      
       #if (poss_modelname == "additive") {
       #  DMU[[j]] <- c(objval, DMU[[j]])
       #} else if (poss_modelname == "nonradial"){

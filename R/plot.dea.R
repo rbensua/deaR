@@ -66,6 +66,7 @@ plot.dea <- function(x, ...){
    # Efficiencies histogram ----------
    if(!modelname %in% c("nonradial", "deaps")){
    eff <- data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
+   eff <- eff[complete.cases(eff),]
    #eff$iseff <- ifelse(eff$eff<1, "Inefficient" , "Efficient")
    eff$iseff <- ifelse(eff$eff<1, 0 , 1)
    if(!modelname %in% c("supereff_basic", "sbmsupereff")){
@@ -138,9 +139,10 @@ plot.dea <- function(x, ...){
    # Reference Graph ------------------------
    
    if(!modelname %in% c("supereff_basic","sbmsupereff")){
+   lmbd <- lmbd[complete.cases(lmbd),]
    adjmatrix <- lmbd>0
    G <- graph.adjacency(adjmatrix,diag = FALSE )
-  
+   
    efficient <- which(dmunames %in% effdmus)
    non_efficient <- which(dmunames %in% urefnames)
    
