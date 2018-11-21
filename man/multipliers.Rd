@@ -7,20 +7,20 @@
 multipliers(deasol)
 }
 \arguments{
-\item{deasol}{Object of class dea obtained with some of the dea model functions.}
+\item{deasol}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
 }
 \description{
-Extract the multipliers of the DMUs from a dea solution.
+Extract the multipliers of the DMUs from a dea or dea_fuzzy solution.
 }
 \examples{
  data("Coll_Blasco_2006")
  data_example <- read_data(Coll_Blasco_2006,
-                           dmus=1, 
-                           ni=2, 
-                           no=2)
+                           dmus = 1, 
+                           ni = 2, 
+                           no = 2)
  result <- model_multiplier(data_example,
-                            orientation="io", 
-                            rts="crs")
+                            orientation = "io", 
+                            rts = "crs")
  multipliers(result)
  
 }

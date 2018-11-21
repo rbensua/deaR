@@ -38,20 +38,68 @@ rts <- function(deamodel, thr =  1e-4){
   if(deamodel$modelname != "multiplier"){
     lamb <- lambdas(deamodel)
     lambsum <- rowSums(lamb)
-    if(deamodel$rts == "crs"){
-      rts <- ifelse(lambsum > 1 + thr , "Decreasing",
-                    ifelse(abs(lambsum - 1) < thr, "Constant", "Increasing"))
-      res <- data.frame(lambsum = lambsum, rts = rts)
-    } else {
-      res <- data.frame(lambsum = round(lambsum,5))
-      warning("rts function with variable returns to scale does not make much sense!")
+    if(deamodel$orientation %in% c("io","oo")){
+      switch(deamodel$rts,
+             crs = {
+               rts <- ifelse(lambsum > 1 + thr , "Decreasing",
+                             ifelse(abs(lambsum - 1) < thr, "Constant", "Increasing"))
+             },
+             vrs = {
+               rts <- ifelse(abs(lambsum - 1) < thr, "Variable","Variable")
+             },
+             nirs = {
+               rts <- ifelse(lambsum < 1-thr, "Decreasing","Constant")
+             },
+             ndrs = {
+               rts <- ifelse(lambsum > 1 + thr, "Increasing","Constant")
+             },
+             stop("General returns to scale not implemented yet!")
+             
+      )
+    }else{
+      stop("Only input/output orientations are implemented!")
     }
+    res <- data.frame(lambsum = lambsum, rts = rts)
   }else {
     k <- do.call(rbind, lapply(deamodel$DMU, function(x) x$multiplier_rts))
-    rts <- ifelse(k > 1 + thr , "Decreasing",
-                  ifelse(abs(k - 1) < thr, "Constant", "Increasing"))
-    res <- data.frame(k = unname(k), rts = rts)
-  }
+    dimnames(k)[[2]] <- "k"
+    if(deamodel$orientation == "io"){
+      switch(deamodel$rts,
+             crs = {
+               rts <- ifelse(abs(k) > thr , "Error", "Constant")
+             },
+             vrs = {
+               rts <- ifelse(k < -thr, "Decreasing", ifelse(abs(k)< thr, "Constant","Increasing"))
+             },
+             nirs = {
+               rts <- ifelse(k<-thr, "Decreasing","Constant")
+             },
+             ndrs = {
+               rts <- ifelse(k > thr, "Increasing","Constant")
+             },
+             stop("General returns to scale not implemented yet!")
+      )
+    }else{
+      switch(deamodel$rts,
+             crs = {
+               rts <- ifelse(abs(k) > thr , "Error", "Constant")
+             },
+             vrs = {
+               rts <- ifelse(k < -thr, "Increasing", ifelse(abs(k)< thr, "Constant","Decreasing"))
+             },
+             nirs = {
+               rts <- ifelse(k > thr, "Decreasing","Constant")
+             },
+             ndrs = {
+               rts <- ifelse(k < -thr, "Increasing","Constant")
+             },
+             stop("General returns to scale not implemented yet!")
+      )
+    }
+    
+    res <- data.frame(k = k, rts = rts)
+    colnames(res) <- c("k","rts")
+   }
   
   return(res)
 }

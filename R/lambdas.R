@@ -50,9 +50,10 @@ lambdas <-
     dmunames_ref <- names(deasol$dmu_ref)
     nde <- length(deasol$dmu_eval)
     ndr <- length(deasol$dmu_ref)
-    nalpha <- length(deasol$alpha)
     
     if (grepl("kaoliu", deasol$modelname)) {
+      
+      nalpha <- length(deasol$alpha)
       
       if ("lambda" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
         
@@ -75,14 +76,16 @@ lambdas <-
       
     } else if (grepl("possibilistic", deasol$modelname)) {
       
-      if ("lambda" %in% names(deasol$alphacut[[1]]$DMU[[1]])) {
+      nh <- length(deasol$h)
+      
+      if ("lambda" %in% names(deasol$hlevel[[1]]$DMU[[1]])) {
         
         lamb <- array(0,
-                      dim = c(nde, ndr, nalpha),
-                      dimnames = list(dmunames_eval, dmunames_ref, names(deasol$alphacut)))
+                      dim = c(nde, ndr, nh),
+                      dimnames = list(dmunames_eval, dmunames_ref, names(deasol$hlevel)))
         
-        for (i in 1:nalpha) {
-          lamb[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x)
+        for (i in 1:nh) {
+          lamb[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
             x$lambda))
         }
         return(round(lamb,4))

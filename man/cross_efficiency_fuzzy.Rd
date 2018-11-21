@@ -6,7 +6,7 @@
 \usage{
 cross_efficiency_fuzzy(datadea,
             orientation = c("io", "oo"),
-            alpha = 1,
+            h = 1,
             selfapp = TRUE)
 }
 \arguments{
@@ -15,14 +15,14 @@ been obtained with \code{modelfuzzy_guotanaka}.}
 
 \item{orientation}{A string, equal to "io" (input-oriented) or "oo" (output-oriented).}
 
-\item{alpha}{A numeric vector with the alpha-cuts (in [0,1]).}
+\item{h}{A numeric vector with the h-levels (in [0,1]).}
 
 \item{selfapp}{Logical. If it is \code{TRUE}, self-appraisal is included in the average scores of
 \code{A} and \code{e}.}
 }
 \description{
 Computes the cross-efficiency fuzzy table from dea data or a Guo-Tanaka dea model solution.
-The (crisp) relative efficiencies for the case \code{alpha} = 1 are obtained from the CCR model (\code{model_multiplier}).
+The (crisp) relative efficiencies for the case \code{h} = 1 are obtained from the CCR model (\code{model_multiplier}).
 }
 \examples{
  data("Guo_Tanaka_2001")
@@ -33,7 +33,7 @@ The (crisp) relative efficiencies for the case \code{alpha} = 1 are obtained fro
                             outputs.mL = 6:7, 
                             outputs.dL = 8:9)
  result <- cross_efficiency_fuzzy(datadea = datadea, 
-                                 alpha = seq(0, 1, 0.2))
+                                  h = seq(0, 1, 0.2))
  
 }
 \references{

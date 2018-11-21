@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.dea.R
 \name{summary.dea}
 \alias{summary.dea}
-\title{Summary}
+\title{Summary conventional DEA model.}
 \usage{
 \method{summary}{dea}(object, exportExcel = TRUE, filename = NULL, ...)
 }
@@ -23,11 +23,18 @@ with different methods (Arbitrary, Method II or Method III (see CITA)) or, in ca
  malmquist index, a single data.frame with the coefficients for the different periods.
 }
 \description{
-Summary of the results obtained by a dea model.
+Summary of the results obtained by a conventiona DEA model.
 }
 \examples{
-data_example <- read_data(datadea = Fortune500, dmus = 1, inputs = 2:4, outputs = 5:6)
-
-deamodel <- model_basic(data_example)
-summary(deamodel, exporExcel = FALSE)
+data("PFT1981") 
+# Selecting DMUs in Program Follow Through (PFT)
+PFT <- PFT1981[1:49, ] 
+PFT <- read_data(PFT, 
+                 dmus = 1, 
+                 inputs = 2:6, 
+                 outputs = 7:9 )
+eval_pft <- model_basic(PFT, 
+                        orientation = "io", 
+                        rts = "crs")
+summary(eval_pft, exporExcel = FALSE)
 }

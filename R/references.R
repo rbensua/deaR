@@ -93,12 +93,12 @@ references <- function(deasol,
     dmunames_ref <- deasol$data$dmunames[dmu_ref]
     ni <- length(deasol$data$input$mL[, 1])
     no <- length(deasol$data$output$mL[, 1])
-    nalpha <- length(deasol$alpha)
-    
-    referencelist <- vector(mode = "list", length = nalpha) # Preallocate vector
-    names(referencelist) <- names(deasol$alphacut)
     
     if (grepl("kaoliu", deasol$modelname)) {
+      nalpha <- length(deasol$alpha)
+      
+      referencelist <- vector(mode = "list", length = nalpha) # Preallocate vector
+      names(referencelist) <- names(deasol$alphacut)
       
       lamb <- lambdas(deasol)
       
@@ -175,13 +175,17 @@ references <- function(deasol,
       }
       
     } else if (grepl("possibilistic", deasol$modelname)) {
+      nh <- length(deasol$h)
+      
+      referencelist <- vector(mode = "list", length = nh) # Preallocate vector
+      names(referencelist) <- names(deasol$hlevel)
       
       lamb <- lambdas(deasol)
       
-      for (ii in 1:nalpha) {
+      for (ii in 1:nh) {
         
         if(nrow(lamb[, , ii]) != nde) {
-          dmu_eval <- which(sapply(deasol$alphacut[[ii]]$DMU, function(x) !is.null(x$lambda)))
+          dmu_eval <- which(sapply(deasol$hlevel[[ii]]$DMU, function(x) !is.null(x$lambda)))
           nde <- length(dmu_eval)
         }
         

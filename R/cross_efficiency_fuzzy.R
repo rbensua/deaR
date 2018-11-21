@@ -1,17 +1,17 @@
 #' @title Cross efficiency fuzzy tables
 #'   
 #' @description Computes the cross-efficiency fuzzy table from dea data or a Guo-Tanaka dea model solution.
-#' The (crisp) relative efficiencies for the case \code{alpha} = 1 are obtained from the CCR model (\code{model_multiplier}).
+#' The (crisp) relative efficiencies for the case \code{h} = 1 are obtained from the CCR model (\code{model_multiplier}).
 #' 
 #' @usage cross_efficiency_fuzzy(datadea,
 #'             orientation = c("io", "oo"),
-#'             alpha = 1,
+#'             h = 1,
 #'             selfapp = TRUE)
 #' 
 #' @param datadea An object of class \code{dea_fuzzy} or \code{deadata_fuzzy}. If it is of class \code{dea_fuzzy} it must have
 #'                been obtained with \code{modelfuzzy_guotanaka}.
 #' @param orientation A string, equal to "io" (input-oriented) or "oo" (output-oriented).
-#' @param alpha A numeric vector with the alpha-cuts (in [0,1]).
+#' @param h A numeric vector with the h-levels (in [0,1]).
 #' @param selfapp Logical. If it is \code{TRUE}, self-appraisal is included in the average scores of
 #'                \code{A} and \code{e}.
 #'   
@@ -45,13 +45,13 @@
 #'                             outputs.mL = 6:7, 
 #'                             outputs.dL = 8:9)
 #'  result <- cross_efficiency_fuzzy(datadea = datadea, 
-#'                                  alpha = seq(0, 1, 0.2))
+#'                                   h = seq(0, 1, 0.2))
 #'  
 #' @export
 
 cross_efficiency_fuzzy <- function(datadea,
                                    orientation = c("io", "oo"),
-                                   alpha = 1,
+                                   h = 1,
                                    selfapp = TRUE) {
   
   if (is.dea_fuzzy(datadea)) {
@@ -69,7 +69,7 @@ cross_efficiency_fuzzy <- function(datadea,
     }
     
     orientation <- deasol$orientation
-    alpha <- deasol$alpha
+    h <- deasol$h
     
   } else if (is.deadata_fuzzy(datadea)) {
     
@@ -79,15 +79,15 @@ cross_efficiency_fuzzy <- function(datadea,
     dmunames <- datadea$dmunames
     nd <- length(dmunames) # number of dmus
     
-    deasol <- modelfuzzy_guotanaka(datadea = datadea, orientation = orientation, alpha = alpha)
+    deasol <- modelfuzzy_guotanaka(datadea = datadea, orientation = orientation, h = h)
     
   } else {
     stop("Input should be a dea_fuzzy or deadata_fuzzy class object!")
   }
   
-  nalpha <- length(alpha) # number of alpha-cuts
-  alphacut <- vector(mode = "list", length = nalpha)
-  names(alphacut) <- as.character(alpha)
+  nh <- length(h) # number of h-levels
+  hlevel <- vector(mode = "list", length = nh)
+  names(hlevel) <- as.character(h)
   
   if (orientation == "io") {
     input.d <- datadea$input$dL # spread
@@ -107,7 +107,7 @@ cross_efficiency_fuzzy <- function(datadea,
     #f.dir <- c("=", "<=", g0.dir, rep("<=", nd + nd), rep("=", nd - 1))
   }
   
-  for (i in 1:nalpha) {
+  for (i in 1:nh) {
     
     input.m <- datadea$input$mL # center
     output.m <- datadea$output$mL
@@ -116,12 +116,12 @@ cross_efficiency_fuzzy <- function(datadea,
     ni <- nrow(input.m) # number of  inputs
     no <- nrow(output.m) # number of outputs
     
-    input.L <- deasol$alphacut[[i]]$input$Lower
-    input.U <- deasol$alphacut[[i]]$input$Upper
-    output.L <- deasol$alphacut[[i]]$output$Lower
-    output.U <- deasol$alphacut[[i]]$output$Upper
-    mul_input <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x) x$multiplier_input))
-    mul_output <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x) x$multiplier_output))
+    input.L <- deasol$hlevel[[i]]$input$Lower
+    input.U <- deasol$hlevel[[i]]$input$Upper
+    output.L <- deasol$hlevel[[i]]$output$Lower
+    output.U <- deasol$hlevel[[i]]$output$Upper
+    mul_input <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x) x$multiplier_input))
+    mul_output <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x) x$multiplier_output))
     
     cross_eff.m <- (mul_output %*% output.m) / (mul_input %*% input.m)
     cross_eff.dL <- cross_eff.m - (mul_output %*% output.L) / (mul_input %*% input.U)
@@ -198,10 +198,10 @@ cross_efficiency_fuzzy <- function(datadea,
     if (orientation == "oo") {
       input.m <- -datadea$output$mL
       output.m <- -datadea$input$mL
-      input.L <- -deasol$alphacut[[i]]$output$Lower
-      input.U <- -deasol$alphacut[[i]]$output$Upper
-      output.L <- -deasol$alphacut[[i]]$input$Lower
-      output.U <- -deasol$alphacut[[i]]$input$Upper
+      input.L <- -deasol$hlevel[[i]]$output$Lower
+      input.U <- -deasol$hlevel[[i]]$output$Upper
+      output.L <- -deasol$hlevel[[i]]$input$Lower
+      output.U <- -deasol$hlevel[[i]]$input$Upper
       mul_output <- mul_input
     }
     inputnames <- rownames(input.L)
@@ -209,7 +209,7 @@ cross_efficiency_fuzzy <- function(datadea,
     ni <- nrow(input.L) # number of  inputs
     no <- nrow(output.L) # number of outputs
     
-    a <- alpha[i]
+    a <- h[i]
     e_spread <- max(input.d / input.m)
     one.L <- 1 - (1 - a) * e_spread
     one.U <- 1 + (1 - a) * e_spread
@@ -427,11 +427,11 @@ cross_efficiency_fuzzy <- function(datadea,
                   Y2 = Y2)
     }
     
-    alphacut[[i]] <- list(input = deasol$alphacut[[i]]$input,
-                          output = deasol$alphacut[[i]]$output,
-                          Arbitrary = Arbitrary,
-                          Agg = Agg,
-                          Ben = Ben)
+    hlevel[[i]] <- list(input = deasol$hlevel[[i]]$input,
+                        output = deasol$hlevel[[i]]$output,
+                        Arbitrary = Arbitrary,
+                        Agg = Agg,
+                        Ben = Ben)
     
   }
   
@@ -440,8 +440,8 @@ cross_efficiency_fuzzy <- function(datadea,
   return(list(orientation = orientation,
               rts = "crs",
               selfapp = selfapp,
-              alpha = alpha,
-              alphacut = alphacut,
+              h = h,
+              hlevel = hlevel,
               data = datadea))
   
 }

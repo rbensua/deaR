@@ -88,12 +88,12 @@ slacks <- function(deasol) {
     inputnames <- rownames(deasol$data$input$mL)
     outputnames <- rownames(deasol$data$output$mL)
     nde <- length(deasol$dmu_eval)
-    ndr <- length(deasol$dmu_ref)
+    #ndr <- length(deasol$dmu_ref)
     ni <- length(deasol$data$input$mL[, 1])
     no <- length(deasol$data$output$mL[, 1])
-    nalpha <- length(deasol$alpha)
     
     if (grepl("kaoliu", deasol$modelname)) {
+      nalpha <- length(deasol$alpha)
       
       slack_input.W <- NULL
       slack_input.B <- NULL
@@ -180,27 +180,28 @@ slacks <- function(deasol) {
       }
       
     } else if (grepl("possibilistic", deasol$modelname)) {
+      nh <- length(deasol$h)
       
-      if (any(grepl("slack", names(deasol$alphacut[[1]]$DMU[[1]])))) {
+      if (any(grepl("slack", names(deasol$hlevel[[1]]$DMU[[1]])))) {
         
         slack_input <- NULL
-        if ("slack_input" %in% names(deasol$alphacut[[1]]$DMU[[1]])) {
+        if ("slack_input" %in% names(deasol$hlevel[[1]]$DMU[[1]])) {
           
           slack_input <- array(0,
-                                 dim = c(nde, ni, nalpha),
-                                 dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+                               dim = c(nde, ni, nh),
+                               dimnames = list(dmunames_eval, inputnames, names(deasol$hlevel)))
           
-          for (i in 1:nalpha) {
-            slack_input[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x)
+          for (i in 1:nh) {
+            slack_input[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
               x$slack_input))
           }
           
           slack_output <- array(0,
-                                  dim = c(nde, no, nalpha),
-                                  dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+                                dim = c(nde, no, nh),
+                                dimnames = list(dmunames_eval, outputnames, names(deasol$hlevel)))
           
-          for (i in 1:nalpha) {
-            slack_output[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x)
+          for (i in 1:nh) {
+            slack_output[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
               x$slack_output))
           }
           

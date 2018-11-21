@@ -77,15 +77,16 @@ targets <- function(deasol) {
     ndr <- length(deasol$dmu_ref)
     ni <- length(deasol$data$input$mL[, 1])
     no <- length(deasol$data$output$mL[, 1])
-    nalpha <- length(deasol$alpha)
     
     if (grepl("kaoliu", deasol$modelname)) {
+      nalpha <- length(deasol$alpha)
       
       target_input.W <- NULL
       target_input.B <- NULL
       target_output.W <- NULL
       target_output.B <- NULL
-      if ("target_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
+      if (("target_input" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) &&
+          !is.null(deasol$alphacut[[1]]$DMU$Worst[[1]]$target_input)) {
         
         target_input.W <- array(0,
                                 dim = c(nde, ni, nalpha),
@@ -163,27 +164,29 @@ targets <- function(deasol) {
       }
       
     } else if (grepl("possibilistic", deasol$modelname)) {
+      nh <- length(deasol$h)
       
-      if (any(grepl("target", names(deasol$alphacut[[1]]$DMU[[1]])))) {
+      if (any(grepl("target", names(deasol$hlevel[[1]]$DMU[[1]])))) {
         
         target_input <- NULL
-        if ("target_input" %in% names(deasol$alphacut[[1]]$DMU[[1]])) {
+        if (("target_input" %in% names(deasol$hlevel[[1]]$DMU[[1]])) &&
+            !is.null(deasol$hlevel[[1]]$DMU[[1]]$target_input)) {
           
           target_input <- array(0,
-                                dim = c(nde, ni, nalpha),
-                                dimnames = list(dmunames_eval, inputnames, names(deasol$alphacut)))
+                                dim = c(nde, ni, nh),
+                                dimnames = list(dmunames_eval, inputnames, names(deasol$hlevel)))
           
-          for (i in 1:nalpha) {
-            target_input[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x)
+          for (i in 1:nh) {
+            target_input[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
               x$target_input))
           }
           
           target_output <- array(0,
-                                 dim = c(nde, no, nalpha),
-                                 dimnames = list(dmunames_eval, outputnames, names(deasol$alphacut)))
+                                 dim = c(nde, no, nh),
+                                 dimnames = list(dmunames_eval, outputnames, names(deasol$hlevel)))
           
-          for (i in 1:nalpha) {
-            target_output[, , i] <- do.call(rbind, lapply(deasol$alphacut[[i]]$DMU, function(x)
+          for (i in 1:nh) {
+            target_output[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
               x$target_output))
           }
           

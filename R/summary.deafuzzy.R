@@ -1,8 +1,8 @@
-#' @title Summary Fuzzy
+#' @title Summary Fuzzy DEA model
 #'   
 #'   
-#' @description Summary of the results obtained by a dea fuzzy model.
-#' @param object An object of class \code{"dea_fuzzy"} obtained with a dea fuzzy
+#' @description Summary of the results obtained by a fuzzy DEA model.
+#' @param object An object of class \code{"dea_fuzzy"} obtained with a fuzzy dea 
 #'  model function (\code{modelfuzzy_guotanaka}, \code{modelfuzzy_kaoliu},
 #'  \code{modelfuzzy_possibilistic}).
 #' @param ... Extra options
@@ -14,7 +14,7 @@
 #' @return If the model is that from Guo and Tanaka (\code{modelfuzzy_guotanaka}), it returns a data.frame
 #' with columns: DMU, alpha cuts and efficiencies.
 #' For the possibilistic model (\code{modelfuzzy_possibilistic}) it returns a data.frame with columns:
-#' DMU, alpha_cuts, efficiencies and the corresponding lambda values
+#' DMU, alpha-cuts, efficiencies and the corresponding lambda values
 #' For the Kao and Liu model (\code{modelfuzzy_kaoliu}), the result may depend on the crisp sub-model used. 
 #' It will contain a data.frame with the efficiencies (if any), the slacks and superslacks (if any), 
 #' the lambda values and the targets.
@@ -22,10 +22,17 @@
 #' If \code{exportExcel} is TRUE, then an Excel file will be created containing as many sheets as necessary 
 #' depending on the variables returned.
 #' @examples
-#' data_example <- read_data_fuzzy(Guo_Tanaka_2001, 
-#' dmus = 1, inputs.mL = 2:3, inputs.dL = 4:5, outputs.mL = 6:7,outputs.dL =8:9)
-#' result <- modelfuzzy_guotanaka(data_example, alpha = c(0, 0.5, 0.75, 1), 
-#' orientation = "io")
+#' data("Leon2003")
+#' data_example <- read_data_fuzzy(Leon2003,
+#'                                 dmus = 1, 
+#'                                 inputs.mL = 2, 
+#'                                 inputs.dL = 3, 
+#'                                 outputs.mL = 4, 
+#'                                 outputs.dL = 5)
+#' result <- modelfuzzy_possibilistic(data_example, 
+#'                                    alpha= seq(0, 1, by = 0.1), 
+#'                                    orientation = "io", 
+#'                                    rts = "vrs")
 #' summary(result)
 #' @method summary dea_fuzzy
 #' @import writexl tidyr
@@ -46,7 +53,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
    eff <- efficiencies(object)
    effmat <- do.call(rbind,lapply(seq(dim(eff)[3]), function(x) eff[,,x] ))
    effdf <- cbind(data.frame(DMU = dimnames(effmat)[[1]],
-                             alpha_cut = rep(object$alpha,each = dim(eff)[1])), 
+                             hlevel = rep(object$h,each = dim(eff)[1])), 
                   data.frame(effmat, row.names = NULL))
    
    if(exportExcel){
@@ -63,8 +70,8 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
    eff <- efficiencies(object)
    eff <- cbind(data.frame(DMU = dimnames(eff)[[1]]), 
                 data.frame(eff, row.names = NULL))
-   eff %>% gather(key = "alpha_cut", value = "efficiency",-DMU) -> eff
-   eff$alpha_cut <- rep(object$alpha, each = length(object$data$dmunames))
+   eff %>% gather(key = "hlevel", value = "efficiency",-DMU) -> eff
+   eff$hlevel <- rep(object$h, each = length(object$data$dmunames))
    
    # Lambdas
    lamb <- lambdas(object)
@@ -95,30 +102,30 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
        eff.Worst <- data.frame(cbind(data.frame(DMU = rownames(eff.Worst)),
                                      eff.Worst), 
                                row.names = NULL)
-       eff.Worst %>% gather(key = "alpha_cut", 
+       eff.Worst %>% gather(key = "alphacut", 
                             value = "efficiency.Worst",-DMU) -> eff.Worst
-       eff.Worst$alpha_cut <- rep(object$alpha, 
+       eff.Worst$alphacut <- rep(object$alpha, 
                                   each = length(object$data$dmunames))
        
        eff.Best <- data.frame(eff$Best, stringsAsFactors = FALSE)
        eff.Best <- data.frame(cbind(data.frame(DMU = rownames(eff.Best)),eff.Best), row.names = NULL)
-       eff.Best %>% gather(key = "alpha_cut", value = "efficiency.Best",-DMU) -> eff.Best
-       eff.Best$alpha_cut <- rep(object$alpha, each = length(object$data$dmunames))
-       eff.df <- merge(eff.Worst,eff.Best, by = c("DMU","alpha_cut"))
+       eff.Best %>% gather(key = "alphacut", value = "efficiency.Best",-DMU) -> eff.Best
+       eff.Best$alphacut <- rep(object$alpha, each = length(object$data$dmunames))
+       eff.df <- merge(eff.Worst,eff.Best, by = c("DMU","alphacut"))
      }else{
        # Non - radial models-----------------
        effmat.Worst <- do.call(rbind,lapply(seq(dim(eff$Worst)[3]), function(x) eff$Worst[,,x] ))
        effdf.Worst <- cbind(data.frame(DMU = dimnames(effmat.Worst)[[1]], 
-                                   alpha_cut = rep(object$alpha,each = dim(eff$Worst)[1])), 
+                                   alphacut = rep(object$alpha,each = dim(eff$Worst)[1])), 
                         data.frame(effmat.Worst, row.names = NULL))
        colnames(effdf.Worst)[3:(ncol(effdf.Worst))] <- paste("eff",colnames(effdf.Worst)[3:(ncol(effdf.Worst))],"Worst",sep = ".")
        
        effmat.Best <- do.call(rbind,lapply(seq(dim(eff$Best)[3]), function(x) eff$Best[,,x] ))
        effdf.Best <- cbind(data.frame(DMU = dimnames(effmat.Best)[[1]], 
-                                   alpha_cut = rep(object$alpha,each = dim(eff$Best)[1])), 
+                                   alphacut = rep(object$alpha,each = dim(eff$Best)[1])), 
                         data.frame(effmat.Best, row.names = NULL))
        colnames(effdf.Best)[3:(ncol(effdf.Best))] <- paste("eff",colnames(effdf.Best)[3:(ncol(effdf.Best))],"Best",sep = ".")
-       eff.df  <- merge(effdf.Worst,effdf.Best, by = c("alpha_cut","DMU"))
+       eff.df  <- merge(effdf.Worst,effdf.Best, by = c("alphacut","DMU"))
        # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
        srtidx <- (3:ncol(eff.df))
        srtidx <- t(matrix(srtidx, ncol = 2))
@@ -143,7 +150,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                           nrow = length(dmunames),
                                                           dimnames = list(dmunames,dimnames(s$slack_input.W)[[2]]))))
      s.i.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.i.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(s$slack_input.W)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(s$slack_input.W)[1])), 
                           data.frame(s.i.Worst, row.names = NULL))
      colnames(s.i.Worst)[3:(ncol(s.i.Worst))] <- paste("slack",
                                                        colnames(s.i.Worst)[3:(ncol(s.i.Worst))],
@@ -154,7 +161,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                           nrow = length(dmunames),
                                                           dimnames = list(dmunames,dimnames(s$slack_output.W)[[2]]))))
      s.o.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.o.Worst)[[1]], 
-                                   alpha_cut = rep(object$alpha,each = dim(s$slack_output.W)[1])), 
+                                   alphacut = rep(object$alpha,each = dim(s$slack_output.W)[1])), 
                         data.frame(s.o.Worst, row.names = NULL))
      colnames(s.o.Worst)[3:(ncol(s.o.Worst))] <- paste("slack",
                                                        colnames(s.o.Worst)[3:(ncol(s.o.Worst))],
@@ -165,7 +172,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                          nrow = length(dmunames),
                                                          dimnames = list(dmunames,dimnames(s$slack_input.B)[[2]])) ))
      s.i.Best <- cbind(data.frame(DMU = dimnames(s.i.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(s$slack_input.B)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(s$slack_input.B)[1])), 
                          data.frame(s.i.Best, row.names = NULL))
      colnames(s.i.Best)[3:(ncol(s.i.Best))] <- paste("slack",
                                                      colnames(s.i.Best)[3:(ncol(s.i.Best))],
@@ -175,20 +182,20 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                          nrow = length(dmunames),
                                                          dimnames = list(dmunames,dimnames(s$slack_output.B)[[2]])) ))
      s.o.Best <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.o.Best)[[1]], 
-                                  alpha_cut = rep(object$alpha,each = dim(s$slack_output.B)[1])), 
+                                  alphacut = rep(object$alpha,each = dim(s$slack_output.B)[1])), 
                        data.frame(s.o.Best, row.names = NULL))
      colnames(s.o.Best)[3:(ncol(s.o.Best))] <- paste("slack",
                                                      colnames(s.o.Best)[3:(ncol(s.o.Best))],
                                                      "Best",sep = ".")
      
-     s.i.df  <- merge(s.i.Worst,s.i.Best, by = c("alpha_cut","DMU"))
+     s.i.df  <- merge(s.i.Worst,s.i.Best, by = c("alphacut","DMU"))
      # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
      srtidx <- (3:ncol(s.i.df))
      srtidx <- t(matrix(srtidx, ncol = 2))
      dim(srtidx) <- c(1,length(srtidx))
      s.i.df <- s.i.df[,c(2,1,srtidx)]
      
-     s.o.df  <- merge(s.o.Worst,s.o.Best, by = c("alpha_cut","DMU"))
+     s.o.df  <- merge(s.o.Worst,s.o.Best, by = c("alphacut","DMU"))
      # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
      srtidx <- (3:ncol(s.o.df))
      srtidx <- t(matrix(srtidx, ncol = 2))
@@ -206,7 +213,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                             nrow = length(dmunames),
                                                             dimnames = list(dmunames,dimnames(s$slack_output.W)[[2]]))))
        s.o.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.o.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(s$slack_output.W)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(s$slack_output.W)[1])), 
                           data.frame(s.o.Worst, row.names = NULL))
        colnames(s.o.Worst)[3:(ncol(s.o.Worst))] <- paste("slack",
                                                          colnames(s.o.Worst)[3:(ncol(s.o.Worst))],
@@ -219,13 +226,13 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                            nrow = length(dmunames),
                                                            dimnames = list(dmunames,dimnames(s$slack_output.B)[[2]])) ))
        s.o.Best <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.o.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(s$slack_output.B)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(s$slack_output.B)[1])), 
                          data.frame(s.o.Best, row.names = NULL))
        colnames(s.o.Best)[3:(ncol(s.o.Best))] <- paste("slack",
                                                        colnames(s.o.Best)[3:(ncol(s.o.Best))],
                                                        "Best",sep = ".")
        
-       s.o.df  <- merge(s.o.Worst,s.o.Best, by = c("alpha_cut","DMU"))
+       s.o.df  <- merge(s.o.Worst,s.o.Best, by = c("alphacut","DMU"))
        # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
        srtidx <- (3:ncol(s.o.df))
        srtidx <- t(matrix(srtidx, ncol = 2))
@@ -237,7 +244,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                             nrow = length(dmunames),
                                                             dimnames = list(dmunames,dimnames(s$slack_input.W)[[2]]))))
        s.i.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(s.i.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(s$slack_input.W)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(s$slack_input.W)[1])), 
                           data.frame(s.i.Worst, row.names = NULL))
        colnames(s.i.Worst)[3:(ncol(s.i.Worst))] <- paste("slack",
                                                          colnames(s.i.Worst)[3:(ncol(s.i.Worst))],
@@ -248,12 +255,12 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                            nrow = length(dmunames),
                                                            dimnames = list(dmunames,dimnames(s$slack_input.B)[[2]])) ))
        s.i.Best <- cbind(data.frame(DMU = dimnames(s.i.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(s$slack_input.B)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(s$slack_input.B)[1])), 
                          data.frame(s.i.Best, row.names = NULL))
        colnames(s.i.Best)[3:(ncol(s.i.Best))] <- paste("slack",
                                                        colnames(s.i.Best)[3:(ncol(s.i.Best))],
                                                        "Best",sep = ".")
-       s.i.df  <- merge(s.i.Worst,s.i.Best, by = c("alpha_cut","DMU"))
+       s.i.df  <- merge(s.i.Worst,s.i.Best, by = c("alphacut","DMU"))
        # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
        srtidx <- (3:ncol(s.i.df))
        srtidx <- t(matrix(srtidx, ncol = 2))
@@ -269,7 +276,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                             nrow = length(dmunames),
                                                             dimnames = list(dmunames,dimnames(s$superslack_input.W)[[2]]))))
        supers.i.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(supers.i.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(s$superslack_input.W)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(s$superslack_input.W)[1])), 
                           data.frame(supers.i.Worst, row.names = NULL))
        colnames(supers.i.Worst)[3:(ncol(supers.i.Worst))] <- paste("superslack",
                                                          colnames(supers.i.Worst)[3:(ncol(supers.i.Worst))],
@@ -280,7 +287,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                             nrow = length(dmunames),
                                                             dimnames = list(dmunames,dimnames(s$superslack_output.W)[[2]]))))
        supers.o.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(supers.o.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(s$superslack_output.W)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(s$superslack_output.W)[1])), 
                           data.frame(supers.o.Worst, row.names = NULL))
        colnames(supers.o.Worst)[3:(ncol(supers.o.Worst))] <- paste("superslack",
                                                          colnames(supers.o.Worst)[3:(ncol(supers.o.Worst))],
@@ -291,7 +298,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                            nrow = length(dmunames),
                                                            dimnames = list(dmunames,dimnames(s$superslack_input.B)[[2]])) ))
        supers.i.Best <- cbind(data.frame(DMU = dimnames(supers.i.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(s$superslack_input.B)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(s$superslack_input.B)[1])), 
                          data.frame(supers.i.Best, row.names = NULL))
        colnames(supers.i.Best)[3:(ncol(supers.i.Best))] <- paste("superslack",
                                                        colnames(supers.i.Best)[3:(ncol(supers.i.Best))],
@@ -301,20 +308,20 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                            nrow = length(dmunames),
                                                            dimnames = list(dmunames,dimnames(s$superslack_output.B)[[2]])) ))
        supers.o.Best <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(supers.o.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(s$superslack_output.B)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(s$superslack_output.B)[1])), 
                          data.frame(supers.o.Best, row.names = NULL))
        colnames(supers.o.Best)[3:(ncol(supers.o.Best))] <- paste("superslack",
                                                        colnames(supers.o.Best)[3:(ncol(supers.o.Best))],
                                                        "Best",sep = ".")
        
-       supers.i.df  <- merge(supers.i.Worst,supers.i.Best, by = c("alpha_cut","DMU"))
+       supers.i.df  <- merge(supers.i.Worst,supers.i.Best, by = c("alphacut","DMU"))
        # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
        srtidx <- (3:ncol(supers.i.df))
        srtidx <- t(matrix(srtidx, ncol = 2))
        dim(srtidx) <- c(1,length(srtidx))
        supers.i.df <- supers.i.df[,c(2,1,srtidx)]
        
-       supers.o.df  <- merge(supers.o.Worst,supers.o.Best, by = c("alpha_cut","DMU"))
+       supers.o.df  <- merge(supers.o.Worst,supers.o.Best, by = c("alphacut","DMU"))
        # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
        srtidx <- (3:ncol(supers.o.df))
        srtidx <- t(matrix(srtidx, ncol = 2))
@@ -331,16 +338,16 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
      
      lmbmat.Worst <- do.call(rbind,lapply(seq(dim(lmb$Worst)[3]), function(x) lmb$Worst[,,x] ))
      lmbdf.Worst <- cbind(data.frame(DMU = dimnames(lmbmat.Worst)[[1]], 
-                                     alpha_cut = rep(object$alpha,each = dim(lmb$Worst)[1])), 
+                                     alphacut = rep(object$alpha,each = dim(lmb$Worst)[1])), 
                           data.frame(lmbmat.Worst, row.names = NULL))
      colnames(lmbdf.Worst)[3:(ncol(lmbdf.Worst))] <- paste("lambda",colnames(lmbdf.Worst)[3:(ncol(lmbdf.Worst))],"Worst",sep = ".")
      
      lmbmat.Best <- do.call(rbind,lapply(seq(dim(lmb$Best)[3]), function(x) lmb$Best[,,x] ))
      lmbdf.Best <- cbind(data.frame(DMU = dimnames(lmbmat.Best)[[1]], 
-                                    alpha_cut = rep(object$alpha,each = dim(lmb$Best)[1])), 
+                                    alphacut = rep(object$alpha,each = dim(lmb$Best)[1])), 
                          data.frame(lmbmat.Best, row.names = NULL))
      colnames(lmbdf.Best)[3:(ncol(lmbdf.Best))] <- paste("lambda",colnames(lmbdf.Best)[3:(ncol(lmbdf.Best))],"Best",sep = ".")
-     lmb.df  <- merge(lmbdf.Worst,lmbdf.Best, by = c("alpha_cut","DMU"))
+     lmb.df  <- merge(lmbdf.Worst,lmbdf.Best, by = c("alphacut","DMU"))
      # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
      srtidx <- (3:ncol(lmb.df))
      srtidx <- t(matrix(srtidx, ncol = 2))
@@ -357,7 +364,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                           nrow = length(dmunames),
                                                           dimnames = list(dmunames,dimnames(tar$target_input.W)[[2]]))))
      tar.i.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(tar.i.Worst)[[1]], 
-                                   alpha_cut = rep(object$alpha,each = dim(tar$target_input.W)[1])), 
+                                   alphacut = rep(object$alpha,each = dim(tar$target_input.W)[1])), 
                         data.frame(tar.i.Worst, row.names = NULL))
      colnames(tar.i.Worst)[3:(ncol(tar.i.Worst))] <- paste("target",
                                                        colnames(tar.i.Worst)[3:(ncol(tar.i.Worst))],
@@ -368,7 +375,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                           nrow = length(dmunames),
                                                           dimnames = list(dmunames,dimnames(tar$target_output.W)[[2]]))))
      tar.o.Worst <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(tar.o.Worst)[[1]], 
-                                   alpha_cut = rep(object$alpha,each = dim(tar$target_output.W)[1])), 
+                                   alphacut = rep(object$alpha,each = dim(tar$target_output.W)[1])), 
                         data.frame(tar.o.Worst, row.names = NULL))
      colnames(tar.o.Worst)[3:(ncol(tar.o.Worst))] <- paste("target",
                                                        colnames(tar.o.Worst)[3:(ncol(tar.o.Worst))],
@@ -379,7 +386,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                          nrow = length(dmunames),
                                                          dimnames = list(dmunames,dimnames(tar$target_input.B)[[2]])) ))
      tar.i.Best <- cbind(data.frame(DMU = dimnames(tar.i.Best)[[1]], 
-                                  alpha_cut = rep(object$alpha,each = dim(tar$target_input.B)[1])), 
+                                  alphacut = rep(object$alpha,each = dim(tar$target_input.B)[1])), 
                        data.frame(tar.i.Best, row.names = NULL))
      colnames(tar.i.Best)[3:(ncol(tar.i.Best))] <- paste("target",
                                                      colnames(tar.i.Best)[3:(ncol(tar.i.Best))],
@@ -389,20 +396,20 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
                                                          nrow = length(dmunames),
                                                          dimnames = list(dmunames,dimnames(tar$target_output.B)[[2]])) ))
      tar.o.Best <- cbind(data.frame(DMU = object$data$dmunames,#dimnames(tar.o.Best)[[1]], 
-                                  alpha_cut = rep(object$alpha,each = dim(tar$target_output.B)[1])), 
+                                  alphacut = rep(object$alpha,each = dim(tar$target_output.B)[1])), 
                        data.frame(tar.o.Best, row.names = NULL))
      colnames(tar.o.Best)[3:(ncol(tar.o.Best))] <- paste("target",
                                                      colnames(tar.o.Best)[3:(ncol(tar.o.Best))],
                                                      "Best",sep = ".")
      
-     tar.i.df  <- merge(tar.i.Worst,tar.i.Best, by = c("alpha_cut","DMU"))
+     tar.i.df  <- merge(tar.i.Worst,tar.i.Best, by = c("alphacut","DMU"))
      # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
      srtidx <- (3:ncol(tar.i.df))
      srtidx <- t(matrix(srtidx, ncol = 2))
      dim(srtidx) <- c(1,length(srtidx))
      tar.i.df <- tar.i.df[,c(2,1,srtidx)]
      
-     tar.o.df  <- merge(tar.o.Worst,tar.o.Best, by = c("alpha_cut","DMU"))
+     tar.o.df  <- merge(tar.o.Worst,tar.o.Best, by = c("alphacut","DMU"))
      # Re-arranging columns so they are sorted in col1.Worst col1.Best, col2.Worst col2.Best, .... 
      srtidx <- (3:ncol(tar.o.df))
      srtidx <- t(matrix(srtidx, ncol = 2))

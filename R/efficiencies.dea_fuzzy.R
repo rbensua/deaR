@@ -39,9 +39,9 @@ efficiencies.dea_fuzzy <-
     deasol <- x
     dmunames_eval <- names(deasol$dmu_eval)
     nde <- length(deasol$dmu_eval)
-    nalpha <- length(deasol$alpha)
     
     if (grepl("kaoliu", deasol$modelname)) {
+      nalpha <- length(deasol$alpha)
       
       if ("efficiency" %in% names(deasol$alphacut[[1]]$DMU$Worst[[1]])) {
         
@@ -160,61 +160,62 @@ efficiencies.dea_fuzzy <-
       return(list(Worst = round(eff.W, 5), Best = round(eff.B, 5)))
       
     } else if (grepl("possibilistic", deasol$modelname)) {
+      nh <- length(deasol$h)
       
-      if ("efficiency" %in% names(deasol$alphacut[[1]]$DMU[[1]])) {
+      if ("efficiency" %in% names(deasol$hlevel[[1]]$DMU[[1]])) {
         
-        neff <- length(deasol$alphacut[[1]]$DMU[[1]]$efficiency)
+        neff <- length(deasol$hlevel[[1]]$DMU[[1]]$efficiency)
         
         if (neff == 1) {
           
-          eff <- matrix(0, nrow = nde, ncol = nalpha)
+          eff <- matrix(0, nrow = nde, ncol = nh)
           rownames(eff) <- dmunames_eval
-          colnames(eff) <- names(deasol$alphacut)
+          colnames(eff) <- names(deasol$hlevel)
           
-          for (j in 1:nalpha) {
-            eff[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU, function(x)
+          for (j in 1:nh) {
+            eff[, j] <- unlist(lapply(deasol$hlevel[[j]]$DMU, function(x)
               x$efficiency))
             #for (i in 1:nde) {
-            #  eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$efficiency
+            #  eff[i, j] <- deasol$hlevel[[j]]$DMU[[i]]$efficiency
             #}
           }
           
         } else {
           
           eff <- array(0,
-                       dim = c(nde, neff + 1, nalpha),
+                       dim = c(nde, neff + 1, nh),
                        dimnames = list(dmunames_eval,
-                                       c(names(deasol$alphacut[[1]]$DMU[[1]]$efficiency), "mean_efficiency"),
-                                       names(deasol$alphacut)))
+                                       c(names(deasol$hlevel[[1]]$DMU[[1]]$efficiency), "mean_efficiency"),
+                                       names(deasol$hlevel)))
           
-          for (k in 1:nalpha) {
+          for (k in 1:nh) {
             eff[, , k]  <- cbind(
-              do.call(rbind, lapply(deasol$alphacut[[k]]$DMU, function(x)
+              do.call(rbind, lapply(deasol$hlevel[[k]]$DMU, function(x)
                 x$efficiency)),
-              unlist(lapply(deasol$alphacut[[k]]$DMU, function(x)
+              unlist(lapply(deasol$hlevel[[k]]$DMU, function(x)
                 x$mean_efficiency))
             )
             #for (i in 1:nde) {
             #  for (j in 1:neff) {
-            #    eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
+            #    eff[i, j, k] <- deasol$hlevel[[k]]$DMU[[i]]$efficiency[j]
             #  }
-            #  eff[i, neff + 1, k] <- deasol$alphacut[[k]]$DMU[[i]]$mean_efficiency
+            #  eff[i, neff + 1, k] <- deasol$hlevel[[k]]$DMU[[i]]$mean_efficiency
             #}
           }
           
         }
         
-      } else if ("beta" %in% names(deasol$alphacut[[1]]$DMU[[1]])) {
+      } else if ("beta" %in% names(deasol$hlevel[[1]]$DMU[[1]])) {
         
-        eff <- matrix(0, nrow = nde, ncol = nalpha)
+        eff <- matrix(0, nrow = nde, ncol = nh)
         rownames(eff) <- dmunames_eval
-        colnames(eff) <- names(deasol$alphacut)
+        colnames(eff) <- names(deasol$hlevel)
         
-        for (j in 1:nalpha) {
-          eff[, j] <- unlist(lapply(deasol$alphacut[[j]]$DMU, function(x)
+        for (j in 1:nh) {
+          eff[, j] <- unlist(lapply(deasol$hlevel[[j]]$DMU, function(x)
             x$beta))
           #for (i in 1:nde) {
-          #  eff[i, j] <- deasol$alphacut[[j]]$DMU[[i]]$beta
+          #  eff[i, j] <- deasol$hlevel[[j]]$DMU[[i]]$beta
           #}
         }
       
@@ -225,19 +226,20 @@ efficiencies.dea_fuzzy <-
       return(round(eff, 5))
       
     } else if (grepl("guotanaka", deasol$modelname)) {
+      nh <- length(deasol$h)
       
       eff <- array(0,
-                   dim = c(nde, 3, nalpha),
+                   dim = c(nde, 3, nh),
                    dimnames = list(dmunames_eval,
-                                   names(deasol$alphacut[[1]]$DMU[[1]]$efficiency),
-                                   names(deasol$alphacut)))
+                                   names(deasol$hlevel[[1]]$DMU[[1]]$efficiency),
+                                   names(deasol$hlevel)))
       
-      for (k in 1:nalpha) {
-        eff[, , k]  <- do.call(rbind, lapply(deasol$alphacut[[k]]$DMU, function(x)
+      for (k in 1:nh) {
+        eff[, , k]  <- do.call(rbind, lapply(deasol$hlevel[[k]]$DMU, function(x)
             x$efficiency))
         #for (i in 1:nde) {
         #  for (j in 1:3) {
-        #    eff[i, j, k] <- deasol$alphacut[[k]]$DMU[[i]]$efficiency[j]
+        #    eff[i, j, k] <- deasol$hlevel[[k]]$DMU[[i]]$efficiency[j]
         #  }
         #}
       }

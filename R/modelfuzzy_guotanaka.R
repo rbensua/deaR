@@ -3,19 +3,19 @@
 #' @description Solve the Fuzzy input-oriented and output-oriented DEA model by Guo and Tanaka (2001) under constant returns-to-scale.
 #' In deaR is implemented the LP poblem given by the model (16) in Guo and Tanaka (2001, p.155).
 #' The fuzzy efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001, p.155).
-#' The (crisp) relative efficiencies and multipliers for the case \code{alpha} = 1 are obtained from the CCR model (\code{model_multiplier}).
+#' The (crisp) relative efficiencies and multipliers for the case \code{h} = 1 are obtained from the CCR model (\code{model_multiplier}).
 #' @note The optimal solution of model (16) is not unique. 
 #' @usage modelfuzzy_guotanaka(datadea,
 #'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
 #'             orientation = c("io", "oo"),
-#'             alpha = 1)
+#'             h = 1)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
 #' @param orientation A string, equal to "io" (input oriented) or "oo" (output oriented).
-#' @param alpha A numeric vector with the alpha-cuts (in [0,1]).
+#' @param h A numeric vector with the h-levels (in [0,1]).
 #'   
 #' @return An object of class \code{deadata_fuzzy}.
 #' 
@@ -49,9 +49,9 @@
 #'                                 inputs.mL = 2:3, 
 #'                                 inputs.dL = 4:5, 
 #'                                 outputs.mL = 6:7,
-#'                                 outputs.dL =8:9)
+#'                                 outputs.dL = 8:9)
 #' result <- modelfuzzy_guotanaka(data_example, 
-#'                                alpha = c(0, 0.5, 0.75, 1), 
+#'                                h = c(0, 0.5, 0.75, 1), 
 #'                                orientation = "io")
 #' efficiencies(result)
 #'  
@@ -64,7 +64,7 @@
 #'                                 outputs.mL = 6:7, 
 #'                                 outputs.dL = 8:9)
 #' result2 <- modelfuzzy_guotanaka(data_example, 
-#'                                 alpha = seq(0, 1, by = 0.1), 
+#'                                 h = seq(0, 1, by = 0.1), 
 #'                                 orientation = "io")
 #' efficiencies(result2)
 #' 
@@ -79,7 +79,7 @@ function(datadea,
          dmu_eval = NULL,
          dmu_ref = NULL,
          orientation = c("io", "oo"),
-         alpha = 1) {
+         h = 1) {
  
   # Cheking whether datadea is of class "deadata_fuzzy" or not...  
   if (!is.deadata_fuzzy(datadea)) {
@@ -150,25 +150,25 @@ function(datadea,
   ni <- length(inputnames) # number of inputs
   no <- length(outputnames) # number of outputs
   
-  # Checking alpha
-  if (any(alpha > 1) || any(alpha < 0)){
-    stop("Invalid alpha vector.")
+  # Checking h
+  if (any(h > 1) || any(h < 0)){
+    stop("Invalid h vector.")
   }
-  alpha <- sort(unique(alpha))
-  nalpha <- length(alpha) # number of alpha-cuts
-  alphacut <- vector(mode = "list", length = nalpha)
-  names(alphacut) <- as.character(alpha)
+  h <- sort(unique(h))
+  nh <- length(h) # number of h-levels
+  hlevel <- vector(mode = "list", length = nh)
+  names(hlevel) <- as.character(h)
   
   e_spread <- max(input.d / input.m)
   
   DMU <- vector(mode = "list", length = nde)
   names(DMU) <- dmunames[dmu_eval]
   
-  if (alpha[nalpha] == 1) {
+  if (h[nh] == 1) {
     datadea_crisp <- structure(list(input = input.m,
                                     output = output.m,
                                     dmunames = dmunames),
-                               class = "deadata")
+                              class = "deadata")
     deasol_crisp <- do.call(model_multiplier, list(datadea = datadea_crisp,
                                               dmu_eval = dmu_eval,
                                               dmu_ref = dmu_ref,
@@ -180,18 +180,18 @@ function(datadea,
                        multiplier_input = deasol_crisp$DMU[[j]]$multiplier_input,
                        multiplier_output = deasol_crisp$DMU[[j]]$multiplier_output)
     }
-    alphacut[[nalpha]] <- list(input = list(Lower = input.m, Upper = input.m),
-                          output = list(Lower = output.m, Upper = output.m),
-                          DMU = DMU)
-    nalpha <- nalpha - 1
+    hlevel[[nh]] <- list(input = list(Lower = input.m, Upper = input.m),
+                         output = list(Lower = output.m, Upper = output.m),
+                         DMU = DMU)
+    nh <- nh - 1
   }
   
-  if (nalpha > 0) {
-    for (i in 1:nalpha) {
+  if (nh > 0) {
+    for (i in 1:nh) {
       
-      # alpha-cuts
+      # h-levels
       
-      a <- alpha[i]
+      a <- h[i]
       input.L <- input.m - input.d * (1 - a)
       input.U <- input.m + input.d * (1 - a)
       output.L <- output.m - output.d * (1 - a)
@@ -253,13 +253,13 @@ function(datadea,
       }
       
       if (orientation == "io") {
-        alphacut[[i]] <- list(input = list(Lower = input.L, Upper = input.U),
-                              output = list(Lower = output.L, Upper = output.U),
-                              DMU = DMU)
+        hlevel[[i]] <- list(input = list(Lower = input.L, Upper = input.U),
+                            output = list(Lower = output.L, Upper = output.U),
+                            DMU = DMU)
       } else {
-        alphacut[[i]] <- list(input = list(Lower = -output.L, Upper = -output.U),
-                              output = list(Lower = -input.L, Upper = -input.U),
-                              DMU = DMU)
+        hlevel[[i]] <- list(input = list(Lower = -output.L, Upper = -output.U),
+                            output = list(Lower = -input.L, Upper = -input.U),
+                            DMU = DMU)
       }
       
     }
@@ -267,8 +267,8 @@ function(datadea,
   
   deaOutput <- list(modelname = "fuzzy_guotanaka",
                     orientation = orientation,
-                    alpha = alpha,
-                    alphacut = alphacut,
+                    h = h,
+                    hlevel = hlevel,
                     data = datadea,
                     dmu_eval = dmu_eval,
                     dmu_ref = dmu_ref)

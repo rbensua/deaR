@@ -5,13 +5,13 @@
 #' @usage modelfuzzy_possibilistic(datadea,
 #'             dmu_eval = NULL,
 #'             poss_modelname = c("basic"),
-#'             alpha = 1,
+#'             h = 1,
 #'             ...)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param poss_modelname a string containing the name of the model.
-#' @param alpha A numeric vector with the alpha-cuts (in [0,1]).
+#' @param h A numeric vector with the h-levels (in [0,1]).
 #' @param ... \code{dmu_ref}, \code{orientation}, \code{rts} and other model parameters.
 #'   
 #' @return An object of class \code{deadata_fuzzy}.
@@ -38,7 +38,7 @@
 #'                                 outputs.mL = 4, 
 #'                                 outputs.dL = 5)
 #' result <- modelfuzzy_possibilistic(data_example, 
-#'                                    alpha= seq(0, 1, by = 0.1), 
+#'                                    h = seq(0, 1, by = 0.1), 
 #'                                    orientation = "io", 
 #'                                    rts = "vrs")
 #' efficiencies(result)
@@ -61,7 +61,7 @@ modelfuzzy_possibilistic <-
   function(datadea,
            dmu_eval = NULL,
            poss_modelname = c("basic"),
-           alpha = 1,
+           h = 1,
            ...) {
  
   # Cheking whether datadea is of class "deadata_fuzzy" or not...  
@@ -111,19 +111,20 @@ modelfuzzy_possibilistic <-
   datadea.mL <- structure(list(input = input.mL, output = output.mL, dmunames = dmunames), class = "deadata")
   datadea.mR <- structure(list(input = input.mR, output = output.mR, dmunames = dmunames), class = "deadata")
   
-  # Checking alpha
-  if (any(alpha > 1) || any(alpha < 0)){
-    stop("Invalid alpha vector.")
+  # Checking h
+  if (any(h > 1) || any(h < 0)){
+    stop("Invalid h vector.")
   }
-  nalpha <- length(alpha) # number of alpha-cuts
-  alphacut <- vector(mode = "list", length = nalpha)
-  names(alphacut) <- as.character(alpha)
+  h <- sort(unique(h))
+  nh <- length(h) # number of h-levels
+  hlevel <- vector(mode = "list", length = nh)
+  names(hlevel) <- as.character(h)
 
-  for (i in 1:nalpha) {
+  for (i in 1:nh) {
 
-    # alpha-cuts
+    # h-level
     
-    a <- alpha[i]
+    a <- h[i]
     input.L <- input.mL - input.dL * (1 - a)
     input.U <- input.mR + input.dR * (1 - a)
     output.L <- output.mL - output.dL * (1 - a)
@@ -165,10 +166,11 @@ modelfuzzy_possibilistic <-
       #if (poss_modelname == "fdh") {
       #  binary.vec = lp.mL$DMU[[1]]$binary.vec
       #} else {
-        binary.vec = NULL
+      #  binary.vec = NULL
       #}
+      #res <- lp(obj, f.obj, f.con, f.dir, f.rhs, binary.vec = binary.vec)
       
-      res <- lp(obj, f.obj, f.con, f.dir, f.rhs, binary.vec = binary.vec)
+      res <- lp(obj, f.obj, f.con, f.dir, f.rhs)
       objval <- res$objval
       names(objval) <- "objval"
       res <- res$solution
@@ -186,9 +188,7 @@ modelfuzzy_possibilistic <-
       }
       
       #if (poss_modelname == "basic") {
-
       #}
-      
       #if (poss_modelname == "additive") {
       #  DMU[[j]] <- c(objval, DMU[[j]])
       #} else if (poss_modelname == "nonradial"){
@@ -201,39 +201,18 @@ modelfuzzy_possibilistic <-
       
     }
     
-    alphacut[[i]] <- list(input = list(Lower = input.L, Upper = input.U),
-                          output = list(Lower = output.L, Upper = output.U),
-                          DMU = DMU)
+    hlevel[[i]] <- list(input = list(Lower = input.L, Upper = input.U),
+                        output = list(Lower = output.L, Upper = output.U),
+                        DMU = DMU)
     
   }
-  
-  #if (poss_modelname == "additive") {
-  #  deaOutput <- list(modelname = paste(modelname, "fuzzy_possibilistic", sep = "_"),
-  #                    rts = lp.mL$rts,
-  #                    weight = lp.mL$weight,
-  #                    alpha = alpha,
-  #                    alphacut = alphacut,
-  #                    data = datadea,
-  #                    dmu_eval = dmu_eval,
-  #                    dmu_ref = lp.mL$dmu_ref)
-  #} else if (poss_modelname == "deaps") {
-  #  deaOutput <- list(modelname = paste(modelname, "fuzzy_possibilistic", sep = "_"),
-  #                    orientation = lp.mL$orientation,
-  #                    rts = lp.mL$rts,
-  #                    weight = lp.mL$weight,
-  #                    alpha = alpha,
-  #                    alphacut = alphacut,
-  #                    data = datadea,
-  #                    dmu_eval = dmu_eval,
-  #                    dmu_ref = lp.mL$dmu_ref)
-  #} else {
     deaOutput <- list(modelname = paste("fuzzy_possibilistic", poss_modelname, sep = "_"),
                       orientation = lp.mL$orientation,
                       rts = lp.mL$rts,
                       L = lp.mL$L,
                       U = lp.mL$U,
-                      alpha = alpha,
-                      alphacut = alphacut,
+                      h = h,
+                      hlevel = hlevel,
                       data = datadea,
                       dmu_eval = dmu_eval,
                       dmu_ref = lp.mL$dmu_ref)

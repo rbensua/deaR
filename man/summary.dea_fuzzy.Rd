@@ -2,13 +2,13 @@
 % Please edit documentation in R/summary.deafuzzy.R
 \name{summary.dea_fuzzy}
 \alias{summary.dea_fuzzy}
-\title{Summary Fuzzy}
+\title{Summary Fuzzy DEA model}
 \usage{
 \method{summary}{dea_fuzzy}(object, ..., exportExcel = TRUE,
   filename = NULL)
 }
 \arguments{
-\item{object}{An object of class \code{"dea_fuzzy"} obtained with a dea fuzzy
+\item{object}{An object of class \code{"dea_fuzzy"} obtained with a fuzzy dea 
 model function (\code{modelfuzzy_guotanaka}, \code{modelfuzzy_kaoliu},
 \code{modelfuzzy_possibilistic}).}
 
@@ -23,7 +23,7 @@ If NULL, then the name of the file will be "ResultsDEA"+timestamp.xlsx.}
 If the model is that from Guo and Tanaka (\code{modelfuzzy_guotanaka}), it returns a data.frame
 with columns: DMU, alpha cuts and efficiencies.
 For the possibilistic model (\code{modelfuzzy_possibilistic}) it returns a data.frame with columns:
-DMU, alpha_cuts, efficiencies and the corresponding lambda values
+DMU, alpha-cuts, efficiencies and the corresponding lambda values
 For the Kao and Liu model (\code{modelfuzzy_kaoliu}), the result may depend on the crisp sub-model used. 
 It will contain a data.frame with the efficiencies (if any), the slacks and superslacks (if any), 
 the lambda values and the targets.
@@ -32,12 +32,19 @@ If \code{exportExcel} is TRUE, then an Excel file will be created containing as 
 depending on the variables returned.
 }
 \description{
-Summary of the results obtained by a dea fuzzy model.
+Summary of the results obtained by a fuzzy DEA model.
 }
 \examples{
-data_example <- read_data_fuzzy(Guo_Tanaka_2001, 
-dmus = 1, inputs.mL = 2:3, inputs.dL = 4:5, outputs.mL = 6:7,outputs.dL =8:9)
-result <- modelfuzzy_guotanaka(data_example, alpha = c(0, 0.5, 0.75, 1), 
-orientation = "io")
+data("Leon2003")
+data_example <- read_data_fuzzy(Leon2003,
+                                dmus = 1, 
+                                inputs.mL = 2, 
+                                inputs.dL = 3, 
+                                outputs.mL = 4, 
+                                outputs.dL = 5)
+result <- modelfuzzy_possibilistic(data_example, 
+                                   alpha= seq(0, 1, by = 0.1), 
+                                   orientation = "io", 
+                                   rts = "vrs")
 summary(result)
 }

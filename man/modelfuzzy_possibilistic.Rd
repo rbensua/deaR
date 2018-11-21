@@ -7,7 +7,7 @@
 modelfuzzy_possibilistic(datadea,
             dmu_eval = NULL,
             poss_modelname = c("basic"),
-            alpha = 1,
+            h = 1,
             ...)
 }
 \arguments{
@@ -17,7 +17,7 @@ modelfuzzy_possibilistic(datadea,
 
 \item{poss_modelname}{a string containing the name of the model.}
 
-\item{alpha}{A numeric vector with the alpha-cuts (in [0,1]).}
+\item{h}{A numeric vector with the h-levels (in [0,1]).}
 
 \item{...}{\code{dmu_ref}, \code{orientation}, \code{rts} and other model parameters.}
 }
@@ -37,7 +37,7 @@ data_example <- read_data_fuzzy(Leon2003,
                                 outputs.mL = 4, 
                                 outputs.dL = 5)
 result <- modelfuzzy_possibilistic(data_example, 
-                                   alpha= seq(0, 1, by = 0.1), 
+                                   h = seq(0, 1, by = 0.1), 
                                    orientation = "io", 
                                    rts = "vrs")
 efficiencies(result)
