@@ -338,11 +338,11 @@ model_sbmsupereff <-
             
             dmunames2 <- c(dmunames[ii], dmunames[-ii])
             input2 <- cbind(matrix(project_input, nrow = ni, ncol = 1),
-                            input[, -ii])
+                            matrix(input[, -ii], nrow = ni))
             rownames(input2) <- inputnames
             colnames(input2) <- dmunames2
             output2 <- cbind(matrix(project_output, nrow = no, ncol = 1),
-                             output[, -ii])
+                             matrix(output[, -ii], nrow = no))
             rownames(output2) <- outputnames
             colnames(output2) <- dmunames2
             datadea2 <- structure(list(input = input2,

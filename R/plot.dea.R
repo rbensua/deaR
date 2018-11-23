@@ -22,6 +22,7 @@
 #' @importFrom methods show
 #' @importFrom graphics plot
 #' @importFrom stats runif
+#' @importFrom gridExtra grid.arrange
 #' @import plotly
 #' @export
 #' 
@@ -41,9 +42,20 @@ plot.dea <- function(x, ...){
    if(modelname == "malmquist"){
      malmdata <- summary(object, exportExcel = FALSE)
      results <- malmdata$Results
+     sumres <- malmdata$means_by_period
+     colnames(results) <- c("Period","DMU","Efficiency change", "Technical change", "Productivity change","Scale change","Malmquist index")
+     colnames(sumres) <- c("Period","Efficiency change", "Technical change", "Productivity change","Scale change","Malmquist index")
      results %>% gather(key= "index", value = "value", -c("Period","DMU")) %>% 
-       ggplot(aes(x = Period, y = value, col = DMU)) + geom_line(aes(group = DMU)) + facet_wrap(~index, scales = "free") -> resplot
+       ggplot(aes(x = Period, y = value, col = DMU)) + geom_line(aes(group = DMU)) + facet_wrap(~index, scales = "free") +
+       ylab("") + theme_bw() + ggtitle("Change indices") -> resplot
+     sumres %>% gather(key= "index", value = "value", -c("Period")) %>% 
+       ggplot(aes(x = Period, y = value, col = index)) + geom_line(aes(group = index)) + theme_bw() +
+       ylab("")  + ggtitle("Geometric means by period") -> sumplot
+     
+     invisible(readline(prompt="Press [enter] to continue"))
      ggplotly(resplot)
+     invisible(readline(prompt="Press [enter] to continue"))
+     ggplotly(sumplot)
    }else{
      results <- list(Arb = object$Arbitrary$cross_eff,
      M2_agg = object$M2_agg$cross_eff,
@@ -70,15 +82,17 @@ plot.dea <- function(x, ...){
    #eff$iseff <- ifelse(eff$eff<1, "Inefficient" , "Efficient")
    eff$iseff <- ifelse(eff$eff<1, 0 , 1)
    if(!modelname %in% c("supereff_basic", "sbmsupereff")){
-   eff %>% ggplot(aes(x = eff)) + geom_histogram(breaks = c(seq(from = min(eff$eff), to = max(eff$eff[eff$eff<1]), 
-                                                                length.out = 10),1.05), #bins = 10,
-                                                 col = "white", 
-                                                 aes(fill = ifelse(eff < 1, 
-                                                                   "red",
-                                                                   "lightgreen")
-                                                     )
-                                                 ) + 
-     theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") -> effplot
+     eff %>% filter(iseff == 0) %>% ggplot(aes(x = eff)) + 
+       geom_histogram(breaks = c(seq(from = min(eff$eff), to = max(eff$eff[eff$eff<1]), 
+                                     length.out = 10)),col = "white", 
+                      aes(fill = ifelse(eff < 1, "red","lightgreen"))) + 
+       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + 
+       ggtitle("Non-efficient DMU distribution")-> p2
+     
+     eff %>% ggplot(aes(x = factor(iseff))) + geom_bar(aes(fill = ifelse(eff < 1, "red","lightgreen"))) + theme_bw() +
+       scale_fill_identity() + xlab("") + scale_x_discrete(labels = c("Non-efficient","Efficient")) + ylab("Count") + 
+       ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat='count', aes(label=..count..), vjust=-0.5) -> p1
+     grid.arrange(p1,p2,nrow = 1)
    }else{
      eff %>% ggplot(aes(x = eff)) + geom_histogram(bins = 10,
                                                    col = "white", 
@@ -87,7 +101,9 @@ plot.dea <- function(x, ...){
                                                                      "lightgreen")
                                                    )
      ) + 
-       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap(~iseff, scales = "free") #-> effplot
+       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + 
+       facet_wrap(~ifelse(iseff==0,"Inefficient","Efficient"), scales = "free") -> effplot
+     show(effplot)
      }
    
    
@@ -100,9 +116,9 @@ plot.dea <- function(x, ...){
                                                             length.out = 10), 1.05),#bins = 10,
                                              col = "white", 
                                              aes(fill = ifelse(eff < 1, "red","lightgreen"))) +
-       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap(~Aspect) -> effplot
+       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap(~Aspect)
    }
-   show(effplot)
+   
    invisible(readline(prompt="Press [enter] to continue"))
    # Reference ranking --------------
    if(!modelname %in% c("supereff_basic","sbmsupereff")){
@@ -121,21 +137,26 @@ plot.dea <- function(x, ...){
    RefMat[urefnames,refnames] <- round(lmbd[urefnames, refnames],4)
    RefMatl <- RefMat>0
    ranking <- sort(colSums(RefMatl))
+   realcount <- ranking
    ranking[ranking==0] <- min(ranking[ranking>0])*1e-2
    effnames <- names(ranking)
    
-   rkdf <- data.frame(DMU = effdmus, Count = ranking, Pos = seq(length(effdmus)))
+   rkdf <- data.frame(DMU = effdmus, Count = ranking, realcount = realcount, Pos = seq(length(effdmus)))
    
-   rkdf %>% ggplot(aes(x = as.factor(Pos), y = Count)) + geom_col(fill = "gray") + coord_flip() + 
-     scale_x_discrete(labels = rkdf$DMU, drop = FALSE) + theme_bw() + xlab("Efficient DMUs") + ylab("# times appearing in reference sets") -> refplot
-   show(refplot)}
+   rkdf %>% ggplot(aes(x = as.factor(Pos), y = Count)) + geom_col(aes(fill = Count)) + coord_flip() + 
+     scale_x_discrete(labels = rkdf$DMU, drop = FALSE) + theme_bw() + xlab("Efficient DMUs") + 
+     ylab("# times appearing in reference sets") + geom_text(aes(label = realcount), hjust=-0.5) +
+     guides(fill=FALSE) -> refplot
+   show(refplot)
+   invisible(readline(prompt="Press [enter] to continue"))
+   }
   # }else{
      
      
      
      
    #}
-   invisible(readline(prompt="Press [enter] to continue"))
+   
    # Reference Graph ------------------------
    
    if(!modelname %in% c("supereff_basic","sbmsupereff")){
