@@ -43,19 +43,20 @@ plot.dea <- function(x, ...){
      malmdata <- summary(object, exportExcel = FALSE)
      results <- malmdata$Results
      sumres <- malmdata$means_by_period
-     colnames(results) <- c("Period","DMU","Efficiency change", "Technical change", "Productivity change","Scale change","Malmquist index")
+     colnames(results) <- c("Period","DMU","Eff. change", "Tech. change", "Prod. change","Scale change","Malm. idx")
      colnames(sumres) <- c("Period","Efficiency change", "Technical change", "Productivity change","Scale change","Malmquist index")
-     results %>% gather(key= "index", value = "value", -c("Period","DMU")) %>% 
-       ggplot(aes(x = Period, y = value, col = DMU)) + geom_line(aes(group = DMU)) + facet_wrap(~index, scales = "free") +
-       ylab("") + theme_bw() + ggtitle("Change indices") -> resplot
-     sumres %>% gather(key= "index", value = "value", -c("Period")) %>% 
-       ggplot(aes(x = Period, y = value, col = index)) + geom_line(aes(group = index)) + theme_bw() +
-       ylab("")  + ggtitle("Geometric means by period") -> sumplot
+     invisible(readline(prompt="Press [enter] to continue"))
+     results %>% gather(key= "index", value = "value", -c("Period","DMU")) %>% group_by(index) %>% 
+       do(p = plot_ly(., x =~Period, y=~value, color = ~DMU, mode = 'lines', type = 'scatter', colors = "Paired") %>% layout(yaxis=list(title=~index)))  %>% 
+       subplot(nrows = NROW(.), shareX = TRUE,titleY=TRUE)-> resplot
      
+     show(resplot)
      invisible(readline(prompt="Press [enter] to continue"))
-     ggplotly(resplot)
-     invisible(readline(prompt="Press [enter] to continue"))
-     ggplotly(sumplot)
+     
+     sumres %>% gather(key= "index", value = "value", -c("Period")) %>% 
+       plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
+     show(sumplot)
+     
    }else{
      results <- list(Arb = object$Arbitrary$cross_eff,
      M2_agg = object$M2_agg$cross_eff,
