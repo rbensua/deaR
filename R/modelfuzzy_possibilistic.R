@@ -1,6 +1,6 @@
 #' @title Possibilistic Fuzzy DEA model.
 #'   
-#' @description Solve the possibilistic fuzzy DEA model by León et. al (2003).
+#' @description Solve the possibilistic fuzzy DEA model proposed by León et. al (2003).
 #' 
 #' @usage modelfuzzy_possibilistic(datadea,
 #'             dmu_eval = NULL,

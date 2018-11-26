@@ -1,6 +1,6 @@
 #' @title Fuzzy DEA model
 #'
-#' @description Solve the Fuzzy input-oriented and output-oriented DEA model by Guo and Tanaka (2001) under constant returns-to-scale.
+#' @description Solve the Fuzzy input-oriented and output-oriented DEA model proposed by Guo and Tanaka (2001) under constant returns-to-scale.
 #' In deaR is implemented the LP poblem given by the model (16) in Guo and Tanaka (2001, p.155).
 #' The fuzzy efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001, p.155).
 #' The (crisp) relative efficiencies and multipliers for the case \code{h} = 1 are obtained from the CCR model (\code{model_multiplier}).

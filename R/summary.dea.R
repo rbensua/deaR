@@ -1,4 +1,4 @@
-#' @title Summary conventional DEA model.
+#' @title Summary conventional DEA models.
 #'   
 #'   
 #' @description Summary of the results obtained by a conventiona DEA model.
@@ -14,6 +14,18 @@
 #' slacks, lambdas, targets, references or a list of data.frames with the cross-efficiencies computed 
 #' with different methods (Arbitrary, Method II or Method III (see CITA)) or, in case the model is a
 #'  malmquist index, a single data.frame with the coefficients for the different periods.       
+#' @author 
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+#' 
+#' \strong{Vicente Bolós} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benítez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
+#' 
 #' @examples
 #' data("PFT1981") 
 #' # Selecting DMUs in Program Follow Through (PFT)
@@ -26,6 +38,8 @@
 #'                         orientation = "io", 
 #'                         rts = "crs")
 #' summary(eval_pft, exporExcel = FALSE)
+#' @references 
+#' Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \url{https://pubsonline.informs.org/doi/abs/10.1287/mnsc.27.6.668}
 #' @method summary dea
 #' @import writexl
 #' @importFrom dplyr summarise_at vars funs

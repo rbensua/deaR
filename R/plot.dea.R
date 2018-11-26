@@ -1,7 +1,7 @@
-#' @title Plot
+#' @title Plot for DEA models.
 #'   
 #'   
-#' @description Plot some attribute of a dea model
+#' @description Plot some attribute of a DEA model (conventional, fuzzy or Malmquist).
 #' 
 #' @param x An object of class \code{"dea"} obtained by a dea model function.
 #' @param ... Ignored, for compatibility issues.
@@ -11,11 +11,28 @@
 #' slacks, lambdas, targets, references or a list of data.frames with the cross-efficiencies computed 
 #' with different methods (Arbitrary, Method II or Method III (see CITA)) or, in case the model is a
 #'  malmquist index, a single data.frame with the coefficients for the different periods.       
-#' @examples
-#' data_example <- read_data(datadea = Fortune500, dmus = 1, inputs = 2:4, outputs = 5:6)
+#' @author 
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 #' 
-#' deamodel <- model_basic(data_example)
-#' plot(deamodel)
+#' \strong{Vicente Bolós} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benítez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
+#' 
+#' @examples
+#' data_example <- read_data(datadea = Fortune500,
+#'                           dmus = 1,
+#'                           inputs = 2:4, 
+#'                           outputs = 5:6)
+#' result <- model_basic(data_example)
+#' plot(result)
+#' 
+#' @references
+#' #' Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
 #' @method plot dea
 #' @importFrom igraph graph.adjacency degree "V<-" "V" plot.igraph
 #' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity xlab ylab coord_flip aes

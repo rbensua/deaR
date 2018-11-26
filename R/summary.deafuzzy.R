@@ -1,4 +1,4 @@
-#' @title Summary Fuzzy DEA model
+#' @title Summary Fuzzy DEA models.
 #'   
 #'   
 #' @description Summary of the results obtained by a fuzzy DEA model.
@@ -21,6 +21,17 @@
 #' 
 #' If \code{exportExcel} is TRUE, then an Excel file will be created containing as many sheets as necessary 
 #' depending on the variables returned.
+#' @author 
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+#' 
+#' \strong{Vicente Bolós} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benítez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
 #' @examples
 #' data("Leon2003")
 #' data_example <- read_data_fuzzy(Leon2003,
@@ -34,6 +45,8 @@
 #'                                    orientation = "io", 
 #'                                    rts = "vrs")
 #' summary(result)
+#' @references 
+#' León, T.; Liern, V. Ruiz, J.; Sirvent, I. (2003). "A Possibilistic Programming Approach to the Assessment of Efficiency with DEA Models", Fuzzy Sets and Systems, 139, 407–419. \url{https://doi.org/10.1016/S0165-0114(02)00608-5}
 #' @method summary dea_fuzzy
 #' @import writexl tidyr
 #' @export
