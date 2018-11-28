@@ -35,7 +35,7 @@
 #' #' Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
 #' @method plot dea
 #' @importFrom igraph graph.adjacency degree "V<-" "V" plot.igraph
-#' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity xlab ylab coord_flip aes
+#' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity xlab ylab coord_flip aes ggtitle
 #' @importFrom methods show
 #' @importFrom graphics plot
 #' @importFrom stats runif
@@ -54,24 +54,44 @@ plot.dea <- function(x, ...){
  # For check CRAN pass...
  Period <- value <- DMU <- Pos <- Count <- NULL
  `V<-` <- NULL
+ if(modelname == "deaps"){
+   if(object$restricted_eff == FALSE){
+     stop("Plotting a Preference Structure model with unrestricted efficiencies is not available!")
+   }
+ }
+ if(modelname == "additive"){  
+   stop("Plotting additive models are not implemented yet!")
+   
+ }
+ if(modelname == "basic" & object$orientation$orientation == "dir"){  
+   stop("Plotting Basic model with directional orientation  is not implemented yet!")
+   
+ }
  
  if(modelname %in% c("malmquist","cross_efficiency")){
    if(modelname == "malmquist"){
      malmdata <- summary(object, exportExcel = FALSE)
      results <- malmdata$Results
      sumres <- malmdata$means_by_period
-     colnames(results) <- c("Period","DMU","Eff. change", "Tech. change", "Prod. change","Scale change","Malm. idx")
-     colnames(sumres) <- c("Period","Efficiency change", "Technical change", "Productivity change","Scale change","Malmquist index")
+     colnames(results) <- c("Period","DMU","EC", "TC", "PTEC","SEC","MI")
+     colnames(sumres) <- c("Period","EC", "TC", "PTEC","SC","MI")
+     results <- results[,c("Period","DMU","EC","PTEC","SEC","TC","MI")]
      invisible(readline(prompt="Press [enter] to continue"))
-     results %>% gather(key= "index", value = "value", -c("Period","DMU")) %>% group_by(index) %>% 
-       do(p = plot_ly(., x =~Period, y=~value, color = ~DMU, mode = 'lines', type = 'scatter', colors = "Paired") %>% layout(yaxis=list(title=~index)))  %>% 
+     results %>% gather(key= "index", value = "value", -c("Period","DMU")) -> resmelt 
+     resmelt$index <- as.factor(resmelt$index)
+     resmelt$index <- factor(resmelt$index, levels(resmelt$index)[c(1,3,4,5,2)])
+     resmelt %>% group_by(index) %>% 
+       do(p = plot_ly(., x =~Period, y=~value, color = ~DMU, mode = 'lines', type = 'scatter', colors = "Paired") %>% 
+            layout(yaxis=list(title=~index)))  %>% 
        subplot(nrows = NROW(.), shareX = TRUE,titleY=TRUE)-> resplot
      
      show(resplot)
      invisible(readline(prompt="Press [enter] to continue"))
      
-     sumres %>% gather(key= "index", value = "value", -c("Period")) %>% 
-       plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
+     sumres %>% gather(key= "index", value = "value", -c("Period")) -> sumresmelt 
+     sumresmelt$index <- as.factor(sumresmelt$index)
+     sumresmelt$index <- factor(sumresmelt$index, levels(sumresmelt$index)[c(1,3,4,5,2)])
+       sumresmelt %>% plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
      show(sumplot)
      
    }else{
@@ -95,6 +115,7 @@ plot.dea <- function(x, ...){
  }else{
    # Efficiencies histogram ----------
    if(!modelname %in% c("nonradial", "deaps")){
+    
    eff <- data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
    eff <- eff[complete.cases(eff),]
    #eff$iseff <- ifelse(eff$eff<1, "Inefficient" , "Efficient")
@@ -104,8 +125,9 @@ plot.dea <- function(x, ...){
    slk[sapply(slk, is.null)] <- NULL
    null_slk <- apply(do.call(cbind,slk), MARGIN = 1, FUN = function(x) sum(x^2)) < 1e-4 # Null slacks
    eff_1 <- abs(eff$eff-1) < 1e-4 # Efficiencie = 1
-   
+    
    eff$iseff <- ifelse(null_slk & eff_1, 1,0)
+    
    if(!modelname %in% c("supereff_basic", "sbmsupereff")){
      eff %>% filter(iseff == 0) %>% ggplot(aes(x = eff)) + 
        geom_histogram(breaks = c(seq(from = min(eff$eff), to = max(eff$eff[eff$iseff == 0]), 
@@ -129,9 +151,10 @@ plot.dea <- function(x, ...){
        theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") -> effplot
      show(effplot)
      }
-   
+    
    
    }else{
+     
      eff <- data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
      eff %>% mutate(iseff = ifelse(abs(eff.mean_eff-1)<1e-4, 1 , 0)) -> eff
      effmelted <- eff %>% gather(key = "Aspect", value = "eff", -c(DMU,iseff))
@@ -147,11 +170,14 @@ plot.dea <- function(x, ...){
        scale_fill_identity() + xlab("") + scale_x_discrete(labels = c("Non-efficient","Efficient")) + ylab("Count") + 
        ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat='count', aes(label=..count..), vjust=-0.5)-> p2
      show(p2)
+    
    }
    
    invisible(readline(prompt="Press [enter] to continue"))
    # Reference ranking --------------
    if(!modelname %in% c("supereff_basic","sbmsupereff")){
+   
+         
    ref <- references(object) 
    lmbd <- lambdas(object)
    dmunames <- object$data$dmunames
@@ -178,18 +204,19 @@ plot.dea <- function(x, ...){
      ylab("# times appearing in reference sets") + geom_text(aes(label = realcount), hjust=-0.5) +
      guides(fill=FALSE) -> refplot
    show(refplot)
+   
    invisible(readline(prompt="Press [enter] to continue"))
+   } else{
+     
+   warning("Ranking plots with those models are not implemented yet!")  
+     
+     
    }
-  # }else{
-     
-     
-     
-     
-   #}
    
    # Reference Graph ------------------------
    
    if(!modelname %in% c("supereff_basic","sbmsupereff")){
+  
    lmbd <- lmbd[complete.cases(lmbd),]
    adjmatrix <- lmbd>0
    G <- graph.adjacency(adjmatrix,diag = FALSE )
@@ -226,6 +253,7 @@ plot.dea <- function(x, ...){
    
    plot(G, layout = locations, xlim = c(-2,2), ylim = c(-.4,.4),
         edge.arrow.size=1, edge.arrow.width = 0.5,edge.curved=FALSE)
+   
    }
 
  }
