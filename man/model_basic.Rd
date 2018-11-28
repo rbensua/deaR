@@ -137,6 +137,8 @@ Charnes, A.; Cooper, W.W.; Rhodes, E. (1978). “Measuring the efficiency of dec
 
 Charnes, A.; Cooper, W.W.; Rhodes, E. (1979). “Short communication: Measuring the efficiency of decision making units”, European Journal of Operational Research 3, 339. \url{https://doi.org/10.1016/0377-2217(79)90229-7}  
 
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \url{https://pubsonline.informs.org/doi/abs/10.1287/mnsc.27.6.668}
+
 Banker, R.; Charnes, A.; Cooper, W.W. (1984). “Some Models for Estimating Technical and Scale Inefficiencies in Data Envelopment Analysis”, Management Science; 30; 1078-1092. \url{https://www.jstor.org/stable/2631725}  
 
 Undesirable inputs/outputs: 

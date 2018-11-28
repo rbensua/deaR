@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.dea.R
 \name{summary.dea}
 \alias{summary.dea}
-\title{Summary conventional DEA model.}
+\title{Summary conventional DEA models.}
 \usage{
 \method{summary}{dea}(object, exportExcel = TRUE, filename = NULL, ...)
 }
@@ -37,4 +37,19 @@ eval_pft <- model_basic(PFT,
                         orientation = "io", 
                         rts = "crs")
 summary(eval_pft, exporExcel = FALSE)
+}
+\references{
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \url{https://pubsonline.informs.org/doi/abs/10.1287/mnsc.27.6.668}
+}
+\author{
+\strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
+\emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+
+\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\emph{Department of Business Mathematics}
+
+\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\emph{Department of Business Mathematics}
+
+University of Valencia (Spain)
 }

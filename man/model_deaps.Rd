@@ -12,6 +12,7 @@ model_deaps(datadea,
             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
             L = 1,
             U = 1,
+            restricted_eff = TRUE,
             maxslack = TRUE,
             weight_slack = 1,
             compute_target = TRUE,
@@ -41,6 +42,8 @@ m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_e
 \item{L}{Lower bound for the generalized returns to scale (grs).}
 
 \item{U}{Upper bound for the generalized returns to scale (grs).}
+
+\item{restricted_eff}{Logical. If it is \code{TRUE}, the efficiencies are restricted to be <=1 (input-oriented) or >=1 (output-oriented).}
 
 \item{maxslack}{Logical. If it is \code{TRUE}, it computes the max slack solution.}
 

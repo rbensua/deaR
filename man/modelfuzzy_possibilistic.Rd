@@ -25,7 +25,7 @@ modelfuzzy_possibilistic(datadea,
 An object of class \code{deadata_fuzzy}.
 }
 \description{
-Solve the possibilistic fuzzy DEA model by León et. al (2003).
+Solve the possibilistic fuzzy DEA model proposed by León et. al (2003).
 }
 \examples{
 # Replication of results in Leon et. al (2003, p. 416)

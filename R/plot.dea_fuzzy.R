@@ -3,7 +3,7 @@
 #'   
 #' @description Plot some attribute of a DEA model (conventional, fuzzy or Malmquist).
 #' 
-#' @param x An object of class \code{"dea"} obtained by a dea model function.
+#' @param x An object of class \code{"dea_fuzzy"} obtained by a dea model_fuzzy function.
 #' @param ... Ignored, for compatibility issues.
 #' 
 #'   
@@ -33,7 +33,7 @@
 #' 
 #' @references
 #' #' Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
-#' @method plot dea
+#' @method plot dea_fuzzy
 #' @importFrom igraph graph.adjacency degree "V<-" "V" plot.igraph
 #' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity xlab ylab coord_flip aes
 #' @importFrom methods show
@@ -44,10 +44,10 @@
 #' @export
 #' 
 
-plot.dea <- function(x, ...){
+plot.dea_fuzzy <- function(x, ...){
   object <- x
-  if(!is.dea(object)){
-    stop("Input should be of class dea!")
+  if(!is.dea_fuzzy(object)){
+    stop("Input should be of class dea_fuzzy!")
   }
 
  modelname <- object$modelname
@@ -98,55 +98,43 @@ plot.dea <- function(x, ...){
    eff <- data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
    eff <- eff[complete.cases(eff),]
    #eff$iseff <- ifelse(eff$eff<1, "Inefficient" , "Efficient")
-   
-   # Efficient DMUS have eff = 1 and slacks  = 0
-   slk <- slk <- slacks(object)
-   slk[sapply(slk, is.null)] <- NULL
-   null_slk <- apply(do.call(cbind,slk), MARGIN = 1, FUN = function(x) sum(x^2)) < 1e-4 # Null slacks
-   eff_1 <- abs(eff$eff-1) < 1e-4 # Efficiencie = 1
-   
-   eff$iseff <- ifelse(null_slk & eff_1, 1,0)
+   eff$iseff <- ifelse(eff$eff<1, 0 , 1)
    if(!modelname %in% c("supereff_basic", "sbmsupereff")){
      eff %>% filter(iseff == 0) %>% ggplot(aes(x = eff)) + 
-       geom_histogram(breaks = c(seq(from = min(eff$eff), to = max(eff$eff[eff$iseff == 0]), 
+       geom_histogram(breaks = c(seq(from = min(eff$eff), to = max(eff$eff[eff$eff<1]), 
                                      length.out = 10)),col = "white", 
-                      aes(fill = ifelse(iseff == 0, "red","lightgreen"))) + 
+                      aes(fill = ifelse(eff < 1, "red","lightgreen"))) + 
        theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + 
        ggtitle("Non-efficient DMU distribution")-> p2
      
-     eff %>% ggplot(aes(x = factor(iseff))) + geom_bar(aes(fill = ifelse(iseff == 0, "red","lightgreen"))) + theme_bw() +
+     eff %>% ggplot(aes(x = factor(iseff))) + geom_bar(aes(fill = ifelse(eff < 1, "red","lightgreen"))) + theme_bw() +
        scale_fill_identity() + xlab("") + scale_x_discrete(labels = c("Non-efficient","Efficient")) + ylab("Count") + 
        ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat='count', aes(label=..count..), vjust=-0.5) -> p1
      grid.arrange(p1,p2,nrow = 1)
    }else{
      eff %>% ggplot(aes(x = eff)) + geom_histogram(bins = 10,
                                                    col = "white", 
-                                                   aes(fill = ifelse(iseff == 0, 
+                                                   aes(fill = ifelse(eff < 1, 
                                                                      "red",
                                                                      "lightgreen")
                                                    )
      ) + 
-       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") -> effplot
+       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + 
+       facet_wrap(~ifelse(iseff==0,"Inefficient","Efficient"), scales = "free") -> effplot
      show(effplot)
      }
    
    
    }else{
      eff <- data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
-     eff %>% mutate(iseff = ifelse(abs(eff.mean_eff-1)<1e-4, 1 , 0)) -> eff
-     effmelted <- eff %>% gather(key = "Aspect", value = "eff", -c(DMU,iseff))
+     effmelted <- eff %>% gather(key = "Aspect", value = "eff", -DMU) %>% mutate(iseff = ifelse(eff<1, 0 , 1)) 
      effmelted$Aspect <- gsub("eff.", "", x = effmelted$Aspect)
-     effmelted %>% filter(iseff==0 & Aspect!= "mean_eff") %>% 
-       ggplot(aes(x = eff)) + geom_histogram(bins = 10, fill = "red", col = "white")+
-       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap(~Aspect, scales = "free") -> p1
-     show(p1)
-     invisible(readline(prompt="Press [enter] to continue"))
-     
-     effmelted %>% filter(Aspect == "mean_eff") %>% ggplot(aes(x = factor(iseff))) + 
-       geom_bar(aes(fill = ifelse(iseff == 0, "red","lightgreen")), width = 0.5) + theme_bw() +
-       scale_fill_identity() + xlab("") + scale_x_discrete(labels = c("Non-efficient","Efficient")) + ylab("Count") + 
-       ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat='count', aes(label=..count..), vjust=-0.5)-> p2
-     show(p2)
+     effmelted %>% 
+       ggplot(aes(x = eff)) + geom_histogram(breaks = c(seq(from = min(effmelted$eff), to = max(effmelted$eff[effmelted$eff<1]), 
+                                                            length.out = 10), 1.05),#bins = 10,
+                                             col = "white", 
+                                             aes(fill = ifelse(eff < 1, "red","lightgreen"))) +
+       theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap(~Aspect)
    }
    
    invisible(readline(prompt="Press [enter] to continue"))
@@ -171,7 +159,7 @@ plot.dea <- function(x, ...){
    ranking[ranking==0] <- min(ranking[ranking>0])*1e-2
    effnames <- names(ranking)
    
-   rkdf <- data.frame(DMU = effnames, Count = ranking, realcount = realcount, Pos = seq(length(effdmus)))
+   rkdf <- data.frame(DMU = effdmus, Count = ranking, realcount = realcount, Pos = seq(length(effdmus)))
    
    rkdf %>% ggplot(aes(x = as.factor(Pos), y = Count)) + geom_col(aes(fill = Count)) + coord_flip() + 
      scale_x_discrete(labels = rkdf$DMU, drop = FALSE) + theme_bw() + xlab("Efficient DMUs") + 

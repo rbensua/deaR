@@ -3,6 +3,7 @@
 S3method(efficiencies,dea)
 S3method(efficiencies,dea_fuzzy)
 S3method(plot,dea)
+S3method(plot,dea_fuzzy)
 S3method(summary,dea)
 S3method(summary,dea_fuzzy)
 export(bootstrap_basic)

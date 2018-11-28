@@ -9,6 +9,7 @@
 #'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
 #'             L = 1,
 #'             U = 1,
+#'             restricted_eff = TRUE,
 #'             maxslack = TRUE,
 #'             weight_slack = 1,
 #'             compute_target = TRUE,
@@ -30,6 +31,7 @@
 #'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
+#' @param restricted_eff Logical. If it is \code{TRUE}, the efficiencies are restricted to be <=1 (input-oriented) or >=1 (output-oriented).
 #' @param maxslack Logical. If it is \code{TRUE}, it computes the max slack solution.
 #' @param weight_slack If input-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} with the weights of the output slacks for the max slack solution.
 #'                     If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} with the weights of the input slacks for the max slack solution.
@@ -83,6 +85,7 @@ model_deaps <-
            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
            L = 1,
            U = 1,
+           restricted_eff = TRUE,
            maxslack = TRUE,
            weight_slack = 1,
            compute_target = TRUE,
@@ -226,8 +229,16 @@ model_deaps <-
     }
   }
   
-  # Matriz técnica del 2º bloque de restricciones stage 1
+  # Matriz técnica del 2º y 3º bloque de restricciones stage 1
   f.con.2 <- cbind(matrix(0, nrow = no, ncol = ni), outputref)
+  f.con.3 <- NULL
+  f.dir.3 <- NULL
+  f.rhs.3 <- NULL
+  if (restricted_eff) {
+    f.con.3 <- cbind(orient * diag(ni), matrix(0, nrow = ni, ncol = ndr))
+    f.dir.3 <- rep("<=", ni)
+    f.rhs.3 <- rep(orient, ni)
+  }
   
   if (maxslack && (!returnlp)) {
     
@@ -263,14 +274,14 @@ model_deaps <-
     f.con.1 <- cbind(-diag(input[, ii], nrow = ni), inputref)
     f.con.w0 <- cbind(diag(ni), matrix(0, nrow = ni, ncol = ndr))
     f.con.w0 <- f.con.w0[w0, ]
-    f.con <- rbind(f.con.1, f.con.2, f.con.w0, f.con.rs)
+    f.con <- rbind(f.con.1, f.con.2, f.con.3, f.con.w0, f.con.rs)
     
     # Vector de dirección de restricciones stage 1
-    f.dir <- c(rep("=", ni), rep(">=", no), rep("=", nw0), f.dir.rs)
+    f.dir <- c(rep("=", ni), rep(">=", no), f.dir.3, rep("=", nw0), f.dir.rs)
     f.dir[ni + nc_outputs] <- "="
     
     # Vector de términos independientes stage 1
-    f.rhs <- c(rep(0, ni), output[, ii], rep(1, nw0), f.rhs.rs)
+    f.rhs <- c(rep(0, ni), output[, ii], f.rhs.3, rep(1, nw0), f.rhs.rs)
     
     if (returnlp) {
       
@@ -373,6 +384,7 @@ model_deaps <-
                     data = datadea,
                     dmu_eval = dmu_eval,
                     dmu_ref = dmu_ref,
+                    restricted_eff = restricted_eff,
                     weight_eff = weight_eff)
  
   return(structure(deaOutput, class = "dea"))

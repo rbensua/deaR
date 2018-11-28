@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.deafuzzy.R
 \name{summary.dea_fuzzy}
 \alias{summary.dea_fuzzy}
-\title{Summary Fuzzy DEA model}
+\title{Summary Fuzzy DEA models.}
 \usage{
 \method{summary}{dea_fuzzy}(object, ..., exportExcel = TRUE,
   filename = NULL)
@@ -47,4 +47,19 @@ result <- modelfuzzy_possibilistic(data_example,
                                    orientation = "io", 
                                    rts = "vrs")
 summary(result)
+}
+\references{
+León, T.; Liern, V. Ruiz, J.; Sirvent, I. (2003). "A Possibilistic Programming Approach to the Assessment of Efficiency with DEA Models", Fuzzy Sets and Systems, 139, 407–419. \url{https://doi.org/10.1016/S0165-0114(02)00608-5}
+}
+\author{
+\strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
+\emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+
+\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\emph{Department of Business Mathematics}
+
+\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\emph{Department of Business Mathematics}
+
+University of Valencia (Spain)
 }
