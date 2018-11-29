@@ -156,6 +156,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
    if(is.null(filename)){
      filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
      filename <- gsub(" ","_",filename)
+     filename <- gsub(":",".",filename)
    }
    write_xlsx(dflist, path = filename)
  }

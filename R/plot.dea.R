@@ -35,12 +35,12 @@
 #' #' Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
 #' @method plot dea
 #' @importFrom igraph graph.adjacency degree "V<-" "V" plot.igraph
-#' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity xlab ylab coord_flip aes ggtitle
+#' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity guides xlab ylab coord_flip aes ggtitle geom_bar geom_text
 #' @importFrom methods show
 #' @importFrom graphics plot
 #' @importFrom stats runif
 #' @importFrom gridExtra grid.arrange
-#' @import plotly
+#' @import plotly dplyr
 #' @export
 #' 
 
@@ -63,10 +63,12 @@ plot.dea <- function(x, ...){
    stop("Plotting additive models are not implemented yet!")
    
  }
- if(modelname == "basic" & object$orientation$orientation == "dir"){  
-   stop("Plotting Basic model with directional orientation  is not implemented yet!")
-   
- }
+ if(modelname == "basic"){
+   if(!object$orientation %in% c("io","oo"))
+     stop("Plotting Basic model with is only available with input/output orientations!")
+     
+ } 
+ 
  
  if(modelname %in% c("malmquist","cross_efficiency")){
    if(modelname == "malmquist"){
@@ -184,10 +186,7 @@ plot.dea <- function(x, ...){
    refnames <- unique(unlist(lapply(ref, function (x) names(x))))
    urefnames <- names(ref)
    effdmus <- dmunames[which(! dmunames %in% urefnames)]
-  # if(!modelname %in% c("nonradial", "deaps")){
-   
-   #efficient <- which(efficiencies(object) > (1-1e-6))
-   #effdmus <- dmunames[efficient]
+
    
    RefMat <- matrix(0, nrow = length(urefnames), ncol = length(effdmus),dimnames = list( urefnames, sort(effdmus)))
    RefMat[urefnames,refnames] <- round(lmbd[urefnames, refnames],4)
