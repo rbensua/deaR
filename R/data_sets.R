@@ -620,7 +620,7 @@
 #'                                 outputs.mL=6:7,
 #'                                 outputs.dL=8:9)
 #' result <- modelfuzzy_guotanaka(data_example,
-#'                                alpha= seq(0,1,by=0.1),
+#'                                h = seq(0,1,by=0.1),
 #'                                orientation="io")
 #' efficiencies(result)
 #' 
@@ -665,7 +665,7 @@
 #'                                 outputs.mL = 4, 
 #'                                 outputs.dL=5)
 #' result <- modelfuzzy_possibilistic(data_example,
-#'                                    alpha= seq(0,1,by=0.1), 
+#'                                    h = seq(0,1,by=0.1), 
 #'                                    orientation="io", 
 #'                                    rts="vrs")
 #' efficiencies(result)

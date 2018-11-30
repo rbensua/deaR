@@ -327,7 +327,8 @@ model_additive <-
                     dmu_eval = dmu_eval,
                     dmu_ref = dmu_ref,
                     weight_slack_i = weight_slack_i,
-                    weight_slack_o = weight_slack_o)
+                    weight_slack_o = weight_slack_o,
+                    orientation = "NA")
   
   return(structure(deaOutput, class = "dea"))
   

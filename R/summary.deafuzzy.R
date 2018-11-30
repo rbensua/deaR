@@ -41,7 +41,7 @@
 #'                                 outputs.mL = 4, 
 #'                                 outputs.dL = 5)
 #' result <- modelfuzzy_possibilistic(data_example, 
-#'                                    alpha= seq(0, 1, by = 0.1), 
+#'                                    h = seq(0, 1, by = 0.1), 
 #'                                    orientation = "io", 
 #'                                    rts = "vrs")
 #' summary(result)
@@ -73,6 +73,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
      if(is.null(filename)){
        filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
        filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
      }
      write_xlsx(effdf, path = filename)
    }
@@ -96,6 +97,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL){
      if(is.null(filename)){
        filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
        filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
      }
      write_xlsx(df, path = filename)
    }

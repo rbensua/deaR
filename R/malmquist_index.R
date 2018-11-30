@@ -1,7 +1,8 @@
 #' @title Malmquist index
 #'   
-#' @description Malmquist index using model basic io crs...
+#' @description This function calculates the conventional input/output oriented Malmquist index under constant and variables returns-to-scale.
 #' 
+#' @note In the results: EC=Efficiency Change, PTEC=Pure Technical Efficiency Change, SEC=Scale Efficiency Change, TC= Technological Change, MI= Malmquist Index 
 #' @usage malmquist_index(datadealist,
 #'                        dmu_eval = NULL,
 #'                        dmu_ref = NULL,

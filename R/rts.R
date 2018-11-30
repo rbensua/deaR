@@ -35,7 +35,8 @@ rts <- function(deamodel, thr =  1e-4){
   if (!is.dea(deamodel)) {
     stop("Input should be a dea class object!")
   }
-  if(deamodel$modelname != "multiplier"){
+  rts <- NULL
+  if(!deamodel$modelname %in% c("multiplier")){
     lamb <- lambdas(deamodel)
     lambsum <- rowSums(lamb)
     if(deamodel$orientation %in% c("io","oo")){
@@ -56,10 +57,12 @@ rts <- function(deamodel, thr =  1e-4){
              stop("General returns to scale not implemented yet!")
              
       )
+      res <- data.frame(lambsum = lambsum, rts = rts)
     }else{
-      stop("Only input/output orientations are implemented!")
+      warning("Only input/output orientations are implemented!")
+      res <- data.frame(lambsum = lambsum)
     }
-    res <- data.frame(lambsum = lambsum, rts = rts)
+    
   }else {
     k <- do.call(rbind, lapply(deamodel$DMU, function(x) x$multiplier_rts))
     dimnames(k)[[2]] <- "k"

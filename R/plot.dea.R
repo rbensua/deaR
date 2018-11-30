@@ -38,7 +38,7 @@
 #' @importFrom ggplot2 ggplot geom_line geom_histogram geom_col facet_wrap scale_x_discrete theme_bw scale_fill_identity guides xlab ylab coord_flip aes ggtitle geom_bar geom_text
 #' @importFrom methods show
 #' @importFrom graphics plot
-#' @importFrom stats runif
+#' @importFrom stats runif complete.cases
 #' @importFrom gridExtra grid.arrange
 #' @import plotly dplyr
 #' @export
@@ -52,7 +52,7 @@ plot.dea <- function(x, ...){
 
  modelname <- object$modelname
  # For check CRAN pass...
- Period <- value <- DMU <- Pos <- Count <- NULL
+ Period <- value <- DMU <- Pos <- Count <- . <- index <- iseff <- ..count.. <- eff.mean_eff <- Aspect <-  NULL
  `V<-` <- NULL
  if(modelname == "deaps"){
    if(object$restricted_eff == FALSE){

@@ -321,6 +321,7 @@ model_basic <-
   target_output <- NULL
   multiplier_input <- NULL
   multiplier_output <- NULL
+  orientation_param <- NULL
   
   DMU <- vector(mode = "list", length = nde)
   names(DMU) <- dmunames[dmu_eval]
@@ -668,7 +669,7 @@ model_basic <-
       
     }
     
-    orientation <- list(orientation = orientation,
+    orientation_param <- list(
                         dir_input = dir_input,
                         dir_output = dir_output)
     
@@ -682,6 +683,7 @@ model_basic <-
   
   deaOutput <- list(modelname = "basic",
                    orientation = orientation,
+                   orientation_param = orientation_param,
                    rts = rts,
                    L = L,
                    U = U,

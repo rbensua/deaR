@@ -60,13 +60,13 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  if(!modelname %in% c("malmquist","cross_efficiency")){
  
  # Efficiencies
- if(!modelname %in% c("additive","addsupereff")){
+# if(!modelname %in% c("addsupereff")){
    eff <- efficiencies(object)
    eff <- data.frame(eff, stringsAsFactors = FALSE)
    eff <- data.frame(cbind(data.frame(DMU = rownames(eff)),eff), row.names = NULL)
- }else {
-   eff <- NULL
- }
+# }else {
+#   eff <- NULL
+# }
  
  # slacks
  if(!modelname %in% c("multiplier")){
@@ -194,6 +194,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
      if(is.null(filename)){
        filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
        filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
      }
      write_xlsx(res, path = filename)
    }
@@ -209,6 +210,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
      if(is.null(filename)){
        filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
        filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
      }
      write_xlsx(dflist, path = filename)
    }

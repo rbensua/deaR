@@ -33,7 +33,7 @@ data_example <- read_data_fuzzy(Guo_Tanaka_2001,
                                 outputs.mL=6:7,
                                 outputs.dL=8:9)
 result <- modelfuzzy_guotanaka(data_example,
-                               alpha= seq(0,1,by=0.1),
+                               h = seq(0,1,by=0.1),
                                orientation="io")
 efficiencies(result)
 

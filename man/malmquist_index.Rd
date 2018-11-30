@@ -22,7 +22,10 @@ malmquist_index(datadealist,
 A numeric list with Malmquist index and efficiencies.
 }
 \description{
-Malmquist index using model basic io crs...
+This function calculates the conventional input/output oriented Malmquist index under constant and variables returns-to-scale.
+}
+\note{
+In the results: EC=Efficiency Change, PTEC=Pure Technical Efficiency Change, SEC=Scale Efficiency Change, TC= Technological Change, MI= Malmquist Index
 }
 \examples{
 # Example 1. With dataset in wide format.
