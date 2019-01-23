@@ -11,7 +11,7 @@
   \item{y1 = GIOV}{Gross industrial output value (in 100 million RMB)}
 }}
 \source{
-Wang, Y.; Lan, Y. (2011). "Measuring Malmquist Productiviy Index: A New Approach Based on Double Frontiers Data Envelopment Analysis". Mathematical and Computer Modelling, 54, 2760-2771. \url{https://doi.org/10.1016/j.mcm.2011.06.064}
+Wang, Y.; Lan, Y. (2011). "Measuring Malmquist Productiviy Index: A New Approach Based on Double Frontiers Data Envelopment Analysis". Mathematical and Computer Modelling, 54, 2760-2771. \code{doi}: 10.1016/j.mcm.2011.06.064
 }
 \usage{
 data("Economy")
@@ -20,11 +20,11 @@ data("Economy")
 Data of the industrial economy of China in 2005-2009 (data in wide format).
 }
 \examples{
-# Example . Data in wide format. 
+# Example . Data in wide format.
 # Replication of results in Wang and Lan (2011, p. 2768)
 data("Economy")
 data_example <- read_malmquist(Economy,
-                               nper=5, 
+                               nper=5,
                                arrangement="horizontal",
                                ni = 2,
                                no = 1)
@@ -38,10 +38,10 @@ result <- malmquist_index(data_example)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

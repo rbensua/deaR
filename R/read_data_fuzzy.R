@@ -3,7 +3,7 @@
 #' @description This function creates, from a data frame, a \code{deadata_fuzzy} structure, which is as list with fields
 #'   \code{input}, \code{output} and \code{dmunames}. At the same time, \code{input} and \code{output} are lists with fields
 #'   \code{mL}, \code{mR}, \code{dL} and \code{dR}.
-#'   \figure{fuzzy_numbers.jpg}{options: width="100\%" alt="Figure: fuzzy_numbers.jpg"}
+#'   \figure{fuzzynumbers.jpg}{options: width="100\%" alt="Figure: fuzzynumbers.jpg"}
 
 #' @usage read_data_fuzzy(datadea,
 #'              dmus,
@@ -83,7 +83,7 @@ read_data_fuzzy <- function(datadea,
   if(!is.data.frame(datadea)){
     stop("Invalid input data (should be a data frame)!")
   }
-  
+  datadea <- as.data.frame(datadea)
   # Checking dmu
   if (is.null(dmus)) {
     dmunames <- paste("DMU", seq_along(datadea), sep = "")

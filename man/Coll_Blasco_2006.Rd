@@ -7,12 +7,12 @@
 \format{Data frame with 6 rows and 5 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1 = Employees}{Number of employees}
-  \item{x2 = Capital}{Impairment of assets} 
+  \item{x2 = Capital}{Impairment of assets}
   \item{y1 = Vehicles}{Number of vehicles sold}
   \item{y2 = Orders}{Number of orders received at the garage}
 }}
 \source{
-Coll-Serrano, V.; Blasco-Blasco, O. (2006). Evaluación de la Eficiencia mediante el Análisis Envolvente de Datos. Introducción a los Modelos Básicos. \url{www.eumed.net/libros/2006c/197/}
+Coll-Serrano, V.; Blasco-Blasco, O. (2006). Evaluacion de la Eficiencia mediante el Análisis Envolvente de Datos. Introduccion a los Modelos Básicos.
 }
 \usage{
 data("Coll_Blasco_2006")
@@ -24,10 +24,10 @@ Data of six authorized dealers with two inputs and two outputs.
 # Example. How to read data with deaR
 data("Coll_Blasco_2006")
 data_example <- read_data(Coll_Blasco_2006,
-                          dmus=1, 
-                          ni=2, 
+                          dmus=1,
+                          ni=2,
                           no=2)
-                          
+
 }
 \seealso{
 \code{\link{read_data}}
@@ -36,10 +36,10 @@ data_example <- read_data(Coll_Blasco_2006,
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

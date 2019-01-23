@@ -61,7 +61,7 @@ An object of class \code{deadata_fuzzy}.
 This function creates, from a data frame, a \code{deadata_fuzzy} structure, which is as list with fields
   \code{input}, \code{output} and \code{dmunames}. At the same time, \code{input} and \code{output} are lists with fields
   \code{mL}, \code{mR}, \code{dL} and \code{dR}.
-  \figure{fuzzy_numbers.jpg}{options: width="100\%" alt="Figure: fuzzy_numbers.jpg"}
+  \figure{fuzzynumbers.jpg}{options: width="100\%" alt="Figure: fuzzynumbers.jpg"}
 }
 \examples{
 

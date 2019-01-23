@@ -27,9 +27,9 @@
 #' University of Valencia (Spain)
 #'  
 #' @references 
-#' Andersen, P.; Petersen, N.C. (1993). "A procedure for ranking efficient units in data envelopment analysis", Management Science, 39, 1261-1264. \url{https://www.jstor.org/stable/2632964}
+#' Andersen, P.; Petersen, N.C. (1993). "A procedure for ranking efficient units in data envelopment analysis", Management Science, 39, 1261-1264. 
 #' 
-#' Tone, K. (2002). "A slacks-based measure of super-efficiency in data envelopment analysis", European Journal of Operational Research, 143, 32-41. \url{https://doi.org/10.1016/S0377-2217(01)00324-1}  
+#' Tone, K. (2002). "A slacks-based measure of super-efficiency in data envelopment analysis", European Journal of Operational Research, 143, 32-41.
 #' 
 #' @examples
 #' # Example 1.

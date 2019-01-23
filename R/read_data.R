@@ -85,7 +85,7 @@ read_data <- function(datadea,
   if(!is.data.frame(datadea)){
     stop("Invalid input data (should be a data frame)!")
   }
-  
+  datadea <- as.data.frame(datadea)
   # Checking inputs
   if (is.null(inputs)){
     if (!is.null(ni)) {

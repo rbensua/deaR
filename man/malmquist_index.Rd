@@ -22,7 +22,7 @@ malmquist_index(datadealist,
 A numeric list with Malmquist index and efficiencies.
 }
 \description{
-This function calculates the conventional input/output oriented Malmquist index under constant and variables returns-to-scale.
+This function calculates the conventional input/output oriented Malmquist index under variable return-to-scale.
 }
 \note{
 In the results: EC=Efficiency Change, PTEC=Pure Technical Efficiency Change, SEC=Scale Efficiency Change, TC= Technological Change, MI= Malmquist Index
@@ -56,13 +56,13 @@ tech2 <- result2$tc
 
 }
 \references{
-Caves, D.W.; Christensen, L. R. y Diewert, W.E. (1982). “The Economic Theory of Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica, 50(6), 1393-1414. \url{https://www.jstor.org/stable/1913388}
+Caves, D.W.; Christensen, L. R. y Diewert, W.E. (1982). “The Economic Theory of Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica, 50(6), 1393-1414. 
  
 Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1989). “Productivity Developments in Swedish Hospitals: A Malmquist Output Index Approach”. Discussion paper nº 89-3. Southern Illinois University. Illinois.
 
-Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1992). “Productivity changes in Swedish Pharmacies 1980-89: A nonparametric Malmquist Approach”. Journal of productivity Analysis, 3(3), 85-101. \url{https://www.jstor.org/stable/41770574}
+Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1992). “Productivity changes in Swedish Pharmacies 1980-89: A nonparametric Malmquist Approach”. Journal of productivity Analysis, 3(3), 85-101. 
 
-Färe, R.; Grosskopf, S.; Norris, M. y Zhang, Z. (1994). “Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries”. American Economic Review, 84(1), 66-83. \url{https://www.jstor.org/stable/2117971}
+Färe, R.; Grosskopf, S.; Norris, M. y Zhang, Z. (1994). “Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries”. American Economic Review, 84(1), 66-83.
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

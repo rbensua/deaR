@@ -63,7 +63,7 @@
 #'                           rts = "vrs")
 #' efficiencies(result)
 #' 
-#' @seealso \code{\link{model_deaps}}, \code{\link{model_sbmeff}}
+#' @seealso \code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmeff}}
 #'  
 #' @import lpSolve
 #' 

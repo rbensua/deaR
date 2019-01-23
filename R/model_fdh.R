@@ -23,13 +23,13 @@
 #' University of Valencia (Spain)
 #'  
 #' @references
-#' Cherchye, L.; Kuosmanen, T.; Post, T. (2000). "What Is the Economic Meaning of FDH? A Reply to Thrall". Journal of Productivity Analysis, 13(3), 263–267. \url{https://www.jstor.org/stable/41770019}
+#' Cherchye, L.; Kuosmanen, T.; Post, T. (2000). "What Is the Economic Meaning of FDH? A Reply to Thrall". Journal of Productivity Analysis, 13(3), 263–267. 
 #' 
-#' Deprins, D.; Simar, L. and Tulkens, H. (1984). Measuring Labor-Efficiency in Post Offices. In M. Marchand, P. Pestieau and H. Tulkens (eds.), The Performance of Public Entreprises: Concepts and Measurement. Amsterdam: North-Holland. \url{https://doi.org/10.1007/978-0-387-25534-7_16}  
+#' Deprins, D.; Simar, L. and Tulkens, H. (1984). Measuring Labor-Efficiency in Post Offices. In M. Marchand, P. Pestieau and H. Tulkens (eds.), The Performance of Public Entreprises: Concepts and Measurement. Amsterdam: North-Holland.
 #' 
-#' Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models in Supply Chain Management”, International Journal of Mathematical Modelling and Computations, 3(3), 125-129. \url{http://ijm2c.iauctb.ac.ir/article_521826.html}
+#' Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models in Supply Chain Management”, International Journal of Mathematical Modelling and Computations, 3(3), 125-129.
 #' 
-#' Thrall, R. M. (1999).  "What Is the Economic Meaning of FDH?", Journal of Productivity Analysis, 11(3), 243–50. \url{https://doi.org/10.1023/A:1007742104524}
+#' Thrall, R. M. (1999).  "What Is the Economic Meaning of FDH?", Journal of Productivity Analysis, 11(3), 243–50. 
 #' 
 #' @examples 
 #' # Example 1. FDH input-oriented.

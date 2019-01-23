@@ -3,7 +3,7 @@
 #' @description Solve the additive model of Charnes et. al (1985). With the current version of deaR, it is possible to solve input-oriented, output-oriented, and non-oriented additive dea model under constant and non-constants returns-to-scale.
 #' 
 #' Besides, the user can set weights for the input slacks and/or output slacks. So, it is also possible to solve weighted additive models. For example: Measure of Inefficiency Proportions (MIP), Range Adjusted Measure (RAM), etc.
-#' 
+#' @note In this model, the efficiency score is the sum of the slacks. Therefore, a DMU is efficient when the objective value (\code{objval}) is zero.
 #' @usage model_additive(datadea,
 #'             dmu_eval = NULL,
 #'             dmu_ref = NULL,
@@ -44,7 +44,7 @@
 #' University of Valencia (Spain) 
 #' 
 #' @references
-#' Charnes, A.; Cooper, W.W.; Golany, B.; Seiford, L.; Stuz, J. "Foundations of Data Envelopment Analysis for Pareto-Koopmans Efficient Empirical Production Functions", Journal of Econometrics, 30(1-2), 91-107. \url{https://doi.org/10.1016/0304-4076(85)90133-2}
+#' Charnes, A.; Cooper, W.W.; Golany, B.; Seiford, L.; Stuz, J. (1985) "Foundations of Data Envelopment Analysis for Pareto-Koopmans Efficient Empirical Production Functions", Journal of Econometrics, 30(1-2), 91-107. \url{https://doi.org/10.1016/0304-4076(85)90133-2}
 #'   
 #' Charnes, A.; Cooper, W.W.; Lewin, A.Y.; Seiford, L.M. (1994). Data Envelopment Analysis: Theory, Methology, and Application. Boston: Kluwer Academic Publishers. \url{https://doi.org/10.1007/978-94-011-0637-5}
 #' 

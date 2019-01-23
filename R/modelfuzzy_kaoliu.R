@@ -31,17 +31,17 @@
 #' University of Valencia (Spain)
 #'  
 #' @references 
-#' Boscá, J.E.; Liern, V.; Sala, R.; Martínez, A. (2011). "Ranking Decision Making Units by Means of Soft Computing DEA Models". International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems, 19(1), p.115-134. \url{https://doi.org/10.1142/S0218488511006915}
+#' Boscá, J.E.; Liern, V.; Sala, R.; Martínez, A. (2011). "Ranking Decision Making Units by Means of Soft Computing DEA Models". International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems, 19(1), p.115-134. 
 #' 
-#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.), Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness and Soft Computing 309. Springer, Berlin. \url{https://doi.org/10.1007/978-3-642-41372-8_1}
+#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.), Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness and Soft Computing 309. Springer, Berlin.
 #' 
-#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making", European Journal of Operational Research, 214, 457–472. \url{https://doi.org/10.1016/j.ejor.2011.02.001}
+#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making", European Journal of Operational Research, 214, 457–472.
 #' 
-#' Kao, C.; Liu, S.T. (2000). “Fuzzy efficiency measures in data envelopment analysis, Fuzzy Sets and Systems”, 119, 149–160. \url{https://doi.org/10.1016/S0165-0114(98)00137-7}  
+#' Kao, C.; Liu, S.T. (2000). “Fuzzy efficiency measures in data envelopment analysis, Fuzzy Sets and Systems”, 119, 149–160.
 #' 
-#' Kao, C., Liu, S.T., (2000). “Data envelopment analysis with missing data: An application to university libraries in Taiwan”, Journal of the Operational Research Society, 51, 897–905. \url{https://www.jstor.org/stable/254045} 
+#' Kao, C., Liu, S.T., (2000). “Data envelopment analysis with missing data: An application to university libraries in Taiwan”, Journal of the Operational Research Society, 51, 897–905. 
 #' 
-#' Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85, \url{https://doi.org/10.1016/S0925-5273(03)00026-4}
+#' Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85.
 #' 
 #' @examples 
 #' # Example 1. 

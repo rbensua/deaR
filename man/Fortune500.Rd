@@ -13,7 +13,7 @@
   \item{y2 = Profit}{Profit (millions of dollars)}
 }}
 \source{
-Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
+Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. \code{doi}: 10.1007/978-3-319-06647-9
 }
 \usage{
 data("Fortune500")
@@ -23,15 +23,15 @@ This dataset consists of 15 firms from the Fortune 500 list 1995 (\url{fortune.c
 }
 \examples{
 data("Fortune500")
-data_Fortune <- read_data(datadea = Fortune500, 
-                          dmus = 1, 
-                          inputs = 2:4, 
-                          outputs = 5:6) 
-result <- model_multiplier(data_Fortune, 
+data_Fortune <- read_data(datadea = Fortune500,
+                          dmus = 1,
+                          inputs = 2:4,
+                          outputs = 5:6)
+result <- model_multiplier(data_Fortune,
                            epsilon=0.000001,
                            orientation="io",
-                           rts="crs") 
-# results for General Motors and Ford Motor are not shown 
+                           rts="crs")
+# results for General Motors and Ford Motor are not shown
 # by deaR because the solution is infeasible
 efficiencies(result)
 multipliers(result)
@@ -44,10 +44,10 @@ multipliers(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

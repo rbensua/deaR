@@ -15,7 +15,7 @@
   \item{y3 = Other_revenue}{Other revenues (in NT$)}
 }}
 \source{
-Wu, J.; Tsai, H. and Zhou, Z. (2011). "Improving efficiency in International tourist hotels in Taipei using a non‐radial DEA mode", Internationl Journal of Contemporary Hospitality Management, 23(1), 66-83. \url{https://doi.org/10.1108/09596111111101670}
+Wu, J.; Tsai, H. and Zhou, Z. (2011). "Improving efficiency in International tourist hotels in Taipei using a non-radial DEA mode", Internationl Journal of Contemporary Hospitality Management, 23(1), 66-83. \code{doi}: 10.1108/09596111111101670
 }
 \usage{
 data("Hotels")
@@ -27,11 +27,11 @@ This dataset consists of 23 four- and five-plum ITHs in Taipei in 2006. Authors 
 # Example. Replication of results in Wu,Tsai and Zhou (2011)
 data("Hotels")
 data_hotels <- read_data(Hotels,
-                         dmus = 1, 
-                         inputs = 2:5, 
+                         dmus = 1,
+                         inputs = 2:5,
                          outputs = 6:8)
-result <- model_nonradial(data_hotels, 
-                          orientation="oo", 
+result <- model_nonradial(data_hotels,
+                          orientation="oo",
                           rts="vrs")
 efficiencies(result)
 
@@ -43,10 +43,10 @@ efficiencies(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

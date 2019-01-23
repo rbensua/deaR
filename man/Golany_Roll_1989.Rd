@@ -13,7 +13,7 @@
   \item{y1}{Output 2}
 }}
 \source{
-Golany, B.; Roll, Y. (1989). "An Application Procedure for DEA". OMEGA, International Journal of Management Science, 17(3), 237-250. \url{https://doi.org/10.1016/0305-0483(89)90029-7}
+Golany, B.; Roll, Y. (1989). "An Application Procedure for DEA". OMEGA, International Journal of Management Science, 17(3), 237-250. \code{doi}: 10.1016/0305-0483(89)90029-7
 }
 \usage{
 data("Golany_Roll_1989")
@@ -42,10 +42,10 @@ result$Arbitrary$e
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

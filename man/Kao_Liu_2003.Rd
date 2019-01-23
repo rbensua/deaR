@@ -18,7 +18,7 @@
   \item{beta5_u}{upper spread vector Services}
 }}
 \source{
-Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85, \url{https://doi.org/10.1016/S0925-5273(03)00026-4}
+Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85, \code{doi}: 10.1016/S0925-5273(03)00026-4
 }
 \usage{
 data("Kao_Liu_2003")
@@ -31,9 +31,9 @@ There are three observations that are missing: expenditures of Library 24 and se
 }
 \examples{
 # Example. Replication of results in Kao and Liu (2003, p.152)
-data_example <- read_data_fuzzy(Kao_Liu_2003, 
-                                dmus=1, 
-                                inputs.mL= 2, 
+data_example <- read_data_fuzzy(Kao_Liu_2003,
+                                dmus=1,
+                                inputs.mL= 2,
                                 outputs.mL= 3:7,
                                 outputs.dL=c(NA,NA,8,NA,10),
                                 outputs.dR=c(NA,NA,9,NA,11))
@@ -53,10 +53,10 @@ eff
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

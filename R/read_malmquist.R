@@ -60,7 +60,7 @@ read_malmquist <- function(datadea,
   if(!is.data.frame(datadea)){
     stop("Invalid input data (should be a data frame)!")
   }
-
+  datadea <- as.data.frame(datadea)
   
   arrangement <- tolower(arrangement)
   arrangement <- match.arg(arrangement)

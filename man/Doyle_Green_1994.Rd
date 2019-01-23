@@ -14,7 +14,7 @@
   \item{x2 = Other_expenses}{Other expenses}
 }}
 \source{
-Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA: derivations, meanings and the uses”,  Journal of Operational Research Society, 45(5), 567–578. DOI: \url{10.2307/2584392}
+Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA: derivations, meanings and the uses”,  Journal of Operational Research Society, 45(5), 567–578. \code{doi}: 10.2307/2584392
 }
 \usage{
 data("Doyle_Green_1994")
@@ -26,18 +26,18 @@ Data adapted from Tomkins and Green (1988).  13 DMUs using 3 inputs to produce 2
 # Example.
 data("Doyle_Green_1994")
 data_example <- read_data(datadea = Doyle_Green_1994,
-                         dmus = 1, 
-                         inputs = 6:7, 
+                         dmus = 1,
+                         inputs = 6:7,
                          outputs = 2:5)
-result <- cross_efficiency(data_example, 
+result <- cross_efficiency(data_example,
                            orientation = "io",
                            selfapp = TRUE)
-result$Arbitrary$cross_eff  
+result$Arbitrary$cross_eff
 result$Arbitrary$e
 # Aggressive using method II
-result$M2_agg$cross_eff   
+result$M2_agg$cross_eff
 # Aggressive using method III
-result$M3_agg$cross_eff   
+result$M3_agg$cross_eff
 
 }
 \seealso{
@@ -47,10 +47,10 @@ result$M3_agg$cross_eff
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

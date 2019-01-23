@@ -70,7 +70,7 @@ Wh, J.; Tsai, H.; Zhou, Z. (2011). "Improving Efficiency in International Touris
 Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal of the Operational Research Society, 47(1), 136. DOI: 10.2307/2584258
 }
 \seealso{
-\code{\link{model_deaps}}, \code{\link{model_sbmeff}}
+\code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmeff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

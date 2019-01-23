@@ -16,7 +16,7 @@
   \item{beta2}{spread vector Output 2}
 }}
 \source{
-Guo, P.; Tanaka, H. (2001). "Fuzzy DEA: A Perceptual Evaluation Method", Fuzzy Sets and Systems, 119, 149–160. \url{https://doi.org/10.1016/S0165-0114(99)00106-2}
+Guo, P.; Tanaka, H. (2001). "Fuzzy DEA: A Perceptual Evaluation Method", Fuzzy Sets and Systems, 119, 149–160. \code{doi}: 10.1016/S0165-0114(99)00106-2
 }
 \usage{
 data("Guo_Tanaka_2001")
@@ -46,10 +46,10 @@ efficiencies(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

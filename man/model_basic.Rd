@@ -82,6 +82,8 @@ Finally, you can use the \code{model_basic} function to solve directional DEA mo
 (1) With undesirable inputs/outputs, you should select vrs returns to scale in order to maintain translation invariance (Seiford y Zhu, 2002). If deaR detects that you are not specifying \code{rts} = "vrs", it makes the change to vrs automatically. 
 
 (2) With undesirable inputs use input-oriented BCC model, and with undesirable outputs use output-oriented BCC model. Alternatively, you can also treat the undesirable outputs as inputs and the apply the input-oriented BCC model (similarly with undesirable inputs).
+
+(3) With \code{dir} orientation (directional distance functions model), efficient DMUs are those for which \code{beta}=0.
 }
 \examples{
 # Example 1. Basic DEA model with desirable inputs/outputs.
@@ -133,31 +135,31 @@ efficiencies(result)
  
 }
 \references{
-Charnes, A.; Cooper, W.W.; Rhodes, E. (1978). “Measuring the efficiency of decision making units”, European Journal of Operational Research 2, 429–444. \url{https://doi.org/10.1016/0377-2217(78)90138-8}  
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1978). “Measuring the efficiency of decision making units”, European Journal of Operational Research 2, 429–444.
 
-Charnes, A.; Cooper, W.W.; Rhodes, E. (1979). “Short communication: Measuring the efficiency of decision making units”, European Journal of Operational Research 3, 339. \url{https://doi.org/10.1016/0377-2217(79)90229-7}  
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1979). “Short communication: Measuring the efficiency of decision making units”, European Journal of Operational Research 3, 339. 
 
-Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \url{https://pubsonline.informs.org/doi/abs/10.1287/mnsc.27.6.668}
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. 
 
-Banker, R.; Charnes, A.; Cooper, W.W. (1984). “Some Models for Estimating Technical and Scale Inefficiencies in Data Envelopment Analysis”, Management Science; 30; 1078-1092. \url{https://www.jstor.org/stable/2631725}  
+Banker, R.; Charnes, A.; Cooper, W.W. (1984). “Some Models for Estimating Technical and Scale Inefficiencies in Data Envelopment Analysis”, Management Science; 30; 1078-1092. 
 
 Undesirable inputs/outputs: 
 
-Pastor, J.T. (1996). "Translation Invariance in Data Envelopment Analysis: a Generalization", Annals of Operations Research, 66(2), 91-102. \url{https://doi.org/10.1007/BF02187295}
+Pastor, J.T. (1996). "Translation Invariance in Data Envelopment Analysis: a Generalization", Annals of Operations Research, 66(2), 91-102. 
 
-Seiford, L.M.; Zhu, J. (2002). “Modeling undesirable factors in efficiency evaluation”, European Journal of Operational Research 142, 16-20. \url{https://doi.org/10.1016/S0377-2217(01)00293-4}  
+Seiford, L.M.; Zhu, J. (2002). “Modeling undesirable factors in efficiency evaluation”, European Journal of Operational Research 142, 16-20.
 
-Hua Z.; Bian Y. (2007). DEA with Undesirable Factors. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \url{https://doi.org/10.1007/978-0-387-71607-7_6}
+Hua Z.; Bian Y. (2007). DEA with Undesirable Factors. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. 
 
 Non-discretionary/Non-controllable inputs/outputs:  
   
-Banker, R.; Morey, R. (1986). “Efficiency Analysis for Exogenously Fixed Inputs and Outputs”, Operations Research; 34; 513-521. \url{https://doi.org/10.1287/opre.34.4.513}  
+Banker, R.; Morey, R. (1986). “Efficiency Analysis for Exogenously Fixed Inputs and Outputs”, Operations Research; 34; 513-521. 
 
-Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \url{https://doi.org/10.1007/978-0-387-71607-7_5}  
+Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA.
 
 Directional DEA model:  
 
-Chambers, R.G.; Chung, Y.; Färe, R. (1996). "Benefit and Distance Functions", Journal of Economic Theory, 70(2), 407-419. \url{https://doi.org/10.1006/jeth.1996.0096}
+Chambers, R.G.; Chung, Y.; Färe, R. (1996). "Benefit and Distance Functions", Journal of Economic Theory, 70(2), 407-419. 
 
 Chambers, R.G.; Chung, Y.; Färe, R. (1998). "Profit Directional Distance Functions and Nerlovian Efficiency", Journal of Optimization Theory and Applications, 95, 351-354.
 }

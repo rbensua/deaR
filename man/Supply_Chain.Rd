@@ -11,7 +11,7 @@
   \item{Y1 to Y2}{Outputs of suppliers}
 }}
 \source{
-Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models in Supply Chain Management”, International Journal of Mathematical Modelling and Computations, 3(3), 125-129. \url{http://ijm2c.iauctb.ac.ir/article_521826.html}
+Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models in Supply Chain Management”, International Journal of Mathematical Modelling and Computations, 3(3), 125-129.
 }
 \usage{
 data("Supply_Chain")
@@ -24,11 +24,11 @@ Data of 17 supply chain (buyer-supplier relationship in manufacturing).
 # Replication of results in Sanei and Mamizadeh Chatghayeb (2013)
 data("Supply_Chain")
 data_fdh1 <- read_data(Supply_Chain,
-                       dmus=1, 
-                       inputs= 2:4, 
+                       dmus=1,
+                       inputs= 2:4,
                        outputs=5:6)
-# by default orientation="io"                       
-result <- model_fdh(data_fdh1) 
+# by default orientation="io"
+result <- model_fdh(data_fdh1)
 efficiencies(result)
 
 }
@@ -39,10 +39,10 @@ efficiencies(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

@@ -7,14 +7,14 @@
 \format{Data frame with 18 rows and 5 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1 = Labor}{Labor average annual employment}
-  \item{x2 = Fuel}{Fuel \eqn{10¹⁰} Btu}
+  \item{x2 = Fuel}{Fuel \eqn{10^{10}} Btu}
   \item{x3 = Capital}{Capital MW (fixed input)}
-  \item{y1 = Output}{Output \eqn{10⁶} Kwh}
+  \item{y1 = Output}{Output \eqn{10^6} Kwh}
 }}
 \source{
-Färe, R.; Grosskopf, S.; Kokkenlenberg, E. (1989). "Measuring Plant Capacity, Utilization and Technical Change: A Nonparametric Approach". International Economic Review, 30(3), 655-666. \url{https://www.jstor.org/stable/2526781} 
+Färe, R.; Grosskopf, S.; Kokkenlenberg, E. (1989). "Measuring Plant Capacity, Utilization and Technical Change: A Nonparametric Approach". International Economic Review, 30(3), 655-666.
 
-Simar, L.; Wilson, P.W. (1998). "Sensitivity Analysis of Efficiency Scores: How to Bootstrap in Nonparametric Frontier Models". Management Science, 44(1), 49-61. \url{https://www.jstor.org/stable/2634426}
+Simar, L.; Wilson, P.W. (1998). "Sensitivity Analysis of Efficiency Scores: How to Bootstrap in Nonparametric Frontier Models". Management Science, 44(1), 49-61.
 }
 \usage{
 data("Electric_plants")
@@ -26,11 +26,11 @@ Data of 19 coal-fired steam-electric generating plants operating in Illinois in 
 # Example. Replication of results in Simar and Wilson (1998, p.59)
 data("Electric_plants")
 data_example <- read_data(Electric_plants,
-                          dmus = 1, 
-                          ni=3, 
+                          dmus = 1,
+                          ni=3,
                           no=1)
-result <- model_basic(data_example, 
-                      orientation="io", 
+result <- model_basic(data_example,
+                      orientation="io",
                       rts="vrs")
 efficiencies(result)
 
@@ -42,10 +42,10 @@ efficiencies(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

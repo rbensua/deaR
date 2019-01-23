@@ -11,7 +11,7 @@
   \item{y1}{Output 1}
 }}
 \source{
-Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \url{https://doi.org/10.1007/978-0-387-71607-7_5}
+Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \code{doi}: 10.1007/978-0-387-71607-7_5
 }
 \usage{
 data("Ruggiero2007")
@@ -21,14 +21,14 @@ Simulated data of 35 DMUs with two inputs and one output.
 }
 \examples{
 # Example. Replication of results in Ruggiero (2007).
-data("Ruggiero2007") 
+data("Ruggiero2007")
 # the second input is a non-discretionary input
 datadea <- read_data(Ruggiero2007,
-                     ni=2, 
-                     no=1, 
-                     nd_inputs=2) 
-result <- model_basic(datadea, 
-                      orientation="io", 
+                     ni=2,
+                     no=1,
+                     nd_inputs=2)
+result <- model_basic(datadea,
+                      orientation="io",
                       rts="crs")
 efficiencies(result)
 slacks(result)
@@ -41,10 +41,10 @@ slacks(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

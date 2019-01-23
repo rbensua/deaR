@@ -35,15 +35,15 @@
 #' 
 #' @references  Daraio, C.; Simar, L. (2007). Advanced Robust and Nonparametric Methods in Efficiency Analysis: Methodology and Applications. New York: Springer.
 #' 
-#' Färe, R.; Grosskopf, S.; Kokkenlenberg, E. (1989). "Measuring Plant Capacity, Utilization and Technical Change: A Nonparametric Approach". International Economic Review, 30(3), 655-666. \url{https://www.jstor.org/stable/2526781} 
+#' Färe, R.; Grosskopf, S.; Kokkenlenberg, E. (1989). "Measuring Plant Capacity, Utilization and Technical Change: A Nonparametric Approach". International Economic Review, 30(3), 655-666. 
 #' 
-#' Löthgren, M.; Tambour, M. (1999). "Bootstrapping the Data Envelopment Analysis Malmquist Productivity Index". Applied Economics, 31, 417-425. \url{https://doi.org/10.1080/000368499324129}
+#' Löthgren, M.; Tambour, M. (1999). "Bootstrapping the Data Envelopment Analysis Malmquist Productivity Index". Applied Economics, 31, 417-425. 
 #' 
-#' Silverman, B.W. (1986). Density Estimation for Statistics and Data Analysis. London: Chapman and Hall. \url{https://ned.ipac.caltech.edu/level5/March02/Silverman/Silver_contents.html}
+#' Silverman, B.W. (1986). Density Estimation for Statistics and Data Analysis. London: Chapman and Hall. 
 #' 
-#' Simar, L.; Wilson, P.W. (1998). "Sensitivity Analysis of Efficiency Scores: How to Bootstrap in Nonparametric Frontier Models". Management Science, 44(1), 49-61. \url{https://www.jstor.org/stable/2634426}
+#' Simar, L.; Wilson, P.W. (1998). "Sensitivity Analysis of Efficiency Scores: How to Bootstrap in Nonparametric Frontier Models". Management Science, 44(1), 49-61. 
 #' 
-#' Simar, L.; Wilson, P.W. (1999). "Estimating and Bootstrapping Malmquist Indices". European Journal of Operational Research, 115, 459-471. \url{https://doi.org/10.1016/S0377-2217(97)00450-5}
+#' Simar, L.; Wilson, P.W. (1999). "Estimating and Bootstrapping Malmquist Indices". European Journal of Operational Research, 115, 459-471. 
 #' 
 #' Simar, L.; Wilson, P.W. (2008). Statistical Inference in Nonparametric Frontier Models: Recent Developments and Perspective. In H.O. Fried; C.A. Knox Lovell and S.S. Schmidt (eds.) The Measurement of Productive Efficiency and Productivity Growth. New York: Oxford University Press. DOI:10.1093/acprof:oso/9780195183528.001.0001
 #' 
@@ -291,7 +291,8 @@ bootstrap_basic <- function(datadea,
   
   CI <- data.frame(CI_low, CI_up)
   
-  return(list(orientation = orientation,
+  res <- list(modelname = "bootstrap",
+              orientation = orientation,
               rts = rts,
               L = L,
               U = U,
@@ -301,6 +302,6 @@ bootstrap_basic <- function(datadea,
               CI = CI,
               estimates_bootstrap = estimates_bootstrap,
               data = datadea)
-         )
-  
+         
+  return(structure(res, class = "dea"))
 }

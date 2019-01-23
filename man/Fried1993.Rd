@@ -21,12 +21,12 @@ Data of 11 DMUs with two inputs and one output.
 }
 \examples{
 # Example. Replication of results in Ali and (1993, p.143).
-data("Fried1993") 
+data("Fried1993")
 data_example <- read_data(Fried1993,
                           ni=2,
-                          no=1) 
-result <- model_basic(data_example, 
-                      orientation="oo", 
+                          no=1)
+result <- model_basic(data_example,
+                      orientation="oo",
                       rts="vrs")
 efficiencies(result)
 targets(result)
@@ -39,10 +39,10 @@ targets(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

@@ -17,9 +17,6 @@ model_deaps(datadea,
             weight_slack = 1,
             compute_target = TRUE,
             returnlp = FALSE,
-            weight_slack_i = NULL, 
-            weight_slack_o = NULL,
-            weight = NULL,
             ...)
 }
 \arguments{
@@ -54,12 +51,6 @@ If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
 
-\item{weight_slack_i}{This input is not used (it is only for compatibility issues)}
-
-\item{weight_slack_o}{This input is not used (it is only for compatibility issues)}
-
-\item{weight}{This input is not used (it is only for compatibility issues)}
-
 \item{...}{Ignored, for compatibility issues.}
 }
 \description{
@@ -83,7 +74,7 @@ Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The J
 Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
 }
 \seealso{
-\code{\link{model_nonradial}}, \code{\link{model_sbmeff}}
+\code{\link{model_nonradial}}, \code{\link{model_profit}}, \code{\link{model_sbmeff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

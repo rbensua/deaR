@@ -23,17 +23,17 @@ data("Libraries")
 Data for 23 public libraries of the Tokyo Metropolitan Area in 1986.
 }
 \examples{
-# Example 1. Non-controllable input (POPULATION). 
+# Example 1. Non-controllable input (POPULATION).
 # Replication of results in Cooper, Seiford and Tone (2007, p.221)
 data(Libraries)
 # POPULATION (non-controllable input) is the forth input.
-data_example <- read_data(Libraries, 
-                          dmus=1, 
+data_example <- read_data(Libraries,
+                          dmus=1,
                           inputs=2:5,
                           nc_inputs=4,
-                          outputs=6:7) 
-result <- model_basic(data_example, 
-                      orientation="io", 
+                          outputs=6:7)
+result <- model_basic(data_example,
+                      orientation="io",
                       rts="crs")
 efficiencies(result)
 targets(result)
@@ -41,13 +41,13 @@ targets(result)
 # Example 2. Non-discretionary input (POPULATION).
 data(Libraries)
 # POPULATION (non-controllable input) is the forth input.
-data_example2 <- read_data(Libraries, 
+data_example2 <- read_data(Libraries,
                            dmus=1,
                            inputs=2:5,
                            nd_inputs=4,
-                           outputs=6:7) 
-result2 <- model_basic(data_example2, 
-                       orientation="io", 
+                           outputs=6:7)
+result2 <- model_basic(data_example2,
+                       orientation="io",
                        rts="crs")
 efficiencies(result2)
 targets(result2)
@@ -60,10 +60,10 @@ targets(result2)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

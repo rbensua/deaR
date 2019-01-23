@@ -72,7 +72,7 @@ Tone, K. (2001). "A Slacks-Based Beasure of Efficiency in Data Envelopment Analy
 Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis. A Comprehensive Text with Models, Applications, References and DEA-Solver Software. 2nd Edition. Springer, New York. \url{https://doi.org/10.1007/978-0-387-45283-8}
 }
 \seealso{
-\code{\link{model_nonradial}}, \code{\link{model_deaps}}, \code{\link{model_deaps}}, \code{\link{model_sbmsupereff}}
+\code{\link{model_nonradial}}, \code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmsupereff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

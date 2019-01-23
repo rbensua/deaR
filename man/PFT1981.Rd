@@ -9,7 +9,7 @@
   \item{Y1 = Reading}{Total Reading Scores (as measured by the Metropolitan Achievement Test).}
   \item{Y2 = Math}{Total Math Scores (total mathematics score by the Metropolitan Achievement Test.}
   \item{Y3 = Coopersmith}{Total Coopersmith Scores (Coopersmith self-esteem inventory, intended as a measure of self-esteem).}
-  \item{X1 = Education}{Education level of mother (as measured in terms of percentage of high school graduates among female parents).}   
+  \item{X1 = Education}{Education level of mother (as measured in terms of percentage of high school graduates among female parents).}
   \item{X2 = Occupation}{Occupation Index (highest occupation of a family member according to a pre-arranged rating scale).}
   \item{X3 = Parental}{Parental Visit Index (representing the number of visits to the school site).}
   \item{X4 = Counseling}{Counseling Index (parent counselling index calculated from data on time spent with child on school-related topics such as reading together, etc.).}
@@ -17,7 +17,7 @@
   \item{Progrmam}{PFT or NFT.}
 }}
 \source{
-Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \url{https://pubsonline.informs.org/doi/abs/10.1287/mnsc.27.6.668}
+Charnes, A.; Cooper, W.W.; Rhodes, E. (1981). "Evaluating Program and Managerial Efficiency: An Application of Data Envelopment Analysis to Program Follow Through", Management Science, 27(6), 668-697. \code{doi}: 10.1287/mnsc.27.6.668
 }
 \usage{
 data("PFT1981")
@@ -27,28 +27,28 @@ Data from Project Follow Through (PTF) in public school education. There are 49 
 }
 \examples{
 # Example 1. Replication of results in Charnes, Cooper and Rhodes (1981)
-data("PFT1981") 
+data("PFT1981")
 # selecting DMUs in Project Follow Through (PFT)
-PFT <- PFT1981[1:49,] 
+PFT <- PFT1981[1:49,]
 PFT <- read_data(PFT,
-                 dmus=1, 
+                 dmus=1,
                  inputs=2:6,
                  outputs=7:9 )
-eval_pft <- model_basic(PFT, 
-                        orientation="io", 
+eval_pft <- model_basic(PFT,
+                        orientation="io",
                         rts="crs")
 eff_pft <- efficiencies(eval_pft)
 
 # Example 2. Replication of results in Charnes, Cooper and Rhodes (1981)
-data("PFT1981") 
+data("PFT1981")
 # selecting DMUs in Non-Follow Through (NFT)
-NFT <- PFT1981[50:70,] 
+NFT <- PFT1981[50:70,]
 NFT <- read_data(NFT,
-                 dmus=1, 
-                 inputs=2:6, 
+                 dmus=1,
+                 inputs=2:6,
                  outputs=7:9 )
-eval_nft <- model_basic(NFT, 
-                        orientation="io", 
+eval_nft <- model_basic(NFT,
+                        orientation="io",
                         rts="crs")
 eff_nft <- efficiencies(eval_nft)
 
@@ -60,10 +60,10 @@ eff_nft <- efficiencies(eval_nft)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

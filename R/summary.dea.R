@@ -57,7 +57,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  modelname <- object$modelname
  # For CRAN - check pass
  Period <- vars <- ec <- mi <- mi <- funs <- DMU <- . <-  NULL
- if(!modelname %in% c("malmquist","cross_efficiency")){
+ if(!modelname %in% c("malmquist","cross_efficiency","bootstrap")){
  
  # Efficiencies
 # if(!modelname %in% c("addsupereff")){
@@ -105,7 +105,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  
  # References
  ref <- references(object) 
- dmunames <- object$data$dmunames
+ #dmunames <- object$data$dmunames
  
  
  refnames <- unique(unlist(lapply(ref, function (x) names(x))))
@@ -115,10 +115,11 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  
  RefMat <- matrix(0, nrow = length(dmunames), ncol = length(refnames),dimnames = list(dmunames,sort(refnames)))
  RefMat[urefnames,refnames] <- round(lmbd[urefnames, refnames],4)
- for(i in seq_along(refnames)){
- RefMat[refnames[i],refnames[i]] <- 1
+ if(!modelname %in% c("addsupereff","sbmsupereff")){
+   for(i in seq_along(refnames)){
+     RefMat[refnames[i],refnames[i]] <- 1
+   }
  }
-
  #refmat <- RefMat[urefnames,sort(refnames)]
 
  RefMatdf <- data.frame(cbind(data.frame(DMU = dmunames), data.frame(RefMat)), 
@@ -167,7 +168,8 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  return(dffinal)
  }else if(modelname == "malmquist"){
    # Extract information about the data
-   dmunames <- as.character(object$datadealist[[1]]$dmunames)
+   #dmunames <- as.character(object$datadealist[[1]]$dmunames)
+   dmunames <- names(object$dmu_eval)
    periods <- names(object$datadealist)
    nper <- length(periods)
    
@@ -199,7 +201,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
      write_xlsx(res, path = filename)
    }
    return(res)
- }else{
+ }else if(modelname == "cross_efficiency"){
    nm <-  lapply(object, names)
    lst <- lapply(nm, function(x) "cross_eff" %in% x)
    lstce <- lst[sapply(lst,function(x) x)]
@@ -215,5 +217,19 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
      write_xlsx(dflist, path = filename)
    }
    return(dflist)
+ } else{
+   resMat <- cbind(object$score,object$score_bc,object$score-object$score_bc, object$CI)
+   dimnames(resMat)[[2]] <- c("Score", "Bias-Corrected Score","Bias","CI Lower","CI Upper")
+   resdf <- data.frame(cbind(data.frame(DMU = object$data$dmunames), data.frame(resMat)), 
+                          row.names = NULL)
+   if(exportExcel){
+     if(is.null(filename)){
+       filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
+       filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
+     }
+     write_xlsx(resdf, path = filename)
+   }
+   return(resdf)
  }
 }

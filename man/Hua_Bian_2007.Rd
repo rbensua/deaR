@@ -13,7 +13,7 @@
   \item{y3 = UD-Output1}{Undesirable Output 1}
 }}
 \source{
-Hua Z.; Bian Y. (2007). DEA with Undesirable Factors. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \url{https://doi.org/10.1007/978-0-387-71607-7_6}
+Hua Z.; Bian Y. (2007). DEA with Undesirable Factors. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \code{doi}: 10.1007/978-0-387-71607-7_6
 }
 \usage{
 data("Hua_Bian_2007")
@@ -26,15 +26,15 @@ Data of 30 DMUs with two desirable inputs, two desirable outputs and one udesira
 data("Hua_Bian_2007")
 # The third output is an undesirable output
 data_example <- read_data(Hua_Bian_2007,
-                          ni=2, 
-                          no=3, 
-                          ud_outputs=3) 
+                          ni=2,
+                          no=3,
+                          ud_outputs=3)
 
 # Translation parameter (vtrans_o) is set to 1500
 result <- model_basic(data_example,
                       orientation="oo",
                       rts="vrs",
-                      vtrans_o=1500) 
+                      vtrans_o=1500)
 eff <- efficiencies(result)
 1/eff # results M5 in Table 6-5 (p.119)
 
@@ -46,10 +46,10 @@ eff <- efficiencies(result)
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)
