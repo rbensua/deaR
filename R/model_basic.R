@@ -208,7 +208,7 @@ model_basic <-
     }
     if (rts != "vrs") {
       rts <- "vrs"
-      warning("Returns to scale changed to variable (vrs) because there is data with undesirable inputs/outputs.")
+      warning("Returns to scale changed to variable (vrs) because there are data with undesirable inputs/outputs.")
     }
   }
   
