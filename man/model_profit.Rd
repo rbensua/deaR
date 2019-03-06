@@ -45,17 +45,61 @@ the optimal outputs are restricted to be >= outputs (for revenue efficiency mode
 Cost, revenue and profit efficiency DEA models.
 }
 \examples{
- data("Fortune500")
- data_cost <- read_data(datadea = Fortune500,
-                        ni = 3, 
-                        no = 2)
- result <- model_profit(data_cost, 
-                        price_input = 1)
- efficiencies(result)
- 
+# Example 1. Replication of results in Coelli et al. (1998, p.166).
+# Cost efficiency model.
+data("Coelli_1998")
+# Selection of prices: input_prices is the transpose where the prices for inputs are. 
+input_prices <- t(Coelli_1998[,5:6]) 
+
+data_example1 <- read_data(Coelli_1998,
+                           dmus=1,
+                           ni=2,
+                           no=1)
+result1 <- model_profit(data_example1,
+                       price_input=input_prices,
+                       rts="crs", 
+                       restricted_optimal=FALSE) 
+# notice that the option by default is restricted_optimal=TRUE
+efficiencies(result1)
+
+Exemple 2. Revenue efficiency model.
+data("Coelli_1998")
+# Selection of prices for output: output_prices is the transpose where the prices for outputs are. 
+output_prices <- t(Coelli_1998[,7]) 
+data_example2 <- read_data(Coelli_1998,
+                          dmus=1,
+                          ni=2,
+                          no=1)
+result2 <- model_profit(data_example2,
+                       price_output=output_prices,
+                       rts="crs", 
+                       restricted_optimal=FALSE) 
+# notice that the option by default is restricted_optimal=TRUE
+efficiencies(result2)
+
+#' Exemple 3. Profit efficiency model.
+data("Coelli_1998")
+# Selection of prices for inputs and outputs: input_prices and output_prices are 
+# the transpose where the prices (for inputs and outputs) are. 
+input_prices <- t(Coelli_1998[,5:6]) 
+output_prices <- t(Coelli_1998[,7]) 
+data_example3 <- read_data(Coelli_1998,
+                           dmus=1,
+                           ni=2,
+                           no=1)
+result3 <- model_profit(data_example3,
+                        price_input=input_prices,
+                        price_output=output_prices,
+                        rts="crs", 
+                        restricted_optimal=FALSE) 
+# notice that the option by default is restricted_optimal=TRUE
+efficiencies(result3)
+
 }
 \references{
-Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. DOI: 10.1007/978-3-319-06647-9
+Coelli, T.; Prasada Rao, D.S.; Battese, G.E. (1998). An introduction to efficiency and productivity analysis. Jossey-Bass, San Francisco, pp 73–104. \url{https://doi.org/10.1002/ev.1441}
+
+Coelli, T.; Prasada Rao, D.S.; Battese, G.E. An introduction to efficiency and productivity analysis. Boston: Kluwer Academic Publishers.
 }
 \seealso{
 \code{\link{model_deaps}}, \code{\link{model_nonradial}}, \code{\link{model_sbmeff}}

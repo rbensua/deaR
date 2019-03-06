@@ -994,3 +994,54 @@
 #' @seealso \code{\link{read_data}}
 
 "Coll_Blasco_2006"
+
+#' Data: Coelli, Rao and Battese (1998).
+#'
+#' Data of five DMUs with two inputs and one output. Prices for inputs are available. Price for output is not from Coelli et al. (1998).
+#' @usage data("Coelli_1998")
+#' @format Data frame with 6 rows and 5 columns. Definition of inputs (X) and outputs (Y):
+#' \describe{
+#'   \item{Input1}{Input 1}
+#'   \item{Input2}{Input 2}
+#'   \item{Output}{Output}
+#'   \item{Price_input1}{Price input 1}
+#'   \item{Price_input2}{Price input 2}
+#'   \item{Price_output}{Price output}
+#' }
+#' 
+#' @source Coelli, T.; Prasada Rao, D.S.; Battese, G.E. An introduction to efficiency and productivity analysis. Boston: Kluwer Academic Publishers.
+#'
+#' @author
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+#'
+#' \strong{Vicente Bolos} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benitez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
+#'
+#' @examples
+#' # Example. Replication of results in Coelli et al. (1998, p.166).
+#' # Cost efficiency model.
+#' data("Coelli_1994")
+#' # Selection of prices: data_prices is the trasnpose where the prices for inputs are. 
+#' data_prices <- t(Coelli_1998[,5:6]) 
+#' 
+#' data_example <- read_data(Coelli_1998,
+#'                           dmus=1,
+#'                           ni=2,
+#'                           no=1)
+#' result <- model_profit(data_example,
+#'                        price_input=data_prices,
+#'                        rts="crs", 
+#'                        restricted_optimal=FALSE) 
+#' # notice that the option by default is restricted_optimal=TRUE
+#' efficiencies(result)
+#'
+#' @seealso \code{\link{read_data}}
+
+"Coelli_1998"
+

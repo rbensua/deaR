@@ -53,12 +53,13 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
   }
  modelnames <-  c("basic", "additive", "addsupereff", "deaps", "fdh",
                   "multiplier", "nonradial","sbmeff", "sbmsupereff", 
-                  "supereff","malmquist","cross_efficiency")
+                  "supereff","malmquist","cross_efficiency", "profit")
  modelname <- object$modelname
  # For CRAN - check pass
  Period <- vars <- ec <- mi <- mi <- funs <- DMU <- . <-  NULL
- if(!modelname %in% c("malmquist","cross_efficiency","bootstrap")){
- 
+
+ if(!modelname %in% c("malmquist","cross_efficiency","bootstrap","profit")){
+   # All models except malmquist, ce, bootstrap and profit -------
  # Efficiencies
 # if(!modelname %in% c("addsupereff")){
    eff <- efficiencies(object)
@@ -166,7 +167,9 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
  dffinal <- do.call(cbind,dflist)
  dffinal <- cbind(DMU = object$data$dmunames,dffinal)
  return(dffinal)
+ 
  }else if(modelname == "malmquist"){
+   # Malmquist model -----
    # Extract information about the data
    #dmunames <- as.character(object$datadealist[[1]]$dmunames)
    dmunames <- names(object$dmu_eval)
@@ -202,6 +205,7 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
    }
    return(res)
  }else if(modelname == "cross_efficiency"){
+   # Cross - efficiency -----
    nm <-  lapply(object, names)
    lst <- lapply(nm, function(x) "cross_eff" %in% x)
    lstce <- lst[sapply(lst,function(x) x)]
@@ -217,7 +221,101 @@ summary.dea <- function(object, exportExcel = TRUE, filename = NULL,...){
      write_xlsx(dflist, path = filename)
    }
    return(dflist)
+ } else if (modelname == "profit"){
+  # Profit model -------
+   modeltype <- ifelse(!is.null(object$price_input), ifelse(is.null(object$price_output),"price_input",
+                              "price_input_output"),"price_output")
+   
+   switch (modeltype,
+           price_input = {
+             effname <- "cost_efficiency"
+             objname <- "minimum_cost"
+           },
+           price_output = {
+             effname <- "revenue_efficiency"
+             objname <- "maximum_revenue"
+           },
+           price_input_output = {
+             effname <- "profit_efficiency"
+             objname <- "maximum_profit"
+           }
+   )
+   # Efficiencies 
+   eff <- efficiencies(object)
+   eff <- data.frame(eff, stringsAsFactors = FALSE)
+   colnames(eff) <- effname
+   eff <- data.frame(cbind(data.frame(DMU = rownames(eff)),eff), row.names = NULL)
+   # Lambdas
+   lmbd <- lambdas(object)
+   lamb <- data.frame(lmbd, stringsAsFactors = FALSE)
+   lamb <- data.frame(cbind(data.frame(DMU = rownames(lamb)), lamb), 
+                      row.names = NULL, stringsAsFactors = FALSE)
+   # Objective value
+   objval <- unlist(lapply(object$DMU, function(x) x$objval))
+   objval <- data.frame(objval, stringsAsFactors = FALSE)
+   colnames(objval) <- objname
+   objval <- data.frame(cbind(data.frame(DMU = rownames(objval)), objval), row.names = NULL)
+   # RTS 
+   returns <- rts(object)
+   returns <- data.frame(returns)
+   returns <- data.frame(cbind(data.frame(DMU = rownames(returns)),returns), 
+                         row.names = NULL, stringsAsFactors = FALSE)
+   # references 
+   ref <- references(object) 
+   refnames <- unique(unlist(lapply(ref, function (x) names(x))))
+   dmunames <- as.character(lamb$DMU)
+   urefnames <- names(ref)
+   
+   
+   
+   RefMat <- matrix(0, nrow = length(dmunames), ncol = length(refnames),dimnames = list(dmunames,sort(refnames)))
+   RefMat[urefnames,refnames] <- round(lmbd[urefnames, refnames],4)
+   
+   RefMatdf <- data.frame(cbind(data.frame(DMU = dmunames), data.frame(RefMat)), 
+                          row.names = NULL)
+   
+   
+   # Optimal i/o
+   switch(modeltype,
+          price_input = {
+            optimio <- do.call(rbind,lapply(object$DMU, function(x) x$optimal_input))
+          },
+          price_output = {
+            optimio <- do.call(rbind,lapply(object$DMU, function(x) x$optimal_input))
+          },
+          price_input_output = {
+            oi <- do.call(rbind,lapply(object$DMU, function(x) x$optimal_input))
+            oo <- do.call(rbind,lapply(object$DMU, function(x) x$optimal_output))
+            optimio <- cbind(oi,oo)
+          }
+          )
+   optimio <- data.frame(cbind(data.frame(DMU = rownames(optimio)),optimio), 
+                         row.names = NULL, stringsAsFactors = FALSE)
+   
+   
+   dflist <- list(efficiencies = eff, 
+                  objval = objval,
+                  lambdas = lamb,
+                  returns = returns,
+                  optimio = optimio,
+                  references = RefMatdf) 
+   dflist[sapply(dflist, is.null)] <- NULL
+   if(exportExcel){
+     if(is.null(filename)){
+       filename <- paste("ResultsDEA",Sys.time(),".xlsx", sep = "")
+       filename <- gsub(" ","_",filename)
+       filename <- gsub(":",".",filename)
+     }
+     write_xlsx(dflist, path = filename)
+   }
+   
+   dflist <- lapply(dflist, function(x) x[-1])
+   dffinal <- do.call(cbind,dflist)
+   dffinal <- cbind(DMU = object$data$dmunames,dffinal)
+   return(dffinal)
+   
  } else{
+   # Bootstrap -----
    resMat <- cbind(object$score,object$score_bc,object$score-object$score_bc, object$CI)
    dimnames(resMat)[[2]] <- c("Score", "Bias-Corrected Score","Bias","CI Lower","CI Upper")
    resdf <- data.frame(cbind(data.frame(DMU = object$data$dmunames), data.frame(resMat)), 
