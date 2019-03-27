@@ -50,6 +50,9 @@ efficiencies.dea <-
     } else if ("beta" %in% names(deasol$DMU[[1]])) {
       eff <- unlist(lapply(deasol$DMU, function(x)
         x$beta))
+    } else if ("gamma" %in% names(deasol$DMU[[1]])) {
+      eff <- unlist(lapply(deasol$DMU, function(x)
+        x$gamma))
     } else if ("delta" %in% names(deasol$DMU[[1]])) {
       eff <- unlist(lapply(deasol$DMU, function(x)
         x$delta))

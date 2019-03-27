@@ -101,6 +101,12 @@ model_sbmsupereff <-
   rts <- tolower(rts)
   rts <- match.arg(rts)
   
+  # Possible non-feasibilities
+  if ((rts != "crs") && (orientation != "no")) {
+    warning("For oriented models and non constant returns to scale, feasibility is not
+             guaranteed. Proceed with caution, some DMUs results may be missing!")
+  }
+  
   # Checking undesirable io and rts
   #if (((!is.null(datadea$ud_inputs)) || (!is.null(datadea$ud_outputs))) && (rts != "vrs")) {
   #  rts <- "vrs"

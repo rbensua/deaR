@@ -15,6 +15,7 @@ model_sbmcomposite(datadea,
             U = 1,
             compute_target = TRUE,
             compute_alt = FALSE,
+            delta_margin = 1e-8,
             returnlp = FALSE)
 }
 \arguments{
@@ -42,6 +43,9 @@ with weights to outputs corresponding to the relative importance of items.}
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets, superslacks (\code{t_input} and \code{t_output}) and slacks.}
 
 \item{compute_alt}{Logical. If it is \code{TRUE}, it computes the alternative SBM composite super-efficiency.}
+
+\item{delta_margin}{Some numerical errors may appear due to truncation of the SBM super-efficiency in some DMUs.
+In these cases, the SBM super-efficiency is slightly increased by multiplying it by 1 + \code{delta_margin}.}
 
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
 }

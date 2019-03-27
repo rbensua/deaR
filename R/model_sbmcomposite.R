@@ -13,6 +13,7 @@
 #'             U = 1,
 #'             compute_target = TRUE,
 #'             compute_alt = FALSE,
+#'             delta_margin = 1e-8,
 #'             returnlp = FALSE)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
@@ -29,6 +30,8 @@
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets, superslacks (\code{t_input} and \code{t_output}) and slacks.
 #' @param compute_alt Logical. If it is \code{TRUE}, it computes the alternative SBM composite super-efficiency.
+#' @param delta_margin Some numerical errors may appear due to truncation of the SBM super-efficiency in some DMUs.
+#'                     In these cases, the SBM super-efficiency is slightly increased by multiplying it by 1 + \code{delta_margin}.
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
 #'   
 #' @author 
@@ -73,6 +76,7 @@ model_sbmcomposite <-
            U = 1,
            compute_target = TRUE,
            compute_alt = FALSE,
+           delta_margin = 1e-8,
            returnlp = FALSE) {
     
   # Cheking whether datadea is of class "deadata" or not...  
@@ -215,6 +219,10 @@ model_sbmcomposite <-
   delta <- unlist(lapply(deasol$DMU, function(x)
     x$delta))
   
+  if (any(is.na(delta))) {
+    stop("There are some errors in the SBM super-efficiency model.")
+  }
+  
   #################################################
   
   target_input <- NULL
@@ -327,6 +335,21 @@ model_sbmcomposite <-
       
       res <- lp(obj, f.obj, f.con, f.dir, f.rhs)
       
+      if (res$status != 0) { # Second opportunity: apply delta_margin to prevent NA due to truncation
+        
+        delta[i] <- delta[i] * (1 + delta_margin)
+        if (orientation == "no") {
+          f.con.00 <- c(1 - delta[i], rep(0, ndr + ni), auxi, rep(0, no), delta[i] * auxo)
+          f.con <- rbind(f.con.0, f.con.00, f.con.1, f.con.2, f.con.or, f.con.se, f.con.rs)
+        } else if (orientation == "io") {
+          f.rhs <- c(1, delta[i] - 1, input[, ii], output[, ii], rep(0, 2 * no + 1), f.rhs.rs)
+        } else {
+          f.rhs <- c(1, 1 / delta[i] - 1, input[, ii], output[, ii], rep(0, 2 * ni + 1), f.rhs.rs)
+        }
+        res <- lp(obj, f.obj, f.con, f.dir, f.rhs)
+        
+      }
+      
       if (res$status == 0) {
         
         gamma <- res$objval
@@ -380,6 +403,9 @@ model_sbmcomposite <-
         }
         
       } else {
+        
+        warning(c("There are numerical errors due to truncation in DMU ",
+                dmunames[i], ", try to increase delta_margin."))
         
         gamma <- NA
         lambda <- NA

@@ -59,7 +59,7 @@ plot.dea <- function(x, ...){
      stop("Plotting a Preference Structure model with unrestricted efficiencies is not available!")
    }
  }
- if(modelname == "additive"){  
+ if(grepl("add",modelname)){  
    stop("Plotting additive models are not implemented yet!")
    
  }
@@ -246,6 +246,7 @@ plot.dea <- function(x, ...){
    V(G)$color[efficient] <- rep("green", length(efficient))
    V(G)$color[non_efficient] <- rep("red", length(non_efficient))
    lmbd2 <- lmbd / rowSums(lmbd) 
+   lmbd2[is.nan(lmbd2)] <- 0
    V(G)$size <- colSums(lmbd2)^1.1+10#0.6*degree(G, mode = "in") + 10
    
    
