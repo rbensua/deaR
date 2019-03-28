@@ -124,9 +124,9 @@ plot.dea <- function(x, ...){
      
      if (modelname == "profit") {
        # Efficient DMUS have eff = 1 and optimio  = io 
-       iseff <- sapply(seq_len(length(result1$DMU)), function(i) {
-         sum(c((result1$DMU[[i]]$optimal_output - result1$data$output[,i])^2 , 
-               (result1$DMU[[i]]$optimal_input - result1$data$input[,i])^2)) < 1e-10
+       iseff <- sapply(seq_len(length(object$DMU)), function(i) {
+         sum(c((object$DMU[[i]]$optimal_output - object$data$output[,i])^2 , 
+               (object$DMU[[i]]$optimal_input - object$data$input[,i])^2)) < 1e-10
        }
        )
        eff$iseff <- ifelse(iseff, 1, 0)
