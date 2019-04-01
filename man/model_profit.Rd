@@ -49,50 +49,50 @@ Cost, revenue and profit efficiency DEA models.
 # Cost efficiency model.
 data("Coelli_1998")
 # Selection of prices: input_prices is the transpose where the prices for inputs are. 
-input_prices <- t(Coelli_1998[,5:6]) 
+input_prices <- t(Coelli_1998[, 5:6]) 
 
 data_example1 <- read_data(Coelli_1998,
-                           dmus=1,
-                           ni=2,
-                           no=1)
+                           dmus = 1,
+                           ni = 2,
+                           no = 1)
 result1 <- model_profit(data_example1,
-                       price_input=input_prices,
-                       rts="crs", 
-                       restricted_optimal=FALSE) 
-# notice that the option by default is restricted_optimal=TRUE
+                       price_input = input_prices,
+                       rts = "crs", 
+                       restricted_optimal = FALSE) 
+# notice that the option by default is restricted_optimal = TRUE
 efficiencies(result1)
 
-Exemple 2. Revenue efficiency model.
+Example 2. Revenue efficiency model.
 data("Coelli_1998")
 # Selection of prices for output: output_prices is the transpose where the prices for outputs are. 
-output_prices <- t(Coelli_1998[,7]) 
+output_prices <- t(Coelli_1998[, 7]) 
 data_example2 <- read_data(Coelli_1998,
-                          dmus=1,
-                          ni=2,
-                          no=1)
+                          dmus = 1,
+                          ni = 2,
+                          no = 1)
 result2 <- model_profit(data_example2,
-                       price_output=output_prices,
-                       rts="crs", 
-                       restricted_optimal=FALSE) 
-# notice that the option by default is restricted_optimal=TRUE
+                       price_output = output_prices,
+                       rts = "crs", 
+                       restricted_optimal = FALSE) 
+# notice that the option by default is restricted_optimal = TRUE
 efficiencies(result2)
 
-#' Exemple 3. Profit efficiency model.
+#' Example 3. Profit efficiency model.
 data("Coelli_1998")
 # Selection of prices for inputs and outputs: input_prices and output_prices are 
 # the transpose where the prices (for inputs and outputs) are. 
-input_prices <- t(Coelli_1998[,5:6]) 
-output_prices <- t(Coelli_1998[,7]) 
+input_prices <- t(Coelli_1998[, 5:6]) 
+output_prices <- t(Coelli_1998[, 7]) 
 data_example3 <- read_data(Coelli_1998,
-                           dmus=1,
-                           ni=2,
-                           no=1)
+                           dmus = 1,
+                           ni = 2,
+                           no = 1)
 result3 <- model_profit(data_example3,
-                        price_input=input_prices,
-                        price_output=output_prices,
-                        rts="crs", 
-                        restricted_optimal=FALSE) 
-# notice that the option by default is restricted_optimal=TRUE
+                        price_input = input_prices,
+                        price_output = output_prices,
+                        rts = "crs", 
+                        restricted_optimal = FALSE) 
+# notice that the option by default is restricted_optimal = TRUE
 efficiencies(result3)
 
 }

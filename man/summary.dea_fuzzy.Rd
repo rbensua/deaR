@@ -5,7 +5,7 @@
 \title{Summary Fuzzy DEA models.}
 \usage{
 \method{summary}{dea_fuzzy}(object, ..., exportExcel = TRUE,
-  filename = NULL)
+  filename = NULL, returnList = FALSE)
 }
 \arguments{
 \item{object}{An object of class \code{"dea_fuzzy"} obtained with a fuzzy dea 
