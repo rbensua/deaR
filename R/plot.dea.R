@@ -44,7 +44,7 @@
 #' @export
 #' 
 
-plot.dea <- function(x, ...){
+plot.dea <- function(x, showPlots = TRUE, ...){
   object <- x
   if(!is.dea(object)){
     stop("Input should be of class dea!")
@@ -78,7 +78,9 @@ plot.dea <- function(x, ...){
      colnames(results) <- c("Period","DMU","EC", "TC", "PTEC","SEC","MI")
      colnames(sumres) <- c("Period","EC", "TC", "PTEC","SC","MI")
      results <- results[,c("Period","DMU","EC","PTEC","SEC","TC","MI")]
-     invisible(readline(prompt="Press [enter] to continue"))
+     
+     
+     
      results %>% gather(key= "index", value = "value", -c("Period","DMU")) -> resmelt 
      resmelt$index <- as.factor(resmelt$index)
      resmelt$index <- factor(resmelt$index, levels(resmelt$index)[c(1,3,4,5,2)])
@@ -87,32 +89,44 @@ plot.dea <- function(x, ...){
             layout(yaxis=list(title=~index)))  %>% 
        subplot(nrows = NROW(.), shareX = TRUE,titleY=TRUE)-> resplot
      
-     show(resplot)
-     invisible(readline(prompt="Press [enter] to continue"))
+     
      
      sumres %>% gather(key= "index", value = "value", -c("Period")) -> sumresmelt 
      sumresmelt$index <- as.factor(sumresmelt$index)
      sumresmelt$index <- factor(sumresmelt$index, levels(sumresmelt$index)[c(1,3,4,5,2)])
-       sumresmelt %>% plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
-     show(sumplot)
+     sumresmelt %>% plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
      
+     
+     if (showPlots){
+     invisible(readline(prompt="Press [enter] to continue"))
+     show(resplot)
+     invisible(readline(prompt="Press [enter] to continue"))
+     show(sumplot)
+     }
+     invisible(list(`Results plot` = resplot, `Summary plot` = sumplot))
    }else{
      results <- list(Arb = object$Arbitrary$cross_eff,
-     M2_agg = object$M2_agg$cross_eff,
-     M2_ben = object$M2_ben$cross_eff,
-     M3_agg = object$M3_agg$cross_eff,
-     M3_ben = object$M3_ben$cross_eff)
+                     M2_agg = object$M2_agg$cross_eff,
+                     M2_ben = object$M2_ben$cross_eff,
+                     M3_agg = object$M3_agg$cross_eff,
+                     M3_ben = object$M3_ben$cross_eff)
      titles <- list("Arbitrary Method", "Method II - Aggresive", "Method II - Benevolent",
                     "Method III - Aggresive", "Method III - Benevolent")
      titles[sapply(results, is.null)] <- NULL 
-    results[sapply(results, is.null)] <- NULL
-    
-      for(i in seq_along(results)){
-        invisible(readline(prompt="Press [enter] for next plot"))
-      xlab <- ylab <- colnames(results[[i]])
-      p <- plot_ly(x = xlab, y = rev(ylab), z  = results[[i]][nrow(results[[i]]):1,], type = "heatmap" ) %>% layout(title = titles[[i]])
-      print(p)
-      }
+     results[sapply(results, is.null)] <- NULL
+     p <- list()
+     for(i in seq_along(results)){
+       xlab <- ylab <- colnames(results[[i]])
+       p[[i]] <- plot_ly(x = xlab, y = rev(ylab), z  = results[[i]][nrow(results[[i]]):1,], type = "heatmap" ) %>% 
+         layout(title = titles[[i]])
+       if (showPlots){
+         invisible(readline(prompt="Press [enter] for next plot"))
+         show(p[[i]])
+       }
+     }
+     names(p) <- titles
+     invisible(p)
+     
    }
  }else{
    
@@ -164,7 +178,9 @@ plot.dea <- function(x, ...){
          ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat = 'count',
                                                              aes(label = ..count..),
                                                              vjust = -0.5) -> p1
-       grid.arrange(p1, p2, nrow = 1)
+       if (showPlots){
+         grid.arrange(p1, p2, nrow = 1)
+       }
      } else{
        eff %>% ggplot(aes(x = eff)) + geom_histogram(bins = 10,
                                                      col = "white",
@@ -172,7 +188,10 @@ plot.dea <- function(x, ...){
                                                                        "red",
                                                                        "lightgreen"))) +
          theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") -> effplot
-       show(effplot)
+       
+       if (showPlots){
+         show(effplot)
+       }
      }
      
    
@@ -186,20 +205,22 @@ plot.dea <- function(x, ...){
      effmelted %>% filter(iseff == 0 & Aspect != "mean_eff") %>%
        ggplot(aes(x = eff)) + geom_histogram(bins = 10, fill = "red", col = "white") +
        theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") + facet_wrap( ~
-                                                                                               Aspect, scales = "free") -> p1
-     show(p1)
-     invisible(readline(prompt = "Press [enter] to continue"))
+                                                                                               Aspect, scales = "free") -> p2
+     
      
      effmelted %>% filter(Aspect == "mean_eff") %>% ggplot(aes(x = factor(iseff))) +
        geom_bar(aes(fill = ifelse(iseff == 0, "red", "lightgreen")), width = 0.5) + theme_bw() +
        scale_fill_identity() + xlab("") + scale_x_discrete(labels = c("Non-efficient", "Efficient")) + ylab("Count") +
        ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat = 'count', aes(label =
-                                                                                 ..count..), vjust = -0.5) -> p2
-     show(p2)
+                                                                                 ..count..), vjust = -0.5) -> p1
      
+     if (showPlots){
+     show(p1)
+     invisible(readline(prompt = "Press [enter] to continue"))
+     show(p2)
+     }
    }
    
-   invisible(readline(prompt = "Press [enter] to continue"))
    # Reference ranking --------------
    if (!modelname %in% c("supereff_basic", "sbmsupereff")) {
      ref <- references(object)
@@ -238,9 +259,12 @@ plot.dea <- function(x, ...){
        ylab("# times appearing in reference sets") + geom_text(aes(label = realcount), hjust =
                                                                  -0.5) +
        guides(fill = FALSE) -> refplot
-     show(refplot)
      
-     invisible(readline(prompt = "Press [enter] to continue"))
+     if (showPlots){
+       invisible(readline(prompt = "Press [enter] to continue"))
+       show(refplot)
+       invisible(readline(prompt = "Press [enter] to continue"))
+     }
    } else{
      warning("Ranking plots with those models are not implemented yet!")
      
@@ -288,9 +312,7 @@ plot.dea <- function(x, ...){
      V(G)$size <-
        colSums(lmbd2) ^ 1.1 + 10#0.6*degree(G, mode = "in") + 10
      
-     
-     
-     plot(
+     graphPlot <- plot(
        G,
        layout = locations,
        xlim = c(-2, 2),
@@ -300,8 +322,11 @@ plot.dea <- function(x, ...){
        edge.curved = FALSE
      )
      
+     if(showPlots){
+      show(graphPlot)
+     }
    }
-   
+   invisible(list(`Eff/Ineff count` = p1,`Ineff Dstr` = p2,`References Plot`= refplot, `References Graph` = graphPlot))
  }
  
  

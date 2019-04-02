@@ -4,7 +4,7 @@
 \alias{plot.dea}
 \title{Plot for DEA models.}
 \usage{
-\method{plot}{dea}(x, ...)
+\method{plot}{dea}(x, showPlots = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{"dea"} obtained by a dea model function.}
