@@ -9,6 +9,10 @@
 \arguments{
 \item{x}{An object of class \code{"dea"} obtained by a dea model function.}
 
+\item{showPlots}{Logical. When TRUE (default) the plots are shown one by one. When it 
+is FALSE the plots are not shown and are returned by the function (invisiblily) as a 
+list.}
+
 \item{...}{Ignored, for compatibility issues.}
 }
 \value{

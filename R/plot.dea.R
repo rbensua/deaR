@@ -4,6 +4,9 @@
 #' @description Plot some attribute of a DEA model (conventional, fuzzy or Malmquist).
 #' 
 #' @param x An object of class \code{"dea"} obtained by a dea model function.
+#' @param showPlots Logical. When TRUE (default) the plots are shown one by one. When it 
+#' is FALSE the plots are not shown and are returned by the function (invisiblily) as a 
+#' list.
 #' @param ... Ignored, for compatibility issues.
 #' 
 #'   
@@ -56,17 +59,18 @@ plot.dea <- function(x, showPlots = TRUE, ...){
  `V<-` <- NULL
  if(modelname == "deaps"){
    if(object$restricted_eff == FALSE){
-     stop("Plotting a Preference Structure model with unrestricted efficiencies is not available!")
+     warning("Plotting a Preference Structure model with unrestricted efficiencies is not available!")
+     return(NULL)
    }
  }
  if(grepl("add",modelname)){  
-   stop("Plotting additive models are not implemented yet!")
-   
+   warning("Plotting additive models are not implemented yet!")
+   return(NULL)
  }
  if(modelname == "basic"){
    if(!object$orientation %in% c("io","oo"))
-     stop("Plotting Basic model with is only available with input/output orientations!")
-     
+     warning("Plotting Basic model with is only available with input/output orientations!")
+     return(NULL)
  } 
  
  
@@ -312,18 +316,19 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      V(G)$size <-
        colSums(lmbd2) ^ 1.1 + 10#0.6*degree(G, mode = "in") + 10
      
-     graphPlot <- plot(
-       G,
-       layout = locations,
-       xlim = c(-2, 2),
-       ylim = c(-.4, .4),
-       edge.arrow.size = 1,
-       edge.arrow.width = 0.5,
-       edge.curved = FALSE
-     )
      
+     graphPlot <- list(G = G, locations = locations)  
+    
      if(showPlots){
-      show(graphPlot)
+       plot(
+         G,
+         layout = locations,
+         xlim = c(-2, 2),
+         ylim = c(-.4, .4),
+         edge.arrow.size = 1,
+         edge.arrow.width = 0.5,
+         edge.curved = FALSE
+       )
      }
    }
    invisible(list(`Eff/Ineff count` = p1,`Ineff Dstr` = p2,`References Plot`= refplot, `References Graph` = graphPlot))
