@@ -144,7 +144,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
     modelkl <- strsplit(object$modelname, "_")[[1]][3]
     
     # Efficiencies ----------
-    if (!modelkl %in% c("additive", "addsupereff")) {
+    if (!modelkl %in% c("addsupereff")) {
       eff <- efficiencies(object)
       
       # Radial models ----------------
@@ -170,7 +170,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
         # Non - radial models-----------------
         neff <- length(object$alphacut[[1]]$DMU$Worst[[1]]$efficiency)
         
-        
+        if(neff > 1){
           effmat.Worst <-
             do.call(rbind, lapply(seq(dim(eff$Worst)[3]), function(x)
               eff$Worst[, , x]))
@@ -205,6 +205,25 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
           srtidx <- t(matrix(srtidx, ncol = 2))
           dim(srtidx) <- c(1, length(srtidx))
           eff.df <- eff.df[, c(2, 1, srtidx)]
+        }else {
+          eff.Worst <- data.frame(eff$Worst, stringsAsFactors = FALSE)
+          eff.Worst <-
+            data.frame(cbind(data.frame(DMU = rownames(eff.Worst)),
+                             eff.Worst),
+                       row.names = NULL)
+          eff.Worst %>% gather(key = "alphacut",
+                               value = "efficiency.Worst", -DMU) -> eff.Worst
+          eff.Worst$alphacut <- rep(object$alpha,
+                                    each = length(object$data$dmunames))
+          
+          eff.Best <- data.frame(eff$Best, stringsAsFactors = FALSE)
+          eff.Best <-
+            data.frame(cbind(data.frame(DMU = rownames(eff.Best)), eff.Best), row.names = NULL)
+          eff.Best %>% gather(key = "alphacut", value = "efficiency.Best", -DMU) -> eff.Best
+          eff.Best$alphacut <-
+            rep(object$alpha, each = length(object$data$dmunames))
+          eff.df <- merge(eff.Worst, eff.Best, by = c("DMU", "alphacut"))
+          }
        
       }
     } else {

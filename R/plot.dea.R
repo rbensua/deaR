@@ -57,20 +57,23 @@ plot.dea <- function(x, showPlots = TRUE, ...){
  # For check CRAN pass...
  Period <- value <- DMU <- Pos <- Count <- . <- index <- iseff <- ..count.. <- eff.mean_eff <- Aspect <-  NULL
  `V<-` <- NULL
- if(modelname == "deaps"){
-   if(object$restricted_eff == FALSE){
-     warning("Plotting a Preference Structure model with unrestricted efficiencies is not available!")
+ if (modelname == "deaps") {
+   if (object$restricted_eff == FALSE) {
+     warning(
+       "Plotting a Preference Structure model with unrestricted efficiencies is not available!"
+     )
      return(NULL)
    }
  }
- if(grepl("add",modelname)){  
+ if (grepl("add", modelname)) {
    warning("Plotting additive models are not implemented yet!")
    return(NULL)
  }
- if(modelname == "basic"){
-   if(!object$orientation %in% c("io","oo"))
+ if (modelname == "basic") {
+   if (!object$orientation %in% c("io", "oo")) {
      warning("Plotting Basic model with is only available with input/output orientations!")
      return(NULL)
+   }
  } 
  
  

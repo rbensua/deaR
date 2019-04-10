@@ -7,7 +7,8 @@
 malmquist_index(datadealist,
                        dmu_eval = NULL,
                        dmu_ref = NULL,
-                       orientation = c("io", "oo"))
+                       orientation = c("io", "oo"),
+                       type = c("fgnz", "rd", "gl", "seq", "glob"))
 }
 \arguments{
 \item{datadealist}{A list with the data at different times, including DMUs, inputs and outputs.}
@@ -17,6 +18,9 @@ malmquist_index(datadealist,
 \item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
 
 \item{orientation}{A string, equal to "io" (input oriented) or "oo" (output oriented).}
+
+\item{type}{A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
+"gl" (generalized), "seq" (sequential) or "glob" (global).}
 }
 \value{
 A numeric list with Malmquist index and efficiencies.
@@ -25,7 +29,7 @@ A numeric list with Malmquist index and efficiencies.
 This function calculates the conventional input/output oriented Malmquist index under variable return-to-scale.
 }
 \note{
-In the results: EC=Efficiency Change, PTEC=Pure Technical Efficiency Change, SEC=Scale Efficiency Change, TC= Technological Change, MI= Malmquist Index
+In the results: EC = Efficiency Change, PTEC = Pure Technical Efficiency Change, SEC = Scale Efficiency Change, TC = Technological Change, MI = Malmquist Index
 }
 \examples{
 # Example 1. With dataset in wide format.

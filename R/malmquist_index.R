@@ -2,16 +2,19 @@
 #'   
 #' @description This function calculates the conventional input/output oriented Malmquist index under variable return-to-scale.
 #' 
-#' @note In the results: EC=Efficiency Change, PTEC=Pure Technical Efficiency Change, SEC=Scale Efficiency Change, TC= Technological Change, MI= Malmquist Index 
+#' @note In the results: EC = Efficiency Change, PTEC = Pure Technical Efficiency Change, SEC = Scale Efficiency Change, TC = Technological Change, MI = Malmquist Index 
 #' @usage malmquist_index(datadealist,
 #'                        dmu_eval = NULL,
 #'                        dmu_ref = NULL,
-#'                        orientation = c("io", "oo"))
+#'                        orientation = c("io", "oo"),
+#'                        type = c("fgnz", "rd", "gl", "seq", "glob"))
 #' 
 #' @param datadealist A list with the data at different times, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
 #' @param orientation A string, equal to "io" (input oriented) or "oo" (output oriented).
+#' @param type A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
+#' "gl" (generalized), "seq" (sequential) or "glob" (global).
 #'   
 #' @return A numeric list with Malmquist index and efficiencies.
 #' 
@@ -70,7 +73,8 @@
 malmquist_index <- function(datadealist,
                             dmu_eval = NULL,
                             dmu_ref = NULL,
-                            orientation = c("io", "oo")) {
+                            orientation = c("io", "oo"),
+                            type = c("fgnz", "rd", "gl", "seq", "glob")) {
   
   nt <- length(datadealist)
   
@@ -120,147 +124,279 @@ malmquist_index <- function(datadealist,
     }
   }
   
+  # Checking type
+  type <- tolower(type)
+  type <- match.arg(type)
+  
   # Checking orientation
   orientation <- tolower(orientation)
   orientation <- match.arg(orientation)
+  if (orientation == "io") {
+    input <- array(0, dim = c(ni, nd, nt))
+    output <- array(0, dim = c(no, nd, nt))
+    for (t in 1:nt) {
+      input[, , t] <- datadealist[[t]]$input
+      output[, , t] <- datadealist[[t]]$output
+    }
+    obj <- "min"
+  } else {
+    ni <- nrow(datadealist[[1]]$output)
+    no <- nrow(datadealist[[1]]$input)
+    input <- array(0, dim = c(ni, nd, nt))
+    output <- array(0, dim = c(no, nd, nt))
+    for (t in 1:nt) {
+      input[, , t] <- -datadealist[[t]]$output
+      output[, , t] <- -datadealist[[t]]$input
+    }
+    obj <- "max"
+  }
   
   mi <- matrix(0, nrow = nt - 1, ncol = nde)
   colnames(mi) <- dmunames[dmu_eval]
   eff <- matrix(0, nrow = nt, ncol = nde)
   colnames(eff) <- dmunames[dmu_eval]
-  effvrs <- eff
-  eff12 <- mi
-  eff21 <- mi
+  effv <- eff
   
-  if (orientation == "io") {
+  f.obj <- c(1, rep(0, ndr))
+  
+  f.dir <- c(rep("<=", ni), rep(">=", no))
+  f.dirv <- c(f.dir, "=")
+  f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = ndr))
+  
+  if (type == "fgnz") {
     
-    obj <- "min"
-    f.obj <- c(1, rep(0, ndr))
-    
-    f.dir <- c(rep("<=", ni), rep(">=", no))
-    f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = ndr))
+    eff12 <- mi # DMU adelantada
+    eff21 <- mi # Frontera adelantada
     
     for (i in 1:nde) {
       
       ii <- dmu_eval[i]
       
-      f.con.1 <- cbind(-datadealist[[1]]$input[, ii], 
-                       matrix(datadealist[[1]]$input[, dmu_ref], nrow = ni))
+      f.con.1 <- cbind(-input[, ii, 1], 
+                       matrix(input[, dmu_ref, 1], nrow = ni))
       f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
-                       matrix(datadealist[[1]]$output[, dmu_ref], nrow = no))
+                       matrix(output[, dmu_ref, 1], nrow = no))
       f.con1 <- rbind(f.con.1, f.con.2)
       
-      f.rhs1 <- c(rep(0, ni), datadealist[[1]]$output[, ii])
+      f.rhs1 <- c(rep(0, ni), output[, ii, 1])
+      
+      f.con1v <- rbind(f.con1, f.con.vrs)
+      f.rhs1v <- c(f.rhs1, 1)
       
       eff[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
-      effvrs[1, i] <- lp(obj, f.obj, rbind(f.con1, f.con.vrs), c(f.dir, "="), c(f.rhs1, 1))$objval
+      effv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
       
       for (t in 2:nt) {
         
-        f.con.1 <- cbind(-datadealist[[t]]$input[, ii],
-                         matrix(datadealist[[t]]$input[, dmu_ref], nrow = ni))
+        f.con.1 <- cbind(-input[, ii, t],
+                         matrix(input[, dmu_ref, t], nrow = ni))
         f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
-                         matrix(datadealist[[t]]$output[, dmu_ref], nrow = no))
+                         matrix(output[, dmu_ref, t], nrow = no))
         f.con2 <- rbind(f.con.1, f.con.2)
         
-        f.rhs2 <- c(rep(0, ni), datadealist[[t]]$output[, ii])
+        f.rhs2 <- c(rep(0, ni), output[, ii, t])
+        
+        f.con2v <- rbind(f.con2, f.con.vrs)
+        f.rhs2v <- c(f.rhs2, 1)
         
         eff[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
-        effvrs[t, i] <- lp(obj, f.obj, rbind(f.con2, f.con.vrs), c(f.dir, "="), c(f.rhs2, 1))$objval
+        effv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
         
         # Intertemporal scores
         
         f.con12 <- cbind(f.con2[, 1], f.con1[, -1])
         f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
-        
+
         eff12[t - 1, i] <- lp(obj, f.obj, f.con12, f.dir, f.rhs2)$objval
         eff21[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs1)$objval
-        
+
         f.con1 <- f.con2
         f.rhs1 <- f.rhs2
+        f.con1v <- f.con2v
+        f.rhs1v <- f.rhs2v
         
       }
       
     }
     
-  } else {
+    if (orientation == "oo") {
+      eff <- 1 / eff
+      effv <- 1 / effv
+      eff12 <- 1 / eff12
+      eff21 <- 1 / eff21
+    }
     
-    obj <- "max"
-    f.obj <- c(1, rep(0, ndr))
+    mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
+    ec <- eff[-1, ] / eff[-nt, ]
+    tc <- mi / ec
+    pech <- effv[-1, ] / effv[-nt, ]
+    sech <- ec / pech
     
-    f.dir <- c(rep(">=", no), rep("<=", ni))
-    f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = ndr))
+  } else if (type == "rd") {
+    
+    eff12 <- mi # DMU adelantada
+    effv12 <- mi # DMU adelantada vrs
+
+    for (i in 1:nde) {
+      
+      ii <- dmu_eval[i]
+      
+      f.con.1 <- cbind(-input[, ii, 1], 
+                       matrix(input[, dmu_ref, 1], nrow = ni))
+      f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                       matrix(output[, dmu_ref, 1], nrow = no))
+      f.con1 <- rbind(f.con.1, f.con.2)
+      
+      f.rhs1 <- c(rep(0, ni), output[, ii, 1])
+      
+      f.con1v <- rbind(f.con1, f.con.vrs)
+      f.rhs1v <- c(f.rhs1, 1)
+      
+      eff[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
+      effv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
+      
+      for (t in 2:nt) {
+        
+        f.con.1 <- cbind(-input[, ii, t],
+                         matrix(input[, dmu_ref, t], nrow = ni))
+        f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                         matrix(output[, dmu_ref, t], nrow = no))
+        f.con2 <- rbind(f.con.1, f.con.2)
+        
+        f.rhs2 <- c(rep(0, ni), output[, ii, t])
+        
+        f.con2v <- rbind(f.con2, f.con.vrs)
+        f.rhs2v <- c(f.rhs2, 1)
+        
+        eff[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
+        effv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
+        
+        # Intertemporal scores
+        
+        f.con12 <- cbind(f.con2[, 1], f.con1[, -1])
+        f.con12v <- rbind(f.con12, f.con.vrs)
+
+        eff12[t - 1, i] <- lp(obj, f.obj, f.con12, f.dir, f.rhs2)$objval
+        effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval
+
+        f.con1 <- f.con2
+        f.rhs1 <- f.rhs2
+        f.con1v <- f.con2v
+        f.rhs1v <- f.rhs2v
+        
+      }
+      
+    }
+    
+    if (orientation == "oo") {
+      eff <- 1 / eff
+      effv <- 1 / effv
+      eff12 <- 1 / eff12
+      effv12 <- 1 / effv12
+    }
+    
+    tc <- effv12 / effv[-1, ]
+    pech <- effv[-1, ] / effv[-nt, ]
+    sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12) 
+    mi <- tc * pech * sech
+    
+  } else if (type == "gl") {
+    
+    eff12y <- mi # DMU output adelantado
+    effv12 <- mi # DMU adelantada vrs
+    effv12y <- mi # DMU output adelantado vrs
     
     for (i in 1:nde) {
       
       ii <- dmu_eval[i]
       
-      f.con.1 <- cbind(-datadealist[[1]]$output[, ii], 
-                       matrix(datadealist[[1]]$output[, dmu_ref], nrow = no))
-      f.con.2 <- cbind(matrix(0, nrow = ni, ncol = 1),
-                       matrix(datadealist[[1]]$input[, dmu_ref], nrow = ni))
+      f.con.1 <- cbind(-input[, ii, 1], 
+                       matrix(input[, dmu_ref, 1], nrow = ni))
+      f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                       matrix(output[, dmu_ref, 1], nrow = no))
       f.con1 <- rbind(f.con.1, f.con.2)
       
-      f.rhs1 <- c(rep(0, no), datadealist[[1]]$input[, ii])
+      f.rhs1 <- c(rep(0, ni), output[, ii, 1])
+      
+      f.con1v <- rbind(f.con1, f.con.vrs)
+      f.rhs1v <- c(f.rhs1, 1)
       
       eff[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
-      effvrs[1, i] <- lp(obj, f.obj, rbind(f.con1, f.con.vrs), c(f.dir, "="), c(f.rhs1, 1))$objval
+      effv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
       
       for (t in 2:nt) {
         
-        f.con.1 <- cbind(-datadealist[[t]]$output[, ii],
-                         matrix(datadealist[[t]]$output[, dmu_ref], nrow = no))
-        f.con.2 <- cbind(matrix(0, nrow = ni, ncol = 1),
-                         matrix(datadealist[[t]]$input[, dmu_ref], nrow = ni))
+        f.con.1 <- cbind(-input[, ii, t],
+                         matrix(input[, dmu_ref, t], nrow = ni))
+        f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                         matrix(output[, dmu_ref, t], nrow = no))
         f.con2 <- rbind(f.con.1, f.con.2)
         
-        f.rhs2 <- c(rep(0, no), datadealist[[t]]$input[, ii])
+        f.rhs2 <- c(rep(0, ni), output[, ii, t])
+        
+        f.con2v <- rbind(f.con2, f.con.vrs)
+        f.rhs2v <- c(f.rhs2, 1)
         
         eff[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
-        effvrs[t, i] <- lp(obj, f.obj, rbind(f.con2, f.con.vrs), c(f.dir, "="), c(f.rhs2, 1))$objval
+        effv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
         
         # Intertemporal scores
         
         f.con12 <- cbind(f.con2[, 1], f.con1[, -1])
-        f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
-        
-        eff12[t - 1, i] <- lp(obj, f.obj, f.con12, f.dir, f.rhs2)$objval
-        eff21[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs1)$objval
+        f.con12v <- rbind(f.con12, f.con.vrs)
+
+        eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval
+        effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval
+        effv12y[t - 1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs2v)$objval
         
         f.con1 <- f.con2
-        f.rhs1 <- f.rhs2
+        f.con1v <- f.con2v
         
       }
       
     }
     
-    eff <- 1 / eff
-    effvrs <- 1 / effvrs
-    eff12 <- 1 / eff12
-    eff21 <- 1 / eff21
+    if (orientation == "oo") {
+      eff <- 1 / eff
+      effv <- 1 / effv
+      eff12y <- 1 / eff12y
+      effv12 <- 1 / effv12
+      effv12y <- 1 / effv12y
+    }
+    
+    tc <- effv12 / effv[-1, ]
+    pech <- effv[-1, ] / effv[-nt, ]
+    sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12y / eff12y) 
+    mi <- tc * pech * sech
+    
+  } else if (type == "seq") {
+    
+    tc <- NULL
+    pech <- NULL
+    sech <- NULL 
+    mi <- NULL
+    
+  } else if (type == "glob") {
+    
+    tc <- NULL
+    pech <- NULL
+    sech <- NULL 
+    mi <- NULL
     
   }
   
-  mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
-  ec <- eff[-1, ] / eff[-nt, ]
-  tc <- mi / ec
-  pech <- effvrs[-1, ]/effvrs[-nt, ]
-  sech <- ec / pech
-  
   deaOutput <- list(mi = mi,
-              ec = ec,
-              tc = tc,
-              pech = pech,
-              sech = sech,
-              eff = eff,
-              eff12 = eff12,
-              eff21 = eff21,
-              effvrs = effvrs,
-              datadealist = datadealist,
-              dmu_eval = dmu_eval,
-              dmu_ref = dmu_ref,
-              orientation = orientation,
-              modelname = "malmquist")
+                    tc = tc,
+                    pech = pech,
+                    sech = sech,
+                    #eff = eff,
+                    #effv = effv,
+                    datadealist = datadealist,
+                    dmu_eval = dmu_eval,
+                    dmu_ref = dmu_ref,
+                    orientation = orientation,
+                    type = type,
+                    modelname = "malmquist")
   return(structure(deaOutput, class = "dea"))
   
 }
