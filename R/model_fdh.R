@@ -71,12 +71,19 @@ model_fdh <-
   fdh_modelname <- tolower(fdh_modelname)
   fdh_modelname <- match.arg(fdh_modelname)
   model_modelname <- paste("model", fdh_modelname, sep = "_")
-    
+  optlist <- list(...)
+  if ("rts" %in% names(optlist)) {
+    optlist$rts <- "vrs"
+  }
+  optlist$returnlp <- TRUE
+  optlist$datadea <- datadea
   deasol <- do.call(model_modelname,
-                    list(datadea = datadea,
-                         rts = "vrs",
-                         returnlp = TRUE,
-                         ...))
+                    optlist)
+  # deasol <- do.call(model_modelname,
+  #                   list(datadea = datadea,
+  #                        rts = "vrs",
+  #                        returnlp = TRUE,
+  #                        ...))
   
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
     if (fdh_modelname == "basic") {
