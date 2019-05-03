@@ -65,6 +65,18 @@ efficiencies(result_CCR)
 slacks(result_SBM)
 slacks(result_CCR)
  
+# Example. Replication of results in Tone (2003), pp 10-11 case 1:1.
+data("Tone2003")
+data_example <- read_data(Tone2003,
+                          ni = 1,
+                          no = 2,
+                          ud_outputs = 2)
+result <- model_sbmeff(data_example,
+                       rts = "vrs")
+efficiencies(result)
+targets(result)
+ 
+ 
 }
 \references{
 Tone, K. (2001). "A Slacks-Based Beasure of Efficiency in Data Envelopment Analysis", European Journal of Operational Research, 130, 498-509. \url{https://doi.org/10.1016/S0377-2217(99)00407-5}

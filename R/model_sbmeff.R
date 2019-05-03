@@ -65,6 +65,18 @@
 #' slacks(result_SBM)
 #' slacks(result_CCR)
 #'  
+#' # Example. Replication of results in Tone (2003), pp 10-11 case 1:1.
+#' data("Tone2003")
+#' data_example <- read_data(Tone2003,
+#'                           ni = 1,
+#'                           no = 2,
+#'                           ud_outputs = 2)
+#' result <- model_sbmeff(data_example,
+#'                        rts = "vrs")
+#' efficiencies(result)
+#' targets(result)
+#'  
+#'  
 #' @seealso \code{\link{model_nonradial}}, \code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmsupereff}}
 #' 
 #' @import lpSolve
@@ -98,6 +110,10 @@ model_sbmeff <-
   #  datadea$nd_inputs <- NULL
   #  datadea$nd_outputs <- NULL
   #}
+  # Checking undesirable io and rts
+  #if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
+  #  warning("This model does not take into account the undesirable feature for inputs/outputs.")
+  #}
     
   # Checking orientation
   orientation <- tolower(orientation)
@@ -106,15 +122,6 @@ model_sbmeff <-
   # Checking rts
   rts <- tolower(rts)
   rts <- match.arg(rts)
-  
-  # Checking undesirable io and rts
-  #if (((!is.null(datadea$ud_inputs)) || (!is.null(datadea$ud_outputs))) && (rts != "vrs")) {
-  #  rts <- "vrs"
-  #  warning("Returns to scale changed to variable (vrs) because there is data with undesirable inputs/outputs.")
-  #}
-  if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
-    warning("This model does not take into account the undesirable feature for inputs/outputs.")
-  }
   
   if (rts == "grs") {
     if (L > 1) {
@@ -164,6 +171,12 @@ model_sbmeff <-
   nc_outputs <- datadea$nc_outputs
   nnci <- length(nc_inputs)
   nnco <- length(nc_outputs)
+  ud_inputs <- datadea$ud_inputs
+  ud_outputs <- datadea$ud_outputs
+  aux_udi <- rep(1, ni)
+  aux_udi[ud_inputs] <- -1
+  aux_udo <- rep(1, no)
+  aux_udo[ud_outputs] <- -1
   
   aux_i <- 1
   aux_o <- 1
@@ -266,8 +279,8 @@ model_sbmeff <-
       
     # Matriz técnica
     f.con.0 <- c(1, rep(0, ndr + ni), aux_o * weight_output[, i] / (sumwo[i] * output[, ii]))
-    f.con.1 <- cbind(-input[, ii], inputref, diag(ni), matrix(0, nrow = ni, ncol = no))
-    f.con.2 <- cbind(-output[, ii], outputref, matrix(0, nrow = no, ncol = ni), -diag(no))
+    f.con.1 <- cbind(-input[, ii], inputref, diag(aux_udi), matrix(0, nrow = ni, ncol = no))
+    f.con.2 <- cbind(-output[, ii], outputref, matrix(0, nrow = no, ncol = ni), -diag(aux_udo))
     f.con <- rbind(f.con.0, f.con.1, f.con.2, f.con.nc, f.con.rs)
 
     if (returnlp) {
@@ -281,7 +294,7 @@ model_sbmeff <-
       tslack_output <- rep(0, no)
       names(tslack_output) <- outputnames
       var <- list(t = t, tlambda = tlambda, tslack_input = tslack_input, tslack_output = tslack_output)
-      DMU[[i]] <- list(direction = f.dir, objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
+      DMU[[i]] <- list(direction = "min", objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
                        var)
       
     } else {

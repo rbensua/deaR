@@ -8,7 +8,8 @@ malmquist_index(datadealist,
                        dmu_eval = NULL,
                        dmu_ref = NULL,
                        orientation = c("io", "oo"),
-                       type = c("fgnz", "rd", "gl", "seq", "glob"))
+                       type1 = c("cont", "seq", "glob"),
+                       type2 = c("fgnz", "rd", "gl", "bias"))
 }
 \arguments{
 \item{datadealist}{A list with the data at different times, including DMUs, inputs and outputs.}
@@ -19,11 +20,14 @@ malmquist_index(datadealist,
 
 \item{orientation}{A string, equal to "io" (input oriented) or "oo" (output oriented).}
 
-\item{type}{A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
-"gl" (generalized), "seq" (sequential) or "glob" (global).}
+\item{type1}{A string, equal to "cont" (contemporary), "seq" (sequential) or "glob"
+(global).}
+
+\item{type2}{A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
+"gl" (generalized) or "bias" (biased).}
 }
 \value{
-A numeric list with Malmquist index and efficiencies.
+A numeric list with Malmquist index and other parameters.
 }
 \description{
 This function calculates the conventional input/output oriented Malmquist index under variable return-to-scale.

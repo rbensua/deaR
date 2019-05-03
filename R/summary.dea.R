@@ -161,7 +161,9 @@ summary.dea <- function(object,
     RefMat[urefnames, refnames] <- round(lmbd[urefnames, refnames], 4)
     if (!modelname %in% c("addsupereff", "sbmsupereff")) {
       for (i in seq_along(refnames)) {
-        RefMat[refnames[i], refnames[i]] <- 1
+        if (refnames[i] %in% dimnames(RefMat)[[1]] & refnames[i] %in% dimnames(RefMat)[[2]]){
+          RefMat[refnames[i], refnames[i]] <- 1
+        }
       }
     }
     #refmat <- RefMat[urefnames,sort(refnames)]
@@ -235,7 +237,7 @@ summary.dea <- function(object,
         data.frame(
           Period = periods[i + 1],
           DMU = dmunames,
-          ec = object$ec[i, ],
+   #       ec = object$ec[i, ],
           tc = object$tc[i, ],
           pech = object$pech[i,] ,
           sech = object$sech[i, ],
@@ -247,12 +249,12 @@ summary.dea <- function(object,
     rownames(dff) <- NULL
     
     # Geometric means by Period
-    dff %>% group_by(Period) %>% summarise_at(vars(ec:mi), funs(geomean = exp(mean(log(
+    dff %>% group_by(Period) %>% summarise_at(vars(tc:mi), funs(geomean = exp(mean(log(
       .
     ))))) %>% as.data.frame() -> dfsumPer
     colnames(dfsumPer) <- colnames(dff)[-2]
     # Geometric means by DMU
-    dff %>% group_by(DMU) %>% summarise_at(vars(ec:mi), funs(geomean = exp(mean(log(
+    dff %>% group_by(DMU) %>% summarise_at(vars(tc:mi), funs(geomean = exp(mean(log(
       .
     ))))) %>% as.data.frame() -> dfsumDMU
     colnames(dfsumDMU) <- colnames(dff)[-1]

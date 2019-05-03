@@ -140,7 +140,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
    # Efficiencies histogram ----------
    if (!modelname %in% c("nonradial", "deaps")) {
      eff <-
-       data.frame(DMU = object$data$dmunames, eff = efficiencies(object))
+       data.frame(DMU = object$data$dmunames[object$dmu_eval], eff = efficiencies(object))
      eff <- eff[complete.cases(eff), ]
      
      if (modelname == "profit") {
@@ -169,7 +169,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      eff$iseff <- ifelse(null_slk & eff_1, 1, 0)
      }
      if (!modelname %in% c("supereff_basic", "sbmsupereff")) {
-       eff %>% filter(iseff == 0) %>% ggplot(aes(x = eff)) +
+       eff %>% filter(iseff == 0) %>% ggplot(aes(x = eff)) + 
          geom_histogram(breaks = c(seq(
            from = min(eff$eff),
            to = max(eff$eff[eff$iseff == 0]),
@@ -232,12 +232,12 @@ plot.dea <- function(x, showPlots = TRUE, ...){
    if (!modelname %in% c("supereff_basic", "sbmsupereff")) {
      ref <- references(object)
      lmbd <- lambdas(object)
-     dmunames <- object$data$dmunames
+     dmunames <- object$data$dmunames[object$dmu_eval]
      refnames <- unique(unlist(lapply(ref, function (x)
        names(x))))
      urefnames <- names(ref)
      effdmus <- dmunames[which(!dmunames %in% urefnames)]
-     
+     refnames <- refnames[refnames %in% effdmus]
      
      RefMat <-
        matrix(
@@ -282,7 +282,18 @@ plot.dea <- function(x, showPlots = TRUE, ...){
    
    if (!modelname %in% c("supereff_basic", "sbmsupereff")) {
      lmbd <- lmbd[complete.cases(lmbd), ]
-     adjmatrix <- lmbd > 0
+     
+     # Make the matrix square in case dmu_eval != dmu_ref
+     
+     allnames <- unique(unlist(dimnames(lmbd)))
+     
+     extendedlmbd <- matrix(0,
+                            nrow = length(allnames),
+                            ncol = length(allnames),
+                            dimnames = list(sort(allnames), sort(allnames)))
+     extendedlmbd[dimnames(lmbd)[[1]],dimnames(lmbd)[[2]]] <- lmbd
+     
+     adjmatrix <- extendedlmbd > 0
      G <- graph.adjacency(adjmatrix, diag = FALSE)
      
      efficient <- which(dmunames %in% effdmus)

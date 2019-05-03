@@ -316,7 +316,7 @@
 #'   \item{y1}{Output1}
 #'   \item{y2}{Output2}
 #' }
-#' @source Tone, K. (2001). "A Slacks-Based Beasure of Efficiency in Data Envelopment Analysis", European Journal of Operational Research, 130, 498-509. \code{doi}: 10.1016/S0377-2217(99)00407-5
+#' @source Tone, K. (2001). "A Slacks-Based Measure of Efficiency in Data Envelopment Analysis", European Journal of Operational Research, 130, 498-509. \code{doi}: 10.1016/S0377-2217(99)00407-5
 #'
 #' @author
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -1045,3 +1045,42 @@
 
 "Coelli_1998"
 
+#' Data: Tone (2003).
+#'
+#' Data of 9 DMUs producing 2 outputs, being second ouput undesirable, by using 1 input. 
+#' @usage data("Tone2003")
+#' @format Data frame with 9 rows and 4 columns. Definition of inputs (X) and outputs (Y):
+#' \describe{
+#'   \item{x}{Input}
+#'   \item{yg}{Output1 ("good" output)}
+#'   \item{yb}{Output2 (undesirable "bad" output)}
+#' }
+#' @source Tone, K. (2003). "Dealing with undesirable outputs in DEA: A Slacks-Based Measure (SBM) approach", GRIPS Research Report Series I-2003-0005.
+#'
+#' @author
+#' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
+#' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
+#'
+#' \strong{Vicente Bolos} (\email{vicente.bolos@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' \strong{Rafael Benitez} (\email{rafael.suarez@@uv.es}).
+#' \emph{Department of Business Mathematics}
+#'
+#' University of Valencia (Spain)
+#'
+#' @examples
+#' # Example. Replication of results in Tone (2003), pp 10-11 case 1:1.
+#' data("Tone2003")
+#' data_example <- read_data(Tone2003,
+#'                           ni = 1,
+#'                           no = 2,
+#'                           ud_outputs = 2)
+#' result <- model_sbmeff(data_example,
+#'                        rts = "vrs")
+#' efficiencies(result)
+#' targets(result)
+#'
+#' @seealso \code{\link{read_data}}, \code{\link{model_sbmeff}}
+
+"Tone2003"
