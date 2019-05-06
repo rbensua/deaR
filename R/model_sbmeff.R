@@ -110,6 +110,7 @@ model_sbmeff <-
   #  datadea$nd_inputs <- NULL
   #  datadea$nd_outputs <- NULL
   #}
+    
   # Checking undesirable io and rts
   #if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
   #  warning("This model does not take into account the undesirable feature for inputs/outputs.")

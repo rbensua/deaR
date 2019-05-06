@@ -92,6 +92,11 @@ model_sbmsupereff <-
   #  datadea$nd_inputs <- NULL
   #  datadea$nd_outputs <- NULL
   #}
+    
+  # Checking undesirable io and rts
+  if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
+    warning("This model does not take into account the undesirable feature for inputs/outputs.")
+  }
   
   # Checking orientation
   orientation <- tolower(orientation)
@@ -105,15 +110,6 @@ model_sbmsupereff <-
   if ((rts != "crs") && (orientation != "no")) {
     warning("For oriented models and non constant returns to scale, feasibility is not
              guaranteed. Proceed with caution, some DMUs results may be missing!")
-  }
-  
-  # Checking undesirable io and rts
-  #if (((!is.null(datadea$ud_inputs)) || (!is.null(datadea$ud_outputs))) && (rts != "vrs")) {
-  #  rts <- "vrs"
-  #  warning("Returns to scale changed to variable (vrs) because there is data with undesirable inputs/outputs.")
-  #}
-  if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
-    warning("This model does not take into account the undesirable feature for inputs/outputs.")
   }
   
   if (rts == "grs") {
@@ -166,6 +162,16 @@ model_sbmsupereff <-
   nc_outputs <- datadea$nc_outputs
   nnci <- length(nc_inputs)
   nnco <- length(nc_outputs)
+  #ud_inputs <- datadea$ud_inputs
+  #ud_outputs <- datadea$ud_outputs
+  dir1 <- rep("<=", ni)
+  #dir1[ud_inputs] <- ">="
+  dir2 <- rep(">=", no)
+  #dir2[ud_outputs] <- "<="
+  dir3 <- rep(">=", ni)
+  #dir3[ud_inputs] <- "<="
+  dir4 <- rep("<=", no)
+  #dir4[ud_outputs] <- ">="
   
   if (orientation == "oo") {
     obj <- "max"
@@ -249,13 +255,13 @@ model_sbmsupereff <-
   
   # Vector de dirección de restricciones y matriz técnica
   if (orientation == "no") {
-    f.dir <- c("=", rep("<=", ni), rep (">=", no + ni), rep("<=", no))
+    f.dir <- c("=", dir1, dir2, dir3, dir4)
   } else if (orientation == "io") {
     f.con.0 <- c(1, rep(0, ndr + ni + no))
-    f.dir <- c("=", rep("<=", ni), rep (">=", no + ni), rep("=", no))
+    f.dir <- c("=", dir1, dir2, dir3, rep("=", no))
   } else {
     f.con.0 <- c(1, rep(0, ndr + ni + no))
-    f.dir <- c("=", rep("<=", ni), rep (">=", no), rep("=", ni), rep("<=", no))
+    f.dir <- c("=", dir1, dir2, rep("=", ni), dir4)
   }
   f.dir[1 + c(nc_inputs, ni + nc_outputs, ni + no + nc_inputs, ni + no + ni + nc_outputs)] <- "="
   f.dir <- c(f.dir, "=", f.dir.rs)
