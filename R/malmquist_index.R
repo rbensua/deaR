@@ -171,14 +171,14 @@ malmquist_index <- function(datadealist,
     effv12 <- mi # DMU adelantada vrs
     effv21 <- mi # Frontera adelantada vrs
   } else if (type2 == "gl") {
-    eff12y <- mi # DMU output adelantado
+    eff12y <- mi # DMU input adelantado
     effv12 <- mi # DMU adelantada vrs
-    effv12y <- mi # DMU output adelantado vrs
+    effv12y <- mi # DMU input adelantado vrs
   } else if (type2 == "bias") {
     eff12 <- mi # DMU adelantada
     eff21 <- mi # Frontera adelantada
-    eff12y <- mi # DMU output adelantado
-    eff22y <- mi # Frontera y DMU output adelantado
+    eff12y <- mi # DMU input adelantado
+    eff22y <- mi # Frontera y DMU input adelantado
   }
   
   if (type1 == "cont") {
@@ -192,8 +192,7 @@ malmquist_index <- function(datadealist,
       
       ii <- dmu_eval[i]
       
-      f.con.1 <- cbind(-input[, ii, 1], 
-                       matrix(input[, dmu_ref, 1], nrow = ni))
+      f.con.1 <- cbind(-input[, ii, 1], matrix(input[, dmu_ref, 1], nrow = ni))
       f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
                        matrix(output[, dmu_ref, 1], nrow = no))
       f.con1 <- rbind(f.con.1, f.con.2)
@@ -208,8 +207,7 @@ malmquist_index <- function(datadealist,
       
       for (t in 2:nt) {
         
-        f.con.1 <- cbind(-input[, ii, t],
-                         matrix(input[, dmu_ref, t], nrow = ni))
+        f.con.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t], nrow = ni))
         f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
                          matrix(output[, dmu_ref, t], nrow = no))
         f.con2 <- rbind(f.con.1, f.con.2)
@@ -240,17 +238,45 @@ malmquist_index <- function(datadealist,
           f.rhs1v <- f.rhs2v
         } else if (type2 == "gl") {
           f.con12v <- rbind(f.con12, f.con.vrs)
-          eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval
           effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval
-          effv12y[t - 1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs2v)$objval
-          f.con1v <- f.con2v
+          if (orientation == "io") {
+            f.con12y.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t - 1], nrow = ni))
+            f.con12y <- rbind(f.con12y.1, f.con.2)
+            eff12y[t - 1, i] <- lp(obj, f.obj, f.con12y, f.dir, f.rhs1)$objval
+            f.con12yv <- rbind(f.con12y, f.con.vrs)
+            effv12y[t - 1, i] <- lp(obj, f.obj, f.con12yv, f.dirv, f.rhs1v)$objval
+            f.rhs1 <- f.rhs2
+            f.rhs1v <- f.rhs2v
+          } else {
+            eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval
+            effv12y[t - 1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs2v)$objval
+            f.con1v <- f.con2v
+          }
         } else if (type2 == "bias") {
           f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
           eff12[t - 1, i] <- lp(obj, f.obj, f.con12, f.dir, f.rhs2)$objval
           eff21[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs1)$objval
-          eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval 
-          eff22y[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs2)$objval
+          f.con12v <- rbind(f.con12, f.con.vrs)
+          effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval 
+          f.con21v <- rbind(f.con21, f.con.vrs)
+          effv21[t - 1, i] <- lp(obj, f.obj, f.con21v, f.dirv, f.rhs1v)$objval
+          if (orientation == "io") {
+            f.con12y.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t - 1], nrow = ni))
+            f.con12y <- rbind(f.con12y.1, f.con.2)
+            eff12y[t - 1, i] <- lp(obj, f.obj, f.con12y, f.dir, f.rhs1)$objval
+            eff22y[t - 1, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs1)$objval
+            f.con12yv <- rbind(f.con12y, f.con.vrs)
+            effv12y[t - 1, i] <- lp(obj, f.obj, f.con12yv, f.dirv, f.rhs1v)$objval
+            effv22y[t - 1, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs1v)$objval
+          } else {
+            eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval
+            eff22y[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs2)$objval
+            effv12y[t - 1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs2v)$objval
+            effv22y[t - 1, i] <- lp(obj, f.obj, f.con21v, f.dirv, f.rhs2v)$objval
+            f.con1v <- f.con2v
+          }
           f.rhs1 <- f.rhs2
+          f.rhs1v <- f.rhs2v
         }
         f.con1 <- f.con2
         
@@ -318,16 +344,37 @@ malmquist_index <- function(datadealist,
           f.rhs1v <- f.rhs2v
         } else if (type2 == "gl") {
           f.con12v <- rbind(f.con12, cbind(0, matrix(1, nrow = 1, ncol = (t - 1) * ndr)))
-          eff12y[t - 1, i] <- lp(obj, f.obj1, f.con1, f.dir, f.rhs2)$objval
           effv12[t - 1, i] <- lp(obj, f.obj1, f.con12v, f.dirv, f.rhs2v)$objval
-          effv12y[t - 1, i] <- lp(obj, f.obj1, f.con1v, f.dirv, f.rhs2v)$objval
-          f.con1v <- f.con2v
+          if (orientation == "io") {
+            f.con12y.1 <- cbind(-input[, ii, t], inputfront1)
+            f.con12y <- rbind(f.con12y.1, f.con.2)
+            eff12y[t - 1, i] <- lp(obj, f.obj1, f.con12y, f.dir, f.rhs1)$objval
+            f.con12yv <- rbind(f.con12y, cbind(0, matrix(1, nrow = 1, ncol = (t - 1) * ndr)))
+            effv12y[t - 1, i] <- lp(obj, f.obj1, f.con12yv, f.dirv, f.rhs1v)$objval
+            f.rhs1 <- f.rhs2
+            f.rhs1v <- f.rhs2v
+          } else {
+            eff12y[t - 1, i] <- lp(obj, f.obj1, f.con1, f.dir, f.rhs2)$objval
+            effv12y[t - 1, i] <- lp(obj, f.obj1, f.con1v, f.dirv, f.rhs2v)$objval
+            f.con1v <- f.con2v
+          }
         } else if (type2 == "bias") {
           f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
           eff12[t - 1, i] <- lp(obj, f.obj1, f.con12, f.dir, f.rhs2)$objval
           eff21[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs1)$objval
-          eff12y[t - 1, i] <- lp(obj, f.obj1, f.con1, f.dir, f.rhs2)$objval 
-          eff22y[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs2)$objval
+          if (orientation == "io") {
+            f.con12y.1 <- cbind(-input[, ii, t], inputfront1)
+            f.con12y <- rbind(f.con12y.1, f.con.2)
+            eff12y[t - 1, i] <- lp(obj, f.obj1, f.con12y, f.dir, f.rhs1)$objval
+            eff22y[t - 1, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs1)$objval
+          } else {
+            eff12y[t - 1, i] <- lp(obj, f.obj1, f.con1, f.dir, f.rhs2)$objval
+            eff22y[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs2)$objval
+          }
+          #effv12[t - 1, i] <- 
+          #effv21[t - 1, i] <-
+          #effv12y[t - 1, i] <-
+          #effv22y[t - 1, i] <-
           f.rhs1 <- f.rhs2
         }
         f.con1 <- f.con2
@@ -441,31 +488,25 @@ malmquist_index <- function(datadealist,
   ibtech <- NULL
   matech <- NULL
   
+  ec <- eff[-1, ] / eff[-nt, ]
+  pech <- effv[-1, ] / effv[-nt, ]
   if (type2 == "fgnz") {
     mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
-    ec <- eff[-1, ] / eff[-nt, ]
     tc <- mi / ec
-    pech <- effv[-1, ] / effv[-nt, ]
     sech <- ec / pech
   } else if (type2 == "rd") {
-    ec <- eff[-1, ] / eff[-nt, ]
     tc <- effv12 / effv[-1, ]
-    pech <- effv[-1, ] / effv[-nt, ]
     sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12) 
     mi <- tc * pech * sech
   } else if (type2 == "gl") {
-    ec <- eff[-1, ] / eff[-nt, ]
     tc <- effv12 / effv[-1, ]
-    pech <- effv[-1, ] / effv[-nt, ]
     sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12y / eff12y) 
     mi <- tc * pech * sech
   } else if (type2 == "bias") {
-    ec <- eff[-1, ] / eff[-nt, ]
-    obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y) )
-    ibtech <- sqrt((eff[-nt, ] * eff22y) / (eff21 * eff12y) )
+    obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y))
+    ibtech <- sqrt((eff21 * eff12y) / (eff[-nt, ] * eff22y))
     matech <- eff[-nt, ] / eff21
     tc <- obtech * ibtech * matech
-    pech <- NULL
     sech <- NULL
     mi <- ec * tc
   }
