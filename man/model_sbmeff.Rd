@@ -5,17 +5,17 @@
 \title{Slack based measure (SBM) of efficiency model.}
 \usage{
 model_sbmeff(datadea,
-            dmu_eval = NULL,
-            dmu_ref = NULL,
-            weight_input = 1,
-            weight_output = 1,
-            orientation = c("no", "io", "oo"),
-            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-            L = 1,
-            U = 1,
-            compute_target = TRUE,
-            returnlp = FALSE,
-            ...)
+             dmu_eval = NULL,
+             dmu_ref = NULL,
+             weight_input = 1,
+             weight_output = 1,
+             orientation = c("no", "io", "oo"),
+             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+             L = 1,
+             U = 1,
+             compute_target = TRUE,
+             returnlp = FALSE,
+             ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}

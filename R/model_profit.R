@@ -2,16 +2,16 @@
 #'   
 #' @description Cost, revenue and profit efficiency DEA models.
 #' @usage model_profit(datadea,
-#'             dmu_eval = NULL,
-#'             dmu_ref = NULL,
-#'             price_input = NULL,
-#'             price_output = NULL,
-#'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-#'             L = 1,
-#'             U = 1,
-#'             restricted_optimal = TRUE,
-#'             returnlp = FALSE,
-#'             ...)
+#'              dmu_eval = NULL,
+#'              dmu_ref = NULL,
+#'              price_input = NULL,
+#'              price_output = NULL,
+#'              rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+#'              L = 1,
+#'              U = 1,
+#'              restricted_optimal = TRUE,
+#'              returnlp = FALSE,
+#'              ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -54,7 +54,6 @@
 #' input_prices <- t(Coelli_1998[, 5:6]) 
 #' 
 #' data_example1 <- read_data(Coelli_1998,
-#'                            dmus = 1,
 #'                            ni = 2,
 #'                            no = 1)
 #' result1 <- model_profit(data_example1,
@@ -69,7 +68,6 @@
 #' # Selection of prices for output: output_prices is the transpose where the prices for outputs are. 
 #' output_prices <- t(Coelli_1998[, 7]) 
 #' data_example2 <- read_data(Coelli_1998,
-#'                           dmus = 1,
 #'                           ni = 2,
 #'                           no = 1)
 #' result2 <- model_profit(data_example2,
@@ -86,7 +84,6 @@
 #' input_prices <- t(Coelli_1998[, 5:6]) 
 #' output_prices <- t(Coelli_1998[, 7]) 
 #' data_example3 <- read_data(Coelli_1998,
-#'                            dmus = 1,
 #'                            ni = 2,
 #'                            no = 1)
 #' result3 <- model_profit(data_example3,

@@ -5,11 +5,13 @@
 \title{Malmquist index}
 \usage{
 malmquist_index(datadealist,
-                       dmu_eval = NULL,
-                       dmu_ref = NULL,
-                       orientation = c("io", "oo"),
-                       type1 = c("cont", "seq", "glob"),
-                       type2 = c("fgnz", "rd", "gl", "bias"))
+                dmu_eval = NULL,
+                dmu_ref = NULL,
+                orientation = c("io", "oo"),
+                rts = c("crs", "vrs"),
+                type1 = c("cont", "seq", "glob"),
+                type2 = c("fgnz", "rd", "gl", "bias"),
+                tc_vrs = FALSE)
 }
 \arguments{
 \item{datadealist}{A list with the data at different times, including DMUs, inputs and outputs.}
@@ -20,11 +22,18 @@ malmquist_index(datadealist,
 
 \item{orientation}{A string, equal to "io" (input oriented) or "oo" (output oriented).}
 
+\item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant) or
+"vrs" (variable).}
+
 \item{type1}{A string, equal to "cont" (contemporary), "seq" (sequential) or "glob"
 (global).}
 
 \item{type2}{A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
 "gl" (generalized) or "bias" (biased).}
+
+\item{tc_vrs}{Logical. If it is \code{FALSE}, it computes the vrs bias malmquist index by using
+the technical change under crs (Färe and Grosskopf 1996). Otherwise, it uses the technical
+change under vrs.}
 }
 \value{
 A numeric list with Malmquist index and other parameters.

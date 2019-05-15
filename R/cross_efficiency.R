@@ -5,9 +5,15 @@
 #' 
 #' (2) The multiplier model can have alternate optimal solutions (see note 1 in model_multiplier). So, depending on the optimal weights selected we can obtain different cross-efficinecy scores.
 #' 
-#' @usage cross_efficiency(datadea, dmu_eval = NULL, dmu_ref = NULL, epsilon = 0, 
-#' orientation = c("io", "oo"), rts = c("crs", "vrs"), selfapp = TRUE, M2 = TRUE,
-#'  M3 = TRUE)
+#' @usage cross_efficiency(datadea,
+#'                  dmu_eval = NULL,
+#'                  dmu_ref = NULL,
+#'                  epsilon = 0, 
+#'                  orientation = c("io", "oo"),
+#'                  rts = c("crs", "vrs"),
+#'                  selfapp = TRUE,
+#'                  M2 = TRUE,
+#'                  M3 = TRUE)
 #' 
 #' @param datadea An object of class \code{dea} or \code{deadata}. If it is of class \code{dea} it must have
 #'                been obtained with some of the multiplier DEA models.
@@ -49,7 +55,6 @@
 #' # Arbitrary formulation. Input-oriented model under constant returns-to-scale.
 #' data("Golany_Roll_1989")
 #' data_example <- read_data(datadea = Golany_Roll_1989, 
-#'                           dmus = 1, 
 #'                           inputs = 2:4, 
 #'                           outputs = 5:6)
 #' result <- cross_efficiency(data_example, 
@@ -63,7 +68,6 @@
 #' # Benevolent formulation (method II). Input-oriented.
 #' data("Golany_Roll_1989")
 #' data_example <- read_data(datadea = Golany_Roll_1989, 
-#'                           dmus = 1, 
 #'                           inputs = 2:4, 
 #'                           outputs = 5:6)
 #' result <- cross_efficiency(data_example, 
@@ -76,7 +80,6 @@
 #' # Benevolent formulation (method III). Input-oriented.
 #' data("Golany_Roll_1989")
 #' data_example <- read_data(datadea = Golany_Roll_1989, 
-#'                           dmus = 1, 
 #'                           inputs = 2:4, 
 #'                           outputs = 5:6)
 #' result <- cross_efficiency(data_example, 
@@ -89,7 +92,6 @@
 #' # Arbitrary formulation. Output-oriented.
 #' data("Golany_Roll_1989")
 #' data_example <- read_data(datadea = Golany_Roll_1989,
-#'                           dmus = 1, 
 #'                           inputs = 2:4, 
 #'                           outputs = 5:6)
 #' result <- cross_efficiency(data_example, 
@@ -102,7 +104,6 @@
 #' # Arbitrary formulation. Input-oriented model under vrs returns-to-scale.
 #' data("Lim_Zhu_2015")
 #' data_example <- read_data(Lim_Zhu_2015,
-#'                           dmus = 1, 
 #'                           ni = 1, 
 #'                           no = 5)
 #' cross <- cross_efficiency(data_example,

@@ -4,20 +4,27 @@
 #' 
 #' @note In the results: EC = Efficiency Change, PTEC = Pure Technical Efficiency Change, SEC = Scale Efficiency Change, TC = Technological Change, MI = Malmquist Index 
 #' @usage malmquist_index(datadealist,
-#'                        dmu_eval = NULL,
-#'                        dmu_ref = NULL,
-#'                        orientation = c("io", "oo"),
-#'                        type1 = c("cont", "seq", "glob"),
-#'                        type2 = c("fgnz", "rd", "gl", "bias"))
+#'                 dmu_eval = NULL,
+#'                 dmu_ref = NULL,
+#'                 orientation = c("io", "oo"),
+#'                 rts = c("crs", "vrs"),
+#'                 type1 = c("cont", "seq", "glob"),
+#'                 type2 = c("fgnz", "rd", "gl", "bias"),
+#'                 tc_vrs = FALSE)
 #' 
 #' @param datadealist A list with the data at different times, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
 #' @param orientation A string, equal to "io" (input oriented) or "oo" (output oriented).
+#' @param rts A string, determining the type of returns to scale, equal to "crs" (constant) or
+#'            "vrs" (variable).
 #' @param type1 A string, equal to "cont" (contemporary), "seq" (sequential) or "glob"
 #' (global).
 #' @param type2 A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
 #' "gl" (generalized) or "bias" (biased).
+#' @param tc_vrs Logical. If it is \code{FALSE}, it computes the vrs bias malmquist index by using
+#' the technical change under crs (Färe and Grosskopf 1996). Otherwise, it uses the technical
+#' change under vrs.
 #'   
 #' @return A numeric list with Malmquist index and other parameters.
 #' 
@@ -77,8 +84,10 @@ malmquist_index <- function(datadealist,
                             dmu_eval = NULL,
                             dmu_ref = NULL,
                             orientation = c("io", "oo"),
+                            rts = c("crs", "vrs"),
                             type1 = c("cont", "seq", "glob"),
-                            type2 = c("fgnz", "rd", "gl", "bias")) {
+                            type2 = c("fgnz", "rd", "gl", "bias"),
+                            tc_vrs = FALSE) {
   
   nt <- length(datadealist)
   
@@ -134,6 +143,10 @@ malmquist_index <- function(datadealist,
   type2 <- tolower(type2)
   type2 <- match.arg(type2)
   
+  # Checking rts
+  rts <- tolower(rts)
+  rts <- match.arg(rts)
+  
   # Checking orientation
   orientation <- tolower(orientation)
   orientation <- match.arg(orientation)
@@ -179,6 +192,10 @@ malmquist_index <- function(datadealist,
     eff21 <- mi # Frontera adelantada
     eff12y <- mi # DMU input adelantado
     eff22y <- mi # Frontera y DMU input adelantado
+    effv12 <- mi # DMU adelantada
+    effv21 <- mi # Frontera adelantada
+    effv12y <- mi # DMU input adelantado
+    effv22y <- mi # Frontera y DMU input adelantado
   }
   
   if (type1 == "cont") {
@@ -241,7 +258,9 @@ malmquist_index <- function(datadealist,
           effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval
           if (orientation == "io") {
             f.con12y.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t - 1], nrow = ni))
-            f.con12y <- rbind(f.con12y.1, f.con.2)
+            f.con12y.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                                matrix(output[, dmu_ref, t - 1], nrow = no))
+            f.con12y <- rbind(f.con12y.1, f.con12y.2)
             eff12y[t - 1, i] <- lp(obj, f.obj, f.con12y, f.dir, f.rhs1)$objval
             f.con12yv <- rbind(f.con12y, f.con.vrs)
             effv12y[t - 1, i] <- lp(obj, f.obj, f.con12yv, f.dirv, f.rhs1v)$objval
@@ -262,7 +281,9 @@ malmquist_index <- function(datadealist,
           effv21[t - 1, i] <- lp(obj, f.obj, f.con21v, f.dirv, f.rhs1v)$objval
           if (orientation == "io") {
             f.con12y.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t - 1], nrow = ni))
-            f.con12y <- rbind(f.con12y.1, f.con.2)
+            f.con12y.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                                matrix(output[, dmu_ref, t - 1], nrow = no))
+            f.con12y <- rbind(f.con12y.1, f.con12y.2)
             eff12y[t - 1, i] <- lp(obj, f.obj, f.con12y, f.dir, f.rhs1)$objval
             eff22y[t - 1, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs1)$objval
             f.con12yv <- rbind(f.con12y, f.con.vrs)
@@ -347,7 +368,8 @@ malmquist_index <- function(datadealist,
           effv12[t - 1, i] <- lp(obj, f.obj1, f.con12v, f.dirv, f.rhs2v)$objval
           if (orientation == "io") {
             f.con12y.1 <- cbind(-input[, ii, t], inputfront1)
-            f.con12y <- rbind(f.con12y.1, f.con.2)
+            f.con12y.2 <- cbind(matrix(0, nrow = no, ncol = 1), outputfront1)
+            f.con12y <- rbind(f.con12y.1, f.con12y.2)
             eff12y[t - 1, i] <- lp(obj, f.obj1, f.con12y, f.dir, f.rhs1)$objval
             f.con12yv <- rbind(f.con12y, cbind(0, matrix(1, nrow = 1, ncol = (t - 1) * ndr)))
             effv12y[t - 1, i] <- lp(obj, f.obj1, f.con12yv, f.dirv, f.rhs1v)$objval
@@ -362,20 +384,27 @@ malmquist_index <- function(datadealist,
           f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
           eff12[t - 1, i] <- lp(obj, f.obj1, f.con12, f.dir, f.rhs2)$objval
           eff21[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs1)$objval
+          f.con12v <- rbind(f.con12, cbind(0, matrix(1, nrow = 1, ncol = (t - 1) * ndr)))
+          effv12[t - 1, i] <- lp(obj, f.obj1, f.con12v, f.dirv, f.rhs2v)$objval
+          f.con21v <- rbind(f.con21, cbind(0, matrix(1, nrow = 1, ncol = t * ndr)))
+          effv21[t - 1, i] <- lp(obj, f.obj2, f.con21v, f.dirv, f.rhs1v)$objval
           if (orientation == "io") {
             f.con12y.1 <- cbind(-input[, ii, t], inputfront1)
-            f.con12y <- rbind(f.con12y.1, f.con.2)
+            f.con12y.2 <- cbind(matrix(0, nrow = no, ncol = 1), outputfront1)
+            f.con12y <- rbind(f.con12y.1, f.con12y.2)
             eff12y[t - 1, i] <- lp(obj, f.obj1, f.con12y, f.dir, f.rhs1)$objval
-            eff22y[t - 1, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs1)$objval
+            eff22y[t - 1, i] <- lp(obj, f.obj2, f.con2, f.dir, f.rhs1)$objval
+            f.con12yv <- rbind(f.con12y, cbind(0, matrix(1, nrow = 1, ncol = (t - 1) * ndr)))
+            effv12y[t - 1, i] <- lp(obj, f.obj1, f.con12yv, f.dirv, f.rhs1v)$objval
+            effv22y[t - 1, i] <- lp(obj, f.obj2, f.con2v, f.dirv, f.rhs1v)$objval
           } else {
             eff12y[t - 1, i] <- lp(obj, f.obj1, f.con1, f.dir, f.rhs2)$objval
             eff22y[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs2)$objval
+            effv12y[t - 1, i] <- lp(obj, f.obj1, f.con1v, f.dirv, f.rhs2v)$objval
+            effv22y[t - 1, i] <- lp(obj, f.obj2, f.con21v, f.dirv, f.rhs2v)$objval
           }
-          #effv12[t - 1, i] <- 
-          #effv21[t - 1, i] <-
-          #effv12y[t - 1, i] <-
-          #effv22y[t - 1, i] <-
           f.rhs1 <- f.rhs2
+          f.rhs1v <- f.rhs2v
         }
         f.con1 <- f.con2
         f.obj1 <- f.obj2
@@ -388,9 +417,66 @@ malmquist_index <- function(datadealist,
     
   } else if (type1 == "glob") {
     
-    f.obj <- c(1, rep(0, nt * ndr))
+    # Frontera usual
+    
+    f.obj <- c(1, rep(0, ndr))
     f.dir <- c(rep("<=", ni), rep(">=", no))
     f.dirv <- c(f.dir, "=")
+    f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = ndr))
+    
+    for (i in 1:nde) {
+      
+      ii <- dmu_eval[i]
+      
+      f.con.1 <- cbind(-input[, ii, 1], matrix(input[, dmu_ref, 1], nrow = ni))
+      f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                       matrix(output[, dmu_ref, 1], nrow = no))
+      f.con1 <- rbind(f.con.1, f.con.2)
+      
+      f.rhs1 <- c(rep(0, ni), output[, ii, 1])
+      
+      f.con1v <- rbind(f.con1, f.con.vrs)
+      f.rhs1v <- c(f.rhs1, 1)
+      
+      eff[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
+      effv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
+      
+      for (t in 2:nt) {
+        
+        f.con.1 <- cbind(-input[, ii, t], matrix(input[, dmu_ref, t], nrow = ni))
+        f.con.2 <- cbind(matrix(0, nrow = no, ncol = 1),
+                         matrix(output[, dmu_ref, t], nrow = no))
+        f.con2 <- rbind(f.con.1, f.con.2)
+        
+        f.rhs2 <- c(rep(0, ni), output[, ii, t])
+        
+        f.con2v <- rbind(f.con2, f.con.vrs)
+        f.rhs2v <- c(f.rhs2, 1)
+        
+        eff[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
+        effv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
+        
+        # Intertemporal scores
+        
+        if (rts == "vrs") {
+          f.con12 <- cbind(f.con2[, 1], f.con1[, -1])
+          f.con12v <- rbind(f.con12, f.con.vrs)
+          eff12[t - 1, i] <- lp(obj, f.obj, f.con12, f.dir, f.rhs2)$objval
+          effv12[t - 1, i] <- lp(obj, f.obj, f.con12v, f.dirv, f.rhs2v)$objval
+          f.con1 <- f.con2
+        }
+        
+      }
+      
+    }
+    
+    # Frontera global
+    
+    effg <- matrix(0, nrow = nt, ncol = nde)
+    colnames(effg) <- dmunames[dmu_eval]
+    effgv <- effg
+
+    f.obj <- c(1, rep(0, nt * ndr))
     f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = nt * ndr))
     inputfront <- matrix(0, nrow = ni, ncol = nt * ndr)
     outputfront <- matrix(0, nrow = no, ncol = nt * ndr)
@@ -412,8 +498,8 @@ malmquist_index <- function(datadealist,
       f.con1v <- rbind(f.con1, f.con.vrs)
       f.rhs1v <- c(f.rhs1, 1)
       
-      eff[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
-      effv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
+      effg[1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs1)$objval
+      effgv[1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs1v)$objval
       
       for (t in 2:nt) {
         
@@ -425,37 +511,8 @@ malmquist_index <- function(datadealist,
         f.con2v <- rbind(f.con2, f.con.vrs)
         f.rhs2v <- c(f.rhs2, 1)
         
-        eff[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
-        effv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
-        
-        # Intertemporal scores
-        
-        if (type2 == "fgnz") {
-          f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
-          eff12[t - 1, i] <- eff[t, i]
-          eff21[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs1)$objval
-          f.rhs1 <- f.rhs2
-        } else if (type2 == "rd") {
-          eff12[t - 1, i] <- eff[t, i]
-          effv12[t - 1, i] <- effv[t, i]
-          f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
-          f.con21v <- rbind(f.con21, f.con.vrs)
-          effv21[t - 1, i] <- lp(obj, f.obj, f.con21v, f.dirv, f.rhs1v)$objval
-          f.rhs1v <- f.rhs2v
-        } else if (type2 == "gl") {
-          eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval
-          effv12[t - 1, i] <- effv[t, i]
-          effv12y[t - 1, i] <- lp(obj, f.obj, f.con1v, f.dirv, f.rhs2v)$objval
-          f.con1v <- f.con2v
-        } else if (type2 == "bias") {
-          f.con21 <- cbind(f.con1[, 1], f.con2[, -1])
-          eff12[t - 1, i] <- eff[t, i]
-          eff21[t - 1, i] <- lp(obj, f.obj, f.con21, f.dir, f.rhs1)$objval
-          eff12y[t - 1, i] <- lp(obj, f.obj, f.con1, f.dir, f.rhs2)$objval 
-          eff22y[t - 1, i] <- eff12y[t - 1, i]
-          f.rhs1 <- f.rhs2
-        }
-        f.con1 <- f.con2
+        effg[t, i] <- lp(obj, f.obj, f.con2, f.dir, f.rhs2)$objval
+        effgv[t, i] <- lp(obj, f.obj, f.con2v, f.dirv, f.rhs2v)$objval
         
       }
       
@@ -472,6 +529,7 @@ malmquist_index <- function(datadealist,
     } else if (type2 == "rd") {
       eff12 <- 1 / eff12
       effv12 <- 1 / effv12
+      effv21 <- 1 / effv21
     } else if (type2 == "gl") {
       eff12y <- 1 / eff12y
       effv12 <- 1 / effv12
@@ -481,34 +539,118 @@ malmquist_index <- function(datadealist,
       eff21 <- 1 / eff21
       eff12y <- 1 / eff12y 
       eff22y <- 1 / eff22y
+      effv12 <- 1 / effv12
+      effv21 <- 1 / effv21
+      effv12y <- 1 / effv12y 
+      effv22y <- 1 / effv22y
     }
   }
   
+  ec <- NULL
+  pech <- NULL
+  sech <- NULL
   obtech <- NULL
   ibtech <- NULL
   matech <- NULL
   
-  ec <- eff[-1, ] / eff[-nt, ]
-  pech <- effv[-1, ] / effv[-nt, ]
-  if (type2 == "fgnz") {
-    mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
-    tc <- mi / ec
-    sech <- ec / pech
-  } else if (type2 == "rd") {
-    tc <- effv12 / effv[-1, ]
-    sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12) 
-    mi <- tc * pech * sech
-  } else if (type2 == "gl") {
-    tc <- effv12 / effv[-1, ]
-    sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12y / eff12y) 
-    mi <- tc * pech * sech
-  } else if (type2 == "bias") {
-    obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y))
-    ibtech <- sqrt((eff21 * eff12y) / (eff[-nt, ] * eff22y))
-    matech <- eff[-nt, ] / eff21
-    tc <- obtech * ibtech * matech
-    sech <- NULL
-    mi <- ec * tc
+  if (type1 == "glob") {
+    if (rts == "crs") {
+      ec <- eff[-1, ] / eff[-nt, ]
+      tc <- (effg[-1, ] * eff[-nt, ]) / (eff[-1, ] * effg[-nt, ])
+      mi <- ec * tc
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency.glob.crs = effg, efficiency.glob.vrs = effgv)
+    } else {
+      pech <- effv[-1, ] / effv[-nt, ]
+      tc <- (effgv[-1, ] * effv[-nt, ]) / (effv[-1, ] * effgv[-nt, ])
+      sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12) # Grifell-Tatjé and Lovell (1999)
+      mi <- tc * pech * sech
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency.glob.crs = effg, efficiency.glob.vrs = effgv,
+                      efficiency_t_t1.crs = eff12, efficiency_t_t1.vrs = effv12)
+    }
+  } else {
+    
+    if (type2 == "fgnz") {
+      # mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
+      tc <- ((eff12 / eff[-1, ]) * (eff[-nt, ] / eff21)) ^ 0.5
+      # if type1 == "glob" then tc is 1 and mi == ec.
+      if (rts == "crs") {
+        ec <- eff[-1, ] / eff[-nt, ]
+        mi <- ec * tc
+      } else {
+        pech <- effv[-1, ] / effv[-nt, ]
+        sech <- (effv[-nt, ] / eff[-nt, ]) / (effv[-1, ] / eff[-1, ])
+        mi <- tc * pech * sech
+      }
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency_t_t1.crs = eff12, efficiency_t1_t.crs = eff21)
+    } else if (type2 == "rd") {
+      tc <- effv12 / effv[-1, ] # Grifell-Tatjé and Lovell (1999)
+      # tc <- ((effv[-nt, ] / effv21) * (effv12 / effv[-1, ])) ^ 0.5  # Ray and Desli (1997)
+      
+      # if type1 == "glob" then tc is 1 and mi == ec.
+      if (rts == "crs") {
+        warning("Descomposition only under variable returns-to-scale (vrs). Parameter rts has
+                been set to vrs.")
+        rts <- "vrs"
+      }
+      pech <- effv[-1, ] / effv[-nt, ]
+      sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12) # Grifell-Tatjé and Lovell (1999)
+      # sech <- (((effv[-nt, ] / eff[-nt, ]) / (effv12 / eff12)) * ((effv21 / eff21) / (effv[-1, ] / (eff[-1, ])))) ^ 0.5   # Ray and Desli (1997)
+      mi <- tc * pech * sech
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency_t_t1.crs = eff12, efficiency_t_t1.vrs = effv12,
+                      efficiency_t1_t.vrs = effv21)
+    } else if (type2 == "gl") { # generalized
+      tc <- effv12 / effv[-1, ]
+      # if type1 == "glob" then tc is 1 and mi == ec if orientation == "oo".
+      if (rts == "crs") {
+        warning("Descomposition only under variable returns-to-scale (vrs). Parameter rts has
+                been set to vrs.")
+        rts <- "vrs"
+      }
+      pech <- effv[-1, ] / effv[-nt, ]
+      sech <- (effv[-nt, ] / eff[-nt, ]) / (effv12y / eff12y) 
+      mi <- tc * pech * sech
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency_t_xt1.crs = eff12y, efficiency_t_t1.vrs = effv12,
+                      efficiency_t_xt1.vrs = effv12y)
+    } else if (type2 == "bias") {
+      # if type1 == "glob" then obtech, ibtech, matech and tc are 1, and mi == ec.
+      if (rts == "crs") {
+        obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y))
+        ibtech <- sqrt((eff21 * eff12y) / (eff[-nt, ] * eff22y))
+        matech <- eff[-nt, ] / eff21
+        tc <- obtech * ibtech * matech
+        ec <- eff[-1, ] / eff[-nt, ]
+        mi <- ec * tc
+      } else {
+        warning("By default, technical change (tc) is measured relative to constant returns to scale (crs)
+                (Färe and Grosskopf 1996). For tc under variable returns to scale (vrs)
+                set the logical parameter tc_vrs to TRUE.")
+        if (tc_vrs) {
+          obtech <- sqrt((effv12 * effv22y) / (effv[-1, ] * effv12y))
+          ibtech <- sqrt((effv21 * effv12y) / (effv[-nt, ] * effv22y))
+          matech <- effv[-nt, ] / effv21
+          tc <- obtech * ibtech * matech
+        } else {
+          obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y))
+          ibtech <- sqrt((eff21 * eff12y) / (eff[-nt, ] * eff22y))
+          matech <- eff[-nt, ] / eff21
+          tc <- obtech * ibtech * matech
+        }
+        pech <- effv[-1, ] / effv[-nt, ]
+        sech <- (eff[-1, ] / effv[-1, ]) / (eff[-nt, ] / effv[-nt, ]) #fgnz
+        mi <- pech * sech * tc
+      }
+      eff_all <- list(efficiency.crs = eff, efficiency.vrs = effv,
+                      efficiency_t_t1.crs = eff12, efficiency_t1_t.crs = eff21,
+                      efficiency_t_xt1.crs = eff12y, efficiency_t1_xt1.crs = eff22y,
+                      efficiency_t_t1.vrs = effv12, efficiency_t1_t.vrs = effv21,
+                      efficiency_t_xt1.vrs = effv12y, efficiency_t1_xt1.vrs = effv22y)
+    }
+    
   }
   
   deaOutput <- list(mi = mi,
@@ -519,14 +661,15 @@ malmquist_index <- function(datadealist,
                     obtech = obtech,
                     ibtech = ibtech,
                     matech = matech,
-                    eff = eff,
-                    effv = effv,
+                    eff_all = eff_all,
                     datadealist = datadealist,
                     dmu_eval = dmu_eval,
                     dmu_ref = dmu_ref,
                     orientation = orientation,
+                    rts = rts,
                     type1 = type1,
                     type2 = type2,
+                    tc_vrs = tc_vrs,
                     modelname = "malmquist")
   return(structure(deaOutput, class = "dea"))
   

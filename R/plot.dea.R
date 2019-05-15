@@ -28,7 +28,6 @@
 #' 
 #' @examples
 #' data_example <- read_data(datadea = Fortune500,
-#'                           dmus = 1,
 #'                           inputs = 2:4, 
 #'                           outputs = 5:6)
 #' result <- model_basic(data_example)
@@ -49,7 +48,7 @@
 
 plot.dea <- function(x, showPlots = TRUE, ...){
   object <- x
-  if(!is.dea(object)){
+  if (!is.dea(object)) {
     stop("Input should be of class dea!")
   }
 
@@ -59,9 +58,8 @@ plot.dea <- function(x, showPlots = TRUE, ...){
  `V<-` <- NULL
  if (modelname == "deaps") {
    if (object$restricted_eff == FALSE) {
-     warning(
-       "Plotting a Preference Structure model with unrestricted efficiencies is not available!"
-     )
+     warning("Plotting a Preference Structure model with unrestricted efficiencies is not
+             available!")
      return(NULL)
    }
  }
@@ -77,23 +75,23 @@ plot.dea <- function(x, showPlots = TRUE, ...){
  } 
  
  
- if(modelname %in% c("malmquist","cross_efficiency")){
-   if(modelname == "malmquist"){
+ if(modelname %in% c("malmquist", "cross_efficiency")){
+   if (modelname == "malmquist") {
      malmdata <- summary(object, exportExcel = FALSE)
      results <- malmdata$Results
      sumres <- malmdata$means_by_period
-     colnames(results) <- c("Period","DMU","EC", "TC", "PTEC","SEC","MI")
-     colnames(sumres) <- c("Period","EC", "TC", "PTEC","SC","MI")
-     results <- results[,c("Period","DMU","EC","PTEC","SEC","TC","MI")]
+     colnames(results) <- c("Period", "DMU", "EC", "TC", "PTEC", "SEC", "MI")
+     colnames(sumres) <- c("Period", "EC", "TC", "PTEC", "SC", "MI")
+     results <- results[,c("Period", "DMU", "EC", "PTEC", "SEC", "TC", "MI")]
      
      
      
-     results %>% gather(key= "index", value = "value", -c("Period","DMU")) -> resmelt 
+     results %>% gather(key = "index", value = "value", -c("Period", "DMU")) -> resmelt 
      resmelt$index <- as.factor(resmelt$index)
      resmelt$index <- factor(resmelt$index, levels(resmelt$index)[c(1,3,4,5,2)])
      resmelt %>% group_by(index) %>% 
        do(p = plot_ly(., x =~Period, y=~value, color = ~DMU, mode = 'lines', type = 'scatter', colors = "Paired") %>% 
-            layout(yaxis=list(title=~index)))  %>% 
+            layout(yaxis = list(title=~index)))  %>% 
        subplot(nrows = NROW(.), shareX = TRUE,titleY=TRUE)-> resplot
      
      
@@ -104,14 +102,14 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      sumresmelt %>% plot_ly(x = ~Period, y = ~value, type = 'scatter', mode = 'lines', color = ~index) -> sumplot
      
      
-     if (showPlots){
-     invisible(readline(prompt="Press [enter] to continue"))
+     if (showPlots) {
+     invisible(readline(prompt = "Press [enter] to continue"))
      show(resplot)
-     invisible(readline(prompt="Press [enter] to continue"))
+     invisible(readline(prompt = "Press [enter] to continue"))
      show(sumplot)
      }
      invisible(list(`Results plot` = resplot, `Summary plot` = sumplot))
-   }else{
+   } else {
      results <- list(Arb = object$Arbitrary$cross_eff,
                      M2_agg = object$M2_agg$cross_eff,
                      M2_ben = object$M2_ben$cross_eff,
@@ -122,12 +120,12 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      titles[sapply(results, is.null)] <- NULL 
      results[sapply(results, is.null)] <- NULL
      p <- list()
-     for(i in seq_along(results)){
+     for (i in seq_along(results)) {
        xlab <- ylab <- colnames(results[[i]])
-       p[[i]] <- plot_ly(x = xlab, y = rev(ylab), z  = results[[i]][nrow(results[[i]]):1,], type = "heatmap" ) %>% 
+       p[[i]] <- plot_ly(x = xlab, y = rev(ylab), z  = results[[i]][nrow(results[[i]]):1, ], type = "heatmap" ) %>% 
          layout(title = titles[[i]])
-       if (showPlots){
-         invisible(readline(prompt="Press [enter] for next plot"))
+       if (showPlots) {
+         invisible(readline(prompt = "Press [enter] for next plot"))
          show(p[[i]])
        }
      }
@@ -146,14 +144,14 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      if (modelname == "profit") {
        # Efficient DMUS have eff = 1 and optimio  = io 
        iseff <- sapply(seq_len(length(object$DMU)), function(i) {
-         sum(c((object$DMU[[i]]$optimal_output - object$data$output[,i])^2 , 
-               (object$DMU[[i]]$optimal_input - object$data$input[,i])^2)) < 1e-10
+         sum(c((object$DMU[[i]]$optimal_output - object$data$output[, i]) ^ 2 , 
+               (object$DMU[[i]]$optimal_input - object$data$input[, i]) ^ 2)) < 1e-10
        }
        )
        eff$iseff <- ifelse(iseff, 1, 0)
        
        
-     } else{
+     } else {
      # Efficient DMUS have eff = 1 and slacks  = 0
      slk <- slacks(object)
      slk[sapply(slk, is.null)] <- NULL
@@ -185,10 +183,10 @@ plot.dea <- function(x, showPlots = TRUE, ...){
          ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat = 'count',
                                                              aes(label = ..count..),
                                                              vjust = -0.5) -> p1
-       if (showPlots){
+       if (showPlots) {
          grid.arrange(p1, p2, nrow = 1)
        }
-     } else{
+     } else {
        eff %>% ggplot(aes(x = eff)) + geom_histogram(bins = 10,
                                                      col = "white",
                                                      aes(fill = ifelse(iseff == 0,
@@ -196,7 +194,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
                                                                        "lightgreen"))) +
          theme_bw() + scale_fill_identity() + xlab("Efficiency") + ylab("Count") -> effplot
        
-       if (showPlots){
+       if (showPlots) {
          show(effplot)
        }
      }
@@ -221,7 +219,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
        ggtitle("Efficient/Non Efficient DMUs") + geom_text(stat = 'count', aes(label =
                                                                                  ..count..), vjust = -0.5) -> p1
      
-     if (showPlots){
+     if (showPlots) {
      show(p1)
      invisible(readline(prompt = "Press [enter] to continue"))
      show(p2)
@@ -272,7 +270,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
        show(refplot)
        invisible(readline(prompt = "Press [enter] to continue"))
      }
-   } else{
+   } else {
      warning("Ranking plots with those models are not implemented yet!")
      
      
@@ -333,7 +331,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      
      graphPlot <- list(G = G, locations = locations)  
     
-     if(showPlots){
+     if (showPlots) {
        plot(
          G,
          layout = locations,
@@ -345,7 +343,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
        )
      }
    }
-   invisible(list(`Eff/Ineff count` = p1,`Ineff Dstr` = p2,`References Plot`= refplot, `References Graph` = graphPlot))
+   invisible(list(`Eff/Ineff count` = p1, `Ineff Dstr` = p2, `References Plot`= refplot, `References Graph` = graphPlot))
  }
  
  

@@ -5,10 +5,10 @@
 \title{Summary conventional DEA models.}
 \usage{
 summary(object,
-               exportExcel = TRUE,
-               filename = NULL, 
-               returnList = FALSE,
-               ...)
+        exportExcel = TRUE,
+        filename = NULL, 
+        returnList = FALSE,
+        ...)
 }
 \arguments{
 \item{object}{An object of class \code{"dea"} obtained by a dea model function.}
@@ -36,7 +36,6 @@ data("PFT1981")
 # Selecting DMUs in Program Follow Through (PFT)
 PFT <- PFT1981[1:49, ] 
 PFT <- read_data(PFT, 
-                 dmus = 1, 
                  inputs = 2:6, 
                  outputs = 7:9 )
 eval_pft <- model_basic(PFT, 

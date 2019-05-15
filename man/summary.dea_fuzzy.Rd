@@ -37,7 +37,6 @@ Summary of the results obtained by a fuzzy DEA model.
 \examples{
 data("Leon2003")
 data_example <- read_data_fuzzy(Leon2003,
-                                dmus = 1, 
                                 inputs.mL = 2, 
                                 inputs.dL = 3, 
                                 outputs.mL = 4, 

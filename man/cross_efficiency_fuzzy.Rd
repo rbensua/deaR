@@ -5,9 +5,9 @@
 \title{Cross efficiency fuzzy tables}
 \usage{
 cross_efficiency_fuzzy(datadea,
-            orientation = c("io", "oo"),
-            h = 1,
-            selfapp = TRUE)
+                       orientation = c("io", "oo"),
+                       h = 1,
+                       selfapp = TRUE)
 }
 \arguments{
 \item{datadea}{An object of class \code{dea_fuzzy} or \code{deadata_fuzzy}. If it is of class \code{dea_fuzzy} it must have
@@ -27,7 +27,6 @@ The (crisp) relative efficiencies for the case \code{h} = 1 are obtained from th
 \examples{
  data("Guo_Tanaka_2001")
  datadea <- read_data_fuzzy(datadea = Guo_Tanaka_2001, 
-                            dmus = 1, 
                             inputs.mL = 2:3, 
                             inputs.dL = 4:5, 
                             outputs.mL = 6:7, 

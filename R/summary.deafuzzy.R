@@ -35,7 +35,6 @@
 #' @examples
 #' data("Leon2003")
 #' data_example <- read_data_fuzzy(Leon2003,
-#'                                 dmus = 1, 
 #'                                 inputs.mL = 2, 
 #'                                 inputs.dL = 3, 
 #'                                 outputs.mL = 4, 
@@ -113,7 +112,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
       lamb[, , x])
     lambmat <- do.call(rbind, lamblist)
     
-    if (!returnList){
+    if (!returnList) {
       df <- cbind(eff, data.frame(lambmat, row.names = NULL))
       if (exportExcel) {
         if (is.null(filename)) {
@@ -140,7 +139,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
       
     }
     # Kao - Liu ---------------------
-  } else{
+  } else {
     modelkl <- strsplit(object$modelname, "_")[[1]][3]
     
     # Efficiencies ----------
@@ -205,7 +204,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
           srtidx <- t(matrix(srtidx, ncol = 2))
           dim(srtidx) <- c(1, length(srtidx))
           eff.df <- eff.df[, c(2, 1, srtidx)]
-        }else {
+        } else {
           eff.Worst <- data.frame(eff$Worst, stringsAsFactors = FALSE)
           eff.Worst <-
             data.frame(cbind(data.frame(DMU = rownames(eff.Worst)),
@@ -334,7 +333,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
       
       
       
-    } else{
+    } else {
       # Case 2: only either input or output slacks are present (but not both) --------------
       if (object$orientation == "io") {
         s.o.Worst <- do.call(rbind, lapply(seq(dim(s$slack_output.W)[3]),
@@ -692,7 +691,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
     if (!modelkl %in% c("additive", "addsupereff")) {
       df <-
         cbind(eff.df, s.df[, 3:ncol(s.df)], lmb.df[, 3:ncol(lmb.df)], tar.df[, 3:ncol(tar.df)])
-    } else{
+    } else {
       df <-
         cbind(s.df[, 3:ncol(s.df)], lmb.df[, 3:ncol(lmb.df)], tar.df[, 3:ncol(tar.df)])
     }
@@ -716,7 +715,7 @@ summary.dea_fuzzy <- function(object, ..., exportExcel = TRUE, filename = NULL, 
       }
       write_xlsx(df.list, path = filename)
     }
-    if (!returnList){
+    if (!returnList) {
       return(df)
     } else {
       df.list <- list(

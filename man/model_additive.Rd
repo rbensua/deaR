@@ -5,16 +5,16 @@
 \title{Additive DEA model.}
 \usage{
 model_additive(datadea,
-            dmu_eval = NULL,
-            dmu_ref = NULL,
-            weight_slack_i = 1,
-            weight_slack_o = 1,
-            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-            L = 1,
-            U = 1,
-            compute_target = TRUE,
-            returnlp = FALSE,
-            ...)
+               dmu_eval = NULL,
+               dmu_ref = NULL,
+               weight_slack_i = 1,
+               weight_slack_o = 1,
+               rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+               L = 1,
+               U = 1,
+               compute_target = TRUE,
+               returnlp = FALSE,
+               ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}

@@ -3,16 +3,16 @@
 #' @description Solve the additive super-efficiency model proposed by Du, Liang and Zhu (2010). It is an extension of the SBM super-efficiency to the additive DEA model.
 #' 
 #' @usage model_addsupereff(datadea,
-#'             dmu_eval = NULL,
-#'             dmu_ref = NULL,
-#'             weight_slack_i = NULL,
-#'             weight_slack_o = NULL,
-#'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-#'             L = 1,
-#'             U = 1,
-#'             compute_target = TRUE,
-#'             returnlp = FALSE,
-#'             ...)
+#'                   dmu_eval = NULL,
+#'                   dmu_ref = NULL,
+#'                   weight_slack_i = NULL,
+#'                   weight_slack_o = NULL,
+#'                   rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+#'                   L = 1,
+#'                   U = 1,
+#'                   compute_target = TRUE,
+#'                   returnlp = FALSE,
+#'                   ...)
 #' 
 #' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.

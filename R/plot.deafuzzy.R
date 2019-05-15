@@ -39,9 +39,9 @@
 #' @export
 #' 
 
-plot.dea_fuzzy <- function(x, showPlots = TRUE, ...){
+plot.dea_fuzzy <- function(x, showPlots = TRUE, ...) {
   object <- x
-  if(!is.dea_fuzzy(object)){
+  if (!is.dea_fuzzy(object)) {
     stop("Input should be of class dea_fuzzy!")
   }
 
@@ -100,9 +100,9 @@ plot.dea_fuzzy <- function(x, showPlots = TRUE, ...){
    colnames(eff_worst) <- c("DMU", cnames)
    colnames(eff_best) <- c("DMU", cnames)
    eff_worst <- gather(eff_worst, variable, value,-c(DMU))
-   eff_best <- gather(eff_best, variable, value,-c(DMU))
-   colnames(eff_worst) <- c("DMU", "alpha_cut", ifelse(neff == 1,"Efficiency","Mean Efficiency"))
-   colnames(eff_best) <- c("DMU", "alpha_cut", ifelse(neff == 1,"Efficiency","Mean Efficiency"))
+   eff_best <- gather(eff_best, variable, value, -c(DMU))
+   colnames(eff_worst) <- c("DMU", "alpha_cut", ifelse(neff == 1, "Efficiency", "Mean Efficiency"))
+   colnames(eff_best) <- c("DMU", "alpha_cut", ifelse(neff == 1, "Efficiency", "Mean Efficiency"))
    eff_worst$Case <- "Worst"
    eff_best$Case <- "Best"
    eff_df <- rbind(eff_worst, eff_best)

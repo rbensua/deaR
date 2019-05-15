@@ -26,7 +26,6 @@ Data adapted from Tomkins and Green (1988).  13 DMUs using 3 inputs to produce 2
 # Example.
 data("Doyle_Green_1994")
 data_example <- read_data(datadea = Doyle_Green_1994,
-                         dmus = 1,
                          inputs = 6:7,
                          outputs = 2:5)
 result <- cross_efficiency(data_example,

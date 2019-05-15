@@ -5,7 +5,10 @@
 \title{read_malmquist}
 \usage{
 read_malmquist(datadea,
-nper = NULL, percol = NULL,arrangement  = c("horizontal","vertical"),...)
+               nper = NULL,
+               percol = NULL,
+               arrangement  = c("horizontal", "vertical"),
+               ...)
 }
 \arguments{
 \item{datadea}{Dataframe with DEA data.}

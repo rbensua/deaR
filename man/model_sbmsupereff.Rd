@@ -5,17 +5,17 @@
 \title{Slack based measure of superefficiency model}
 \usage{
 model_sbmsupereff(datadea,
-            dmu_eval = NULL,
-            dmu_ref = NULL,
-            weight_input = 1,
-            weight_output = 1,
-            orientation = c("no", "io", "oo"),
-            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-            L = 1,
-            U = 1,
-            compute_target = TRUE,
-            compute_rho = FALSE,
-            returnlp = FALSE)
+                  dmu_eval = NULL,
+                  dmu_ref = NULL,
+                  weight_input = 1,
+                  weight_output = 1,
+                  orientation = c("no", "io", "oo"),
+                  rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+                  L = 1,
+                  U = 1,
+                  compute_target = TRUE,
+                  compute_rho = FALSE,
+                  returnlp = FALSE)
 }
 \arguments{
 \item{datadea}{The data, including DMUs, inputs and outputs.}
@@ -51,8 +51,12 @@ Slack based measure of superefficiency model (Tone 2002) with n DMUs, m inputs, 
 \examples{
 # Replication of results in Tone(2002, p.39)
 data("Power_plants")
-data_example <- read_data(Power_plants, ni = 4, no = 2)
-result <- model_sbmsupereff(data_example, orientation = "io", rts = "crs") 
+data_example <- read_data(Power_plants,
+                          ni = 4,
+                          no = 2)
+result <- model_sbmsupereff(data_example,
+                            orientation = "io",
+                            rts = "crs") 
 efficiencies(result)
 slacks(result)$slack_input
 references(result)

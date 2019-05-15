@@ -32,27 +32,26 @@
 #' # Example 1. Replication of results in Charnes, Cooper and Rhodes (1981)
 #' data("PFT1981")
 #' # selecting DMUs in Project Follow Through (PFT)
-#' PFT <- PFT1981[1:49,]
+#' PFT <- PFT1981[1:49, ]
 #' PFT <- read_data(PFT,
-#'                  dmus=1,
-#'                  inputs=2:6,
-#'                  outputs=7:9 )
+#'                  dmus = 1,
+#'                  inputs = 2:6,
+#'                  outputs = 7:9 )
 #' eval_pft <- model_basic(PFT,
-#'                         orientation="io",
-#'                         rts="crs")
+#'                         orientation = "io",
+#'                         rts = "crs")
 #' eff_pft <- efficiencies(eval_pft)
 #'
 #' # Example 2. Replication of results in Charnes, Cooper and Rhodes (1981)
 #' data("PFT1981")
 #' # selecting DMUs in Non-Follow Through (NFT)
-#' NFT <- PFT1981[50:70,]
+#' NFT <- PFT1981[50:70, ]
 #' NFT <- read_data(NFT,
-#'                  dmus=1,
-#'                  inputs=2:6,
-#'                  outputs=7:9 )
+#'                  inputs = 2:6,
+#'                  outputs = 7:9 )
 #' eval_nft <- model_basic(NFT,
-#'                         orientation="io",
-#'                         rts="crs")
+#'                         orientation = "io",
+#'                         rts = "crs")
 #' eff_nft <- efficiencies(eval_nft)
 #'
 #' @seealso \code{\link{read_data}}, \code{\link{model_basic}}
@@ -100,8 +99,8 @@
 #'                           ni = 4,
 #'                           no = 2)
 #' result <- model_supereff(data_example,
-#'                          orientation="io",
-#'                          rts="crs")
+#'                          orientation = "io",
+#'                          rts = "crs")
 #' eff <- efficiencies(result)
 #' eff
 #'
@@ -111,8 +110,8 @@
 #'                           ni = 4,
 #'                           no = 2)
 #' result2 <- model_sbmsupereff(data_example,
-#'                              orientation="io",
-#'                              rts="crs")
+#'                              orientation = "io",
+#'                              rts = "crs")
 #' efficiencies(result2)
 #' slacks(result2)$input
 #' references(result2)
@@ -151,13 +150,12 @@
 #' @examples
 #' data("Fortune500")
 #' data_Fortune <- read_data(datadea = Fortune500,
-#'                           dmus = 1,
 #'                           inputs = 2:4,
 #'                           outputs = 5:6)
 #' result <- model_multiplier(data_Fortune,
-#'                            epsilon=0.000001,
-#'                            orientation="io",
-#'                            rts="crs")
+#'                            epsilon = 1e-6,
+#'                            orientation = "io",
+#'                            rts = "crs")
 #' # results for General Motors and Ford Motor are not shown
 #' # by deaR because the solution is infeasible
 #' efficiencies(result)
@@ -200,12 +198,11 @@
 #' # Example. Replication of results in Wu,Tsai and Zhou (2011)
 #' data("Hotels")
 #' data_hotels <- read_data(Hotels,
-#'                          dmus = 1,
 #'                          inputs = 2:5,
 #'                          outputs = 6:8)
 #' result <- model_nonradial(data_hotels,
-#'                           orientation="oo",
-#'                           rts="vrs")
+#'                           orientation = "oo",
+#'                           rts = "vrs")
 #' efficiencies(result)
 #'
 #' @seealso \code{\link{read_data}}, \code{\link{model_nonradial}}
@@ -249,13 +246,13 @@
 #' # Replication of results DEA1 in Tomkins and Green (1988)
 #' data("Departments")
 #' # Calculate Total income
-#' Departments$Total_income <- Departments[,5]+Departments[,6]+Departments[,7]
+#' Departments$Total_income <- Departments[, 5]  +Departments[, 6] + Departments[, 7]
 #' data_example <- read_data(Departments,
-#'                           inputs=9,
-#'                           outputs=c(2,3,4,12))
+#'                           inputs = 9,
+#'                           outputs = c(2, 3, 4, 12))
 #' result <- model_basic(data_example,
-#'                       orientation="io",
-#'                       rts="crs")
+#'                       orientation = "io",
+#'                       rts = "crs")
 #' efficiencies(result) # Table 3 (p.156)
 #' references(result) # Table 3 (p.157)
 #'
@@ -293,10 +290,9 @@
 #' # Replication of results in Sanei and Mamizadeh Chatghayeb (2013)
 #' data("Supply_Chain")
 #' data_fdh1 <- read_data(Supply_Chain,
-#'                        dmus=1,
-#'                        inputs= 2:4,
-#'                        outputs=5:6)
-#' # by default orientation="io"
+#'                        inputs = 2:4,
+#'                        outputs = 5:6)
+#' # by default orientation = "io"
 #' result <- model_fdh(data_fdh1)
 #' efficiencies(result)
 #'
@@ -337,7 +333,7 @@
 #'                           ni = 2,
 #'                           no = 2)
 #' result <- model_sbmeff(data_example,
-#'                        orientation ="no",
+#'                        orientation = "no",
 #'                        rts = "crs")
 #' efficiencies(result)
 #' slacks(result)
@@ -376,8 +372,8 @@
 #' # Replication of results in Wang and Lan (2011, p. 2768)
 #' data("Economy")
 #' data_example <- read_malmquist(Economy,
-#'                                nper=5,
-#'                                arrangement="horizontal",
+#'                                nper = 5,
+#'                                arrangement = "horizontal",
 #'                                ni = 2,
 #'                                no = 1)
 #' result <- malmquist_index(data_example)
@@ -416,8 +412,8 @@
 #' # Replication of results in Wang and Lan (2011, p. 2768)
 #' data("EconomyLong")
 #' data_example <- read_malmquist(EconomyLong,
-#'                                percol=2,
-#'                                arrangement="vertical",
+#'                                percol = 2,
+#'                                arrangement = "vertical",
 #'                                ni = 2,
 #'                                no = 1)
 #' result <- malmquist_index(data_example)
@@ -457,7 +453,6 @@
 #' # Example.
 #' data("Golany_Roll_1989")
 #' data_example <- read_data(datadea = Golany_Roll_1989,
-#'                           dmus = 1,
 #'                           inputs = 2:4,
 #'                           outputs = 5:6)
 #' result <- cross_efficiency(data_example,
@@ -502,7 +497,6 @@
 #' # Example.
 #' data("Doyle_Green_1994")
 #' data_example <- read_data(datadea = Doyle_Green_1994,
-#'                          dmus = 1,
 #'                          inputs = 6:7,
 #'                          outputs = 2:5)
 #' result <- cross_efficiency(data_example,
@@ -526,12 +520,12 @@
 #' @usage data("Libraries")
 #' @format Data frame with 23 rows and 7 columns. Definition of inputs (X) and outputs (Y):
 #' \describe{
-#'   \item{x1 = AREA}{Floor area (unit=1000 m2)}
-#'   \item{x2 = BOOKS}{Number of books (unit=1000)}
+#'   \item{x1 = AREA}{Floor area (unit = 1000 m2)}
+#'   \item{x2 = BOOKS}{Number of books (unit = 1000)}
 #'   \item{x3 = STAFF}{Staff}
-#'   \item{x4 = POPULATION}{Population (unit=1000)}
-#'   \item{y1 = REGISTERED}{Registered residents (unit=1000)}
-#'   \item{y2 = BORROWED}{Borrowed books (unit=1000)}
+#'   \item{x4 = POPULATION}{Population (unit = 1000)}
+#'   \item{y1 = REGISTERED}{Registered residents (unit = 1000)}
+#'   \item{y2 = BORROWED}{Borrowed books (unit = 1000)}
 #' }
 #' @source Cooper, W.W.; Seiford, L.M. and Tone, K. (2007). Data Envelopment Analysis. A Comprehensive Text with Models, Applications, References and DEA-Solver Software. Springer
 #'
@@ -553,13 +547,12 @@
 #' data(Libraries)
 #' # POPULATION (non-controllable input) is the forth input.
 #' data_example <- read_data(Libraries,
-#'                           dmus=1,
-#'                           inputs=2:5,
-#'                           nc_inputs=4,
-#'                           outputs=6:7)
+#'                           inputs = 2:5,
+#'                           nc_inputs = 4,
+#'                           outputs = 6:7)
 #' result <- model_basic(data_example,
-#'                       orientation="io",
-#'                       rts="crs")
+#'                       orientation = "io",
+#'                       rts = "crs")
 #' efficiencies(result)
 #' targets(result)
 #'
@@ -567,13 +560,12 @@
 #' data(Libraries)
 #' # POPULATION (non-controllable input) is the forth input.
 #' data_example2 <- read_data(Libraries,
-#'                            dmus=1,
-#'                            inputs=2:5,
-#'                            nd_inputs=4,
-#'                            outputs=6:7)
+#'                            inputs = 2:5,
+#'                            nd_inputs = 4,
+#'                            outputs = 6:7)
 #' result2 <- model_basic(data_example2,
-#'                        orientation="io",
-#'                        rts="crs")
+#'                        orientation = "io",
+#'                        rts = "crs")
 #' efficiencies(result2)
 #' targets(result2)
 #'
@@ -584,7 +576,7 @@
 
 #' Data: Guo and Tanaka (2001).
 #'
-#' Data of 5 DMUs with two symmetric triangular fuzzy inputs, Xj=(xj,alphaj), and two symmetric triangular fuzzy outputs, Yj=(yj,betaj).
+#' Data of 5 DMUs with two symmetric triangular fuzzy inputs, Xj = (xj, alphaj), and two symmetric triangular fuzzy outputs, Yj=(yj,betaj).
 #' @usage data("Guo_Tanaka_2001")
 #' @format Data frame with 5 rows and 9 columns. Definition of fuzzy inputs (X) and fuzzy outputs (Y):
 #' \describe{
@@ -614,14 +606,13 @@
 #' @examples
 #' data("Guo_Tanaka_2001")
 #' data_example <- read_data_fuzzy(Guo_Tanaka_2001,
-#'                                 dmus=1,
-#'                                 inputs.mL=2:3,
-#'                                 inputs.dL=4:5,
-#'                                 outputs.mL=6:7,
-#'                                 outputs.dL=8:9)
+#'                                 inputs.mL = 2:3,
+#'                                 inputs.dL = 4:5,
+#'                                 outputs.mL = 6:7,
+#'                                 outputs.dL = 8:9)
 #' result <- modelfuzzy_guotanaka(data_example,
-#'                                h = seq(0,1,by=0.1),
-#'                                orientation="io")
+#'                                h = seq(0, 1, by = 0.1),
+#'                                orientation = "io")
 #' efficiencies(result)
 #'
 #' @seealso \code{\link{read_data_fuzzy}}, \code{\link{modelfuzzy_guotanaka}},
@@ -659,15 +650,14 @@
 #' # Example. Replication of results in Leon et. al (2003, p. 416)
 #' data("Leon2003")
 #' data_example <- read_data_fuzzy(Leon2003,
-#'                                 dmus = 1,
 #'                                 inputs.mL = 2,
-#'                                 inputs.dL=3,
+#'                                 inputs.dL = 3,
 #'                                 outputs.mL = 4,
-#'                                 outputs.dL=5)
+#'                                 outputs.dL = 5)
 #' result <- modelfuzzy_possibilistic(data_example,
-#'                                    h = seq(0,1,by=0.1),
-#'                                    orientation="io",
-#'                                    rts="vrs")
+#'                                    h = seq(0, 1, by = 0.1),
+#'                                    orientation = "io",
+#'                                    rts = "vrs")
 #' efficiencies(result)
 #'
 #' @seealso \code{\link{read_data_fuzzy}}, \code{\link{modelfuzzy_possibilistic}},
@@ -713,16 +703,15 @@
 #' @examples
 #' # Example. Replication of results in Kao and Liu (2003, p.152)
 #' data_example <- read_data_fuzzy(Kao_Liu_2003,
-#'                                 dmus=1,
-#'                                 inputs.mL= 2,
-#'                                 outputs.mL= 3:7,
-#'                                 outputs.dL=c(NA,NA,8,NA,10),
-#'                                 outputs.dR=c(NA,NA,9,NA,11))
+#'                                 inputs.mL = 2,
+#'                                 outputs.mL = 3:7,
+#'                                 outputs.dL = c(NA, NA, 8, NA, 10),
+#'                                 outputs.dR = c(NA, NA, 9, NA, 11))
 #' result <- modelfuzzy_kaoliu(data_example,
 #'                             kaoliu_modelname = "basic",
-#'                             orientation="oo",
-#'                             rts="vrs",
-#'                             alpha=0)
+#'                             orientation = "oo",
+#'                             rts = "vrs",
+#'                             alpha = 0)
 #' eff <- efficiencies(result)
 #' eff
 #'
@@ -764,9 +753,8 @@
 #' # Input-oriented model under variable returns-to-scale.
 #' data("Lim_Zhu_2015")
 #' data_example <- read_data(Lim_Zhu_2015,
-#'                           dmus=1,
-#'                           ni=1,
-#'                           no=5)
+#'                           ni = 1,
+#'                           no = 5)
 #' cross <- cross_efficiency(data_example,
 #'                           epsilon = 0,
 #'                           orientation = "io",
@@ -812,12 +800,11 @@
 #' # Example. Replication of results in Simar and Wilson (1998, p.59)
 #' data("Electric_plants")
 #' data_example <- read_data(Electric_plants,
-#'                           dmus = 1,
-#'                           ni=3,
-#'                           no=1)
+#'                           ni = 3,
+#'                           no = 1)
 #' result <- model_basic(data_example,
-#'                       orientation="io",
-#'                       rts="vrs")
+#'                       orientation = "io",
+#'                       rts = "vrs")
 #' efficiencies(result)
 #'
 #' @seealso \code{\link{read_data}}, \code{\link{model_basic}}
@@ -857,15 +844,15 @@
 #' data("Hua_Bian_2007")
 #' # The third output is an undesirable output
 #' data_example <- read_data(Hua_Bian_2007,
-#'                           ni=2,
-#'                           no=3,
-#'                           ud_outputs=3)
+#'                           ni = 2,
+#'                           no = 3,
+#'                           ud_outputs = 3)
 #'
 #' # Translation parameter (vtrans_o) is set to 1500
 #' result <- model_basic(data_example,
-#'                       orientation="oo",
-#'                       rts="vrs",
-#'                       vtrans_o=1500)
+#'                       orientation = "oo",
+#'                       rts = "vrs",
+#'                       vtrans_o = 1500)
 #' eff <- efficiencies(result)
 #' 1/eff # results M5 in Table 6-5 (p.119)
 #'
@@ -903,12 +890,12 @@
 #' data("Ruggiero2007")
 #' # the second input is a non-discretionary input
 #' datadea <- read_data(Ruggiero2007,
-#'                      ni=2,
-#'                      no=1,
-#'                      nd_inputs=2)
+#'                      ni = 2,
+#'                      no = 1,
+#'                      nd_inputs = 2)
 #' result <- model_basic(datadea,
-#'                       orientation="io",
-#'                       rts="crs")
+#'                       orientation = "io",
+#'                       rts = "crs")
 #' efficiencies(result)
 #' slacks(result)
 #'
@@ -945,11 +932,11 @@
 #' # Example. Replication of results in Ali and (1993, p.143).
 #' data("Fried1993")
 #' data_example <- read_data(Fried1993,
-#'                           ni=2,
-#'                           no=1)
+#'                           ni = 2,
+#'                           no = 1)
 #' result <- model_basic(data_example,
-#'                       orientation="oo",
-#'                       rts="vrs")
+#'                       orientation = "oo",
+#'                       rts = "vrs")
 #' efficiencies(result)
 #' targets(result)
 #'
@@ -987,9 +974,8 @@
 #' # Example. How to read data with deaR
 #' data("Coll_Blasco_2006")
 #' data_example <- read_data(Coll_Blasco_2006,
-#'                           dmus=1,
-#'                           ni=2,
-#'                           no=2)
+#'                           ni = 2,
+#'                           no = 2)
 #'
 #' @seealso \code{\link{read_data}}
 
@@ -1028,17 +1014,16 @@
 #' # Cost efficiency model.
 #' data("Coelli_1994")
 #' # Selection of prices: data_prices is the trasnpose where the prices for inputs are. 
-#' data_prices <- t(Coelli_1998[,5:6]) 
+#' data_prices <- t(Coelli_1998[, 5:6]) 
 #' 
 #' data_example <- read_data(Coelli_1998,
-#'                           dmus=1,
-#'                           ni=2,
-#'                           no=1)
+#'                           ni = 2,
+#'                           no = 1)
 #' result <- model_profit(data_example,
-#'                        price_input=data_prices,
-#'                        rts="crs", 
-#'                        restricted_optimal=FALSE) 
-#' # notice that the option by default is restricted_optimal=TRUE
+#'                        price_input = data_prices,
+#'                        rts = "crs", 
+#'                        restricted_optimal = FALSE) 
+#' # notice that the option by default is restricted_optimal = TRUE
 #' efficiencies(result)
 #'
 #' @seealso \code{\link{read_data}}

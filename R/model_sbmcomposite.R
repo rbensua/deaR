@@ -3,18 +3,18 @@
 #' @description SBM composite superefficiency model with n DMUs, m inputs, s outputs...
 #' 
 #' @usage model_sbmcomposite(datadea,
-#'             dmu_eval = NULL,
-#'             dmu_ref = NULL,
-#'             weight_input = 1,
-#'             weight_output = 1,
-#'             orientation = c("no", "io", "oo"),
-#'             rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-#'             L = 1,
-#'             U = 1,
-#'             compute_target = TRUE,
-#'             compute_alt = FALSE,
-#'             delta_margin = 1e-8,
-#'             returnlp = FALSE)
+#'                    dmu_eval = NULL,
+#'                    dmu_ref = NULL,
+#'                    weight_input = 1,
+#'                    weight_output = 1,
+#'                    orientation = c("no", "io", "oo"),
+#'                    rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+#'                    L = 1,
+#'                    U = 1,
+#'                    compute_target = TRUE,
+#'                    compute_alt = FALSE,
+#'                    delta_margin = 1e-8,
+#'                    returnlp = FALSE)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
@@ -55,8 +55,11 @@
 #' @examples 
 #' # Data from Tone(2002, p.39)
 #' data("Power_plants")
-#' data_example <- read_data(Power_plants, ni = 4, no = 2)
-#' result <- model_sbmcomposite(data_example, compute_rho = TRUE) 
+#' data_example <- read_data(Power_plants,
+#'                           ni = 4,
+#'                           no = 2)
+#' result <- model_sbmcomposite(data_example,
+#'                              compute_rho = TRUE) 
 #' 
 #' @seealso \code{\link{model_sbmsupereff}}, \code{\link{model_sbmeff}}, \code{\link{model_supereff}}, \code{\link{model_addsupereff}}
 #' 

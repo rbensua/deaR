@@ -4,10 +4,10 @@
 #' @description Summary of the results obtained by a conventiona DEA model.
 #' 
 #' @usage summary(object,
-#'                exportExcel = TRUE,
-#'                filename = NULL, 
-#'                returnList = FALSE,
-#'                ...)
+#'         exportExcel = TRUE,
+#'         filename = NULL, 
+#'         returnList = FALSE,
+#'         ...)
 #' 
 #' @param object An object of class \code{"dea"} obtained by a dea model function.
 #' @param exportExcel Logical value. If TRUE (default) the results are also exported to an Excel file
@@ -39,7 +39,6 @@
 #' # Selecting DMUs in Program Follow Through (PFT)
 #' PFT <- PFT1981[1:49, ] 
 #' PFT <- read_data(PFT, 
-#'                  dmus = 1, 
 #'                  inputs = 2:6, 
 #'                  outputs = 7:9 )
 #' eval_pft <- model_basic(PFT, 
@@ -61,7 +60,7 @@ summary.dea <- function(object,
                         exportExcel = TRUE,
                         filename = NULL, 
                         returnList = FALSE,
-                        ...){
+                        ...) {
   
   if (!is.dea(object)) {
     stop("Input should be of class dea!")
@@ -108,7 +107,7 @@ summary.dea <- function(object,
                    row.names = NULL,
                    stringsAsFactors = FALSE)
       
-    } else{
+    } else {
       s <- NULL
     }
     # Lambdas
@@ -136,7 +135,7 @@ summary.dea <- function(object,
         data.frame(cbind(data.frame(DMU = object$data$dmunames), mult),
                    row.names = NULL,
                    stringsAsFactors = FALSE)
-    } else{
+    } else {
       mult <- NULL
     }
     
@@ -214,7 +213,7 @@ summary.dea <- function(object,
     }
     
     #dflist <- lapply(dflist, function(x) x[-1])
-    if (returnList){
+    if (returnList) {
       return(dflist)
     } else {
       dffinal <- do.call(cbind, dflist)
@@ -237,7 +236,7 @@ summary.dea <- function(object,
         data.frame(
           Period = periods[i + 1],
           DMU = dmunames,
-   #       ec = object$ec[i, ],
+          ec = object$ec[i, ],
           tc = object$tc[i, ],
           pech = object$pech[i,] ,
           sech = object$sech[i, ],
@@ -421,14 +420,14 @@ summary.dea <- function(object,
     
    # dflist <- lapply(dflist, function(x)
     #  x[-1])
-    if (returnList){
+    if (returnList) {
       return(dflist)
     } else {
       dffinal <- do.call(cbind, dflist)
       dffinal <- cbind(DMU = object$data$dmunames, dffinal)
       return(dffinal)
     }
-  } else{
+  } else {
     # Bootstrap -----
     resMat <-
       cbind(object$score,

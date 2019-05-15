@@ -24,13 +24,12 @@ This dataset consists of 15 firms from the Fortune 500 list 1995 (\url{fortune.c
 \examples{
 data("Fortune500")
 data_Fortune <- read_data(datadea = Fortune500,
-                          dmus = 1,
                           inputs = 2:4,
                           outputs = 5:6)
 result <- model_multiplier(data_Fortune,
-                           epsilon=0.000001,
-                           orientation="io",
-                           rts="crs")
+                           epsilon = 1e-6,
+                           orientation = "io",
+                           rts = "crs")
 # results for General Motors and Ford Motor are not shown
 # by deaR because the solution is infeasible
 efficiencies(result)

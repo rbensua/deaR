@@ -5,17 +5,17 @@
 \title{Non-radial DEA model.}
 \usage{
 model_nonradial(datadea,
-            dmu_eval = NULL,
-            dmu_ref = NULL,
-            orientation = c("io", "oo"),
-            rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
-            L = 1,
-            U = 1,
-            maxslack = TRUE,
-            weight_slack = 1,
-            compute_target = TRUE,
-            returnlp = FALSE,
-            ...)
+                dmu_eval = NULL,
+                dmu_ref = NULL,
+                orientation = c("io", "oo"),
+                rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+                L = 1,
+                U = 1,
+                maxslack = TRUE,
+                weight_slack = 1,
+                compute_target = TRUE,
+                returnlp = FALSE,
+                ...)
 }
 \arguments{
 \item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
@@ -51,7 +51,6 @@ Non-radial DEA model allows for non-proportional reductions in each input or aug
 # Replication of results in Wu, Tsai and Zhou (2011)
 data("Hotels")
 data_hotels <- read_data(Hotels, 
-                         dmus = 1, 
                          inputs = 2:5, 
                          outputs = 6:8)
 result <- model_nonradial(data_hotels, 

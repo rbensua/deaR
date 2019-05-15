@@ -3,8 +3,8 @@
 #' @description  FDH model allows the free disposability to construct the production possiblity set. The central feature of the FDH model is the lack of convexity for its production possibility set (Thrall, 1999).
 #' 
 #' @usage model_fdh(datadea,
-#'             fdh_modelname = c("basic"),
-#'             ...)
+#'           fdh_modelname = c("basic"),
+#'           ...)
 #' 
 #' @param datadea The data, including DMUs, inputs and outputs.
 #' @param fdh_modelname A string containing the name of the model to apply FDH.
@@ -36,7 +36,6 @@
 #' # Replication of results in Sanei and Mamizadeh Chatghayeb (2013)
 #' data("Supply_Chain")
 #' data_fdh1 <- read_data(Supply_Chain, 
-#'                        dmus = 1, 
 #'                        inputs = 2:4, 
 #'                        outputs = 5:6)
 #' result <- model_fdh(data_fdh1) # by default orientation = "io"
@@ -46,7 +45,6 @@
 #' # Replication of results in Sanei and Mamizadeh Chatghayeb (2013)
 #' data("Supply_Chain")
 #' data_fdh2 <- read_data(Supply_Chain, 
-#'                        dmus = 1, 
 #'                        inputs = 5:6, 
 #'                        outputs = 7:8)
 #' result2 <- model_fdh(data_fdh2, 
