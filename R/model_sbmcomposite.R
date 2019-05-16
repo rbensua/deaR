@@ -1,6 +1,6 @@
 #' @title SBM composite superefficiency model
 #'   
-#' @description SBM composite superefficiency model with n DMUs, m inputs, s outputs...
+#' @description SBM composite superefficiency model.
 #' 
 #' @usage model_sbmcomposite(datadea,
 #'                    dmu_eval = NULL,
@@ -16,22 +16,22 @@
 #'                    delta_margin = 1e-8,
 #'                    returnlp = FALSE)
 #' 
-#' @param datadea The data, including DMUs, inputs and outputs.
+#' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
 #' @param weight_input A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-#'                     with weights to inputs corresponding to the relative importance of items.
+#' with weights to inputs corresponding to the relative importance of items.
 #' @param weight_output A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-#'                      with weights to outputs corresponding to the relative importance of items.
+#' with weights to outputs corresponding to the relative importance of items.
 #' @param orientation A string, equal to "no" (non-oriented), "io" (input-oriented) or "oo" (output-oriented).
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
-#'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
+#' "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param compute_target Logical. If it is \code{TRUE}, it computes targets, superslacks (\code{t_input} and \code{t_output}) and slacks.
 #' @param compute_alt Logical. If it is \code{TRUE}, it computes the alternative SBM composite super-efficiency.
 #' @param delta_margin Some numerical errors may appear due to truncation of the SBM super-efficiency in some DMUs.
-#'                     In these cases, the SBM super-efficiency is slightly increased by multiplying it by 1 + \code{delta_margin}.
+#' In these cases, the SBM super-efficiency is slightly increased by multiplying it by 1 + \code{delta_margin}.
 #' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
 #'   
 #' @author 

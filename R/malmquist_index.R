@@ -172,30 +172,40 @@ malmquist_index <- function(datadealist,
   
   mi <- matrix(0, nrow = nt - 1, ncol = nde)
   colnames(mi) <- dmunames[dmu_eval]
-  eff <- matrix(0, nrow = nt, ncol = nde)
+  eff <- matrix(0, nrow = nt, ncol = nde) # eficiencias crs
   colnames(eff) <- dmunames[dmu_eval]
-  effv <- eff
+  effv <- eff # eficiencias vrs
   
-  if (type2 == "fgnz") {
-    eff12 <- mi # DMU adelantada
-    eff21 <- mi # Frontera adelantada
-  } else if (type2 == "rd") {
-    eff12 <- mi # DMU adelantada
-    effv12 <- mi # DMU adelantada vrs
-    effv21 <- mi # Frontera adelantada vrs
-  } else if (type2 == "gl") {
-    eff12y <- mi # DMU input adelantado
-    effv12 <- mi # DMU adelantada vrs
-    effv12y <- mi # DMU input adelantado vrs
-  } else if (type2 == "bias") {
-    eff12 <- mi # DMU adelantada
-    eff21 <- mi # Frontera adelantada
-    eff12y <- mi # DMU input adelantado
-    eff22y <- mi # Frontera y DMU input adelantado
-    effv12 <- mi # DMU adelantada
-    effv21 <- mi # Frontera adelantada
-    effv12y <- mi # DMU input adelantado
-    effv22y <- mi # Frontera y DMU input adelantado
+  if (type1 == "glob") {
+    type2 <- NULL
+    effg <- eff # eficiencias con frontera global crs 
+    effgv <- eff # eficiencias con frontera global vrs 
+    if (rts == "vrs") {
+      eff12 <- mi # DMU adelantada
+      effv12 <- mi # DMU adelantada vrs
+    }
+  } else {
+    if (type2 == "fgnz") {
+      eff12 <- mi # DMU adelantada
+      eff21 <- mi # Frontera adelantada
+    } else if (type2 == "rd") {
+      eff12 <- mi # DMU adelantada
+      effv12 <- mi # DMU adelantada vrs
+      effv21 <- mi # Frontera adelantada vrs
+    } else if (type2 == "gl") {
+      eff12y <- mi # DMU input adelantado
+      effv12 <- mi # DMU adelantada vrs
+      effv12y <- mi # DMU input adelantado vrs
+    } else if (type2 == "bias") {
+      eff12 <- mi # DMU adelantada
+      eff21 <- mi # Frontera adelantada
+      eff12y <- mi # DMU input adelantado
+      eff22y <- mi # Frontera y DMU input adelantado
+      effv12 <- mi # DMU adelantada
+      effv21 <- mi # Frontera adelantada
+      effv12y <- mi # DMU input adelantado
+      effv22y <- mi # Frontera y DMU input adelantado
+    }
   }
   
   if (type1 == "cont") {
@@ -402,6 +412,7 @@ malmquist_index <- function(datadealist,
             eff22y[t - 1, i] <- lp(obj, f.obj2, f.con21, f.dir, f.rhs2)$objval
             effv12y[t - 1, i] <- lp(obj, f.obj1, f.con1v, f.dirv, f.rhs2v)$objval
             effv22y[t - 1, i] <- lp(obj, f.obj2, f.con21v, f.dirv, f.rhs2v)$objval
+            f.con1v <- f.con2v
           }
           f.rhs1 <- f.rhs2
           f.rhs1v <- f.rhs2v
@@ -471,10 +482,6 @@ malmquist_index <- function(datadealist,
     }
     
     # Frontera global
-    
-    effg <- matrix(0, nrow = nt, ncol = nde)
-    colnames(effg) <- dmunames[dmu_eval]
-    effgv <- effg
 
     f.obj <- c(1, rep(0, nt * ndr))
     f.con.vrs <- cbind(0, matrix(1, nrow = 1, ncol = nt * ndr))
@@ -523,26 +530,35 @@ malmquist_index <- function(datadealist,
   if (orientation == "oo") {
     eff <- 1 / eff
     effv <- 1 / effv
-    if (type2 == "fgnz") {
-      eff12 <- 1 / eff12
-      eff21 <- 1 / eff21
-    } else if (type2 == "rd") {
-      eff12 <- 1 / eff12
-      effv12 <- 1 / effv12
-      effv21 <- 1 / effv21
-    } else if (type2 == "gl") {
-      eff12y <- 1 / eff12y
-      effv12 <- 1 / effv12
-      effv12y <- 1 / effv12y
-    } else if (type2 == "bias") {
-      eff12 <- 1 / eff12
-      eff21 <- 1 / eff21
-      eff12y <- 1 / eff12y 
-      eff22y <- 1 / eff22y
-      effv12 <- 1 / effv12
-      effv21 <- 1 / effv21
-      effv12y <- 1 / effv12y 
-      effv22y <- 1 / effv22y
+    if (type1 == "glob") {
+      effg <- 1 / effg 
+      effgv <- 1 / effgv  
+      if (rts == "vrs") {
+        eff12 <- 1 / eff12
+        effv12 <- 1 / effv12
+      }
+    } else {
+      if (type2 == "fgnz") {
+        eff12 <- 1 / eff12
+        eff21 <- 1 / eff21
+      } else if (type2 == "rd") {
+        eff12 <- 1 / eff12
+        effv12 <- 1 / effv12
+        effv21 <- 1 / effv21
+      } else if (type2 == "gl") {
+        eff12y <- 1 / eff12y
+        effv12 <- 1 / effv12
+        effv12y <- 1 / effv12y
+      } else if (type2 == "bias") {
+        eff12 <- 1 / eff12
+        eff21 <- 1 / eff21
+        eff12y <- 1 / eff12y 
+        eff22y <- 1 / eff22y
+        effv12 <- 1 / effv12
+        effv21 <- 1 / effv21
+        effv12y <- 1 / effv12y 
+        effv22y <- 1 / effv22y
+      }
     }
   }
   
@@ -574,7 +590,6 @@ malmquist_index <- function(datadealist,
     if (type2 == "fgnz") {
       # mi <- sqrt((eff12 * eff[-1, ]) / (eff[-nt, ] * eff21))
       tc <- ((eff12 / eff[-1, ]) * (eff[-nt, ] / eff21)) ^ 0.5
-      # if type1 == "glob" then tc is 1 and mi == ec.
       if (rts == "crs") {
         ec <- eff[-1, ] / eff[-nt, ]
         mi <- ec * tc
@@ -588,8 +603,6 @@ malmquist_index <- function(datadealist,
     } else if (type2 == "rd") {
       tc <- effv12 / effv[-1, ] # Grifell-Tatjé and Lovell (1999)
       # tc <- ((effv[-nt, ] / effv21) * (effv12 / effv[-1, ])) ^ 0.5  # Ray and Desli (1997)
-      
-      # if type1 == "glob" then tc is 1 and mi == ec.
       if (rts == "crs") {
         warning("Descomposition only under variable returns-to-scale (vrs). Parameter rts has
                 been set to vrs.")
@@ -604,7 +617,6 @@ malmquist_index <- function(datadealist,
                       efficiency_t1_t.vrs = effv21)
     } else if (type2 == "gl") { # generalized
       tc <- effv12 / effv[-1, ]
-      # if type1 == "glob" then tc is 1 and mi == ec if orientation == "oo".
       if (rts == "crs") {
         warning("Descomposition only under variable returns-to-scale (vrs). Parameter rts has
                 been set to vrs.")
@@ -617,7 +629,6 @@ malmquist_index <- function(datadealist,
                       efficiency_t_xt1.crs = eff12y, efficiency_t_t1.vrs = effv12,
                       efficiency_t_xt1.vrs = effv12y)
     } else if (type2 == "bias") {
-      # if type1 == "glob" then obtech, ibtech, matech and tc are 1, and mi == ec.
       if (rts == "crs") {
         obtech <- sqrt((eff12 * eff22y) / (eff[-1, ] * eff12y))
         ibtech <- sqrt((eff21 * eff12y) / (eff[-nt, ] * eff22y))

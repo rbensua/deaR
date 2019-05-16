@@ -221,7 +221,7 @@ read_data_fuzzy <- function(datadea,
     
     # Checking data...
     if (!is.data.frame(datadea)) {
-      stop("Invalid input data (should be a data frame)!")
+      stop("Invalid data datadea (should be a data frame)!")
     }
     datadea <- as.data.frame(datadea)
     
