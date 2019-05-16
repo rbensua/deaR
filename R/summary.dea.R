@@ -231,17 +231,24 @@ summary.dea <- function(object,
     
     # Create a list of data frames (each element is a period)
     df <- list()
+    reslist <- object[1:8]
+    reslist[sapply(reslist,is.null)] <- NULL
+    
     for (i in (1:(nper - 1))) {
       df[[i]]  <-
-        data.frame(
+        cbind(data.frame(
           Period = periods[i + 1],
-          DMU = dmunames,
-          ec = object$ec[i, ],
-          tc = object$tc[i, ],
-          pech = object$pech[i,] ,
-          sech = object$sech[i, ],
-          mi = object$mi[i, ]
-        )
+          DMU = dmunames),
+          sapply(reslist, function(x) x[i,]))
+        # data.frame(
+        #   Period = periods[i + 1],
+        #   DMU = dmunames,
+        #   ec = object$ec[i, ],
+        #   tc = object$tc[i, ],
+        #   pech = object$pech[i,] ,
+        #   sech = object$sech[i, ],
+        #   mi = object$mi[i, ]
+        # )
     }
     # collapse the list into a data.frame
     dff <- do.call(rbind, df)

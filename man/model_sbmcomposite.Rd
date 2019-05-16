@@ -19,7 +19,7 @@ model_sbmcomposite(datadea,
                    returnlp = FALSE)
 }
 \arguments{
-\item{datadea}{The data, including DMUs, inputs and outputs.}
+\item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
 
 \item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
 
@@ -50,7 +50,7 @@ In these cases, the SBM super-efficiency is slightly increased by multiplying it
 \item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
 }
 \description{
-SBM composite superefficiency model with n DMUs, m inputs, s outputs...
+SBM composite superefficiency model.
 }
 \examples{
 # Data from Tone(2002, p.39)
