@@ -54,10 +54,14 @@ rts <- function(deamodel, thr =  1e-4) {
              ndrs = {
                rts <- ifelse(lambsum > 1 + thr, "Increasing","Constant")
              },
-             stop("General returns to scale not implemented yet!")
+             warning("RTS with General returns to scale are not implemented yet!")
              
       )
-      res <- data.frame(lambsum = lambsum, rts = rts)
+      if (deamodel$rts != "grs") {
+        res <- data.frame(lambsum = lambsum, rts = rts)
+      } else {
+        res <- data.frame(lambsum = lambsum)
+      }
     }else{
       warning("Only input/output orientations are implemented!")
       res <- data.frame(lambsum = lambsum)

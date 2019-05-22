@@ -253,14 +253,14 @@ summary.dea <- function(object,
     # collapse the list into a data.frame
     dff <- do.call(rbind, df)
     rownames(dff) <- NULL
-    
-    # Geometric means by Period
-    dff %>% group_by(Period) %>% summarise_at(vars(tc:mi), funs(geomean = exp(mean(log(
+    cnames <- colnames(dff)
+    # Geometric means by Period vars(3:ncol(dff))
+    dff %>% group_by(Period) %>% summarise_at(vars(cnames[3]:cnames[ncol(dff)]), list(geomean = ~exp(mean(log(
       .
     ))))) %>% as.data.frame() -> dfsumPer
     colnames(dfsumPer) <- colnames(dff)[-2]
     # Geometric means by DMU
-    dff %>% group_by(DMU) %>% summarise_at(vars(tc:mi), funs(geomean = exp(mean(log(
+    dff %>% group_by(DMU) %>% summarise_at(vars(cnames[3]:cnames[ncol(dff)]), list(geomean = ~exp(mean(log(
       .
     ))))) %>% as.data.frame() -> dfsumDMU
     colnames(dfsumDMU) <- colnames(dff)[-1]

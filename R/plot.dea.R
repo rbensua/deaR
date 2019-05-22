@@ -80,9 +80,11 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      malmdata <- summary(object, exportExcel = FALSE)
      results <- malmdata$Results
      sumres <- malmdata$means_by_period
-     colnames(results) <- c("Period", "DMU", "EC", "TC", "PTEC", "SEC", "MI")
-     colnames(sumres) <- c("Period", "EC", "TC", "PTEC", "SC", "MI")
-     results <- results[,c("Period", "DMU", "EC", "PTEC", "SEC", "TC", "MI")]
+     #colnames(results) <- c("Period", "DMU", "EC", "TC", "PTEC", "SEC", "MI")
+     #colnames(sumres) <- c("Period", "EC", "TC", "PTEC", "SC", "MI")
+     #colnames(results) <- toupper(colnames(results))
+     #colnames(sumres) <- toupper(colnames(sumres))
+     #results <- results[,c("Period", "DMU", "EC", "PTEC", "SEC", "TC", "MI")]
      
      
      
@@ -162,7 +164,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
          FUN = function(x)
            sum(x ^ 2)
        ) < 1e-4 # Null slacks
-     eff_1 <- abs(eff$eff - 1) < 1e-4 # Efficiency = 1
+     eff_1 <- abs(eff$eff - 1) < 1e-8 # Efficiency = 1
      
      eff$iseff <- ifelse(null_slk & eff_1, 1, 0)
      }
@@ -288,7 +290,7 @@ plot.dea <- function(x, showPlots = TRUE, ...){
      extendedlmbd <- matrix(0,
                             nrow = length(allnames),
                             ncol = length(allnames),
-                            dimnames = list(sort(allnames), sort(allnames)))
+                            dimnames = list(allnames, allnames))
      extendedlmbd[dimnames(lmbd)[[1]],dimnames(lmbd)[[2]]] <- lmbd
      
      adjmatrix <- extendedlmbd > 0
