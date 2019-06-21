@@ -59,7 +59,7 @@ data_example <- read_data(Power_plants,
                           ni = 4,
                           no = 2)
 result <- model_sbmcomposite(data_example,
-                             compute_rho = TRUE) 
+                             compute_alt = TRUE) 
 
 }
 \references{

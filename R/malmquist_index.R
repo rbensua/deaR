@@ -41,14 +41,27 @@
 #' University of Valencia (Spain)
 #'  
 #' @references 
-#' Caves, D.W.; Christensen, L. R. y Diewert, W.E. (1982). “The Economic Theory of Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica, 50(6), 1393-1414. 
+#' Caves, D.W.; Christensen, L. R.; Diewert, W.E. (1982). “The Economic Theory of Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica, 50(6), 1393-1414. 
 #'  
+#' Färe, R.; Grifell-Tatjé, E.; Grosskopf, S.; Lovell, C.A.K. (1997). "Biased Technical Change and the Malmquist Productivity Index". Scandinavian Journal of Economics, 99(1), 119-127.
+#' 
 #' Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1989). “Productivity Developments in Swedish Hospitals: A Malmquist Output Index Approach”. Discussion paper nº 89-3. Southern Illinois University. Illinois.
 #' 
 #' Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1992). “Productivity changes in Swedish Pharmacies 1980-89: A nonparametric Malmquist Approach”. Journal of productivity Analysis, 3(3), 85-101. 
 #' 
-#' Färe, R.; Grosskopf, S.; Norris, M. y Zhang, Z. (1994). “Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries”. American Economic Review, 84(1), 66-83. 
-
+#' Färe, R.; Grosskopf, S.; Norris, M.; Zhang, Z. (1994). “Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries”. American Economic Review, 84(1), 66-83. 
+#'
+#' Färe, R.; Grosskopf, S.; Roos, P. (1998), Malmquist Productivity Indexes: A Survey of Theory and Practice. In: Färe R., Grosskopf S., Russell R.R. (eds) Index Numbers: Essays in Honour of Sten Malmquist. Springer.
+#' 
+#' Grifell-Tatjé, E.; Lovel, C.A.K. (1999). "A Generalized Malmquist productivity index". Top, 7(1), 81-101.  
+#'
+#' Pastor, J.T.; Lovel, C.A.k. (2005). "A global Malquist productiviyt index". Economics Letters, 88, 266-271.  
+#' 
+#' Ray, S.C.; Desli, E. (1997). "Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries: Comment". The American Economic Review, 87(5), 1033-1039.
+#'
+#' Shestalova, V. (2003). "Sequential Malmquist Indices of Productivity Growth: An Application to OECD Industrial Activities". Journal of Productivity Analysis, 19, 211-226.
+#'
+#'
 #' @examples 
 #' # Example 1. With dataset in wide format.
 #' # Replication of results in Wang and Lan (2011, p. 2768)
@@ -76,6 +89,35 @@
 #' effch2 <- result2$ec
 #' tech2 <- result2$tc
 #' 
+#' # Example 3. Replication of results in Grifell-Tatjé and Lovell (1999, p. 100).
+#' data("Grifell_Lovell_1999")
+#' data_example <- read_malmquist(Grifell_Lovell_1999,
+#'                                percol = 1,
+#'                                dmus = 2,
+#'                                inputs = 3,
+#'                                outputs = 4,
+#'                                arrangement = "vertical")
+#' result_fgnz <- malmquist_index(data_example,
+#'                                orientation = "oo",
+#'                                rts = "vrs",
+#'                                type1 = "cont",
+#'                                type2 = "fgnz")
+#' mi_fgnz <- result_fgnz$mi 
+#' 
+#' result_rd <- malmquist_index(data_example,
+#'                              orientation = "oo",
+#'                              rts = "vrs",
+#'                              type1 = "cont",
+#'                              type2 = "rd")
+#' mi_rd <- result_rd$mi
+#'  
+#' result_gl <- malmquist_index(data_example,
+#'                              orientation = "oo",
+#'                              rts = "vrs",
+#'                              type1 = "cont",
+#'                              type2 = "gl")
+#' mi_gl <- result_gl$mi
+#'                               
 #' @import lpSolve
 #' 
 #' @export
@@ -101,6 +143,9 @@ malmquist_index <- function(datadealist,
       stop("Data should be of class deadata. Run read_data function first!")
     }
   }
+  
+  pernames <- names(datadealist)
+  minames <- paste(pernames[-nt], pernames[-1], sep = "-")
   
   dmunames <- datadealist[[1]]$dmunames
   nd <- length(dmunames) # number of dmus
@@ -172,8 +217,10 @@ malmquist_index <- function(datadealist,
   
   mi <- matrix(0, nrow = nt - 1, ncol = nde)
   colnames(mi) <- dmunames[dmu_eval]
+  rownames(mi) <- minames
   eff <- matrix(0, nrow = nt, ncol = nde) # eficiencias crs
   colnames(eff) <- dmunames[dmu_eval]
+  rownames(eff) <- pernames
   effv <- eff # eficiencias vrs
   
   if (type1 == "glob") {
@@ -663,6 +710,16 @@ malmquist_index <- function(datadealist,
     }
     
   }
+  
+  minames <- paste(pernames[-nt], pernames[-1], sep = "-")
+  rownames(mi) <- minames
+  rownames(tc) <- minames
+  if (!is.null(ec)) rownames(ec) <- minames
+  if (!is.null(pech)) rownames(pech) <- minames
+  if (!is.null(sech)) rownames(sech) <- minames
+  if (!is.null(obtech)) rownames(obtech) <- minames
+  if (!is.null(ibtech)) rownames(ibtech) <- minames
+  if (!is.null(matech)) rownames(matech) <- minames
   
   deaOutput <- list(mi = mi,
                     ec = ec,

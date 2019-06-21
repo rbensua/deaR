@@ -24,8 +24,8 @@ Data of the industrial economy of China in 2005-2009 (data in long format).
 # Replication of results in Wang and Lan (2011, p. 2768)
 data("EconomyLong")
 data_example <- read_malmquist(EconomyLong,
-                               percol = 2,
-                               arrangement = "vertical",
+                               percol=2,
+                               arrangement="vertical",
                                ni = 2,
                                no = 1)
 result <- malmquist_index(data_example)

@@ -26,11 +26,12 @@ Data of 19 coal-fired steam-electric generating plants operating in Illinois in 
 # Example. Replication of results in Simar and Wilson (1998, p.59)
 data("Electric_plants")
 data_example <- read_data(Electric_plants,
-                          ni = 3,
-                          no = 1)
+                          dmus = 1,
+                          ni=3,
+                          no=1)
 result <- model_basic(data_example,
-                      orientation = "io",
-                      rts = "vrs")
+                      orientation="io",
+                      rts="vrs")
 efficiencies(result)
 
 }

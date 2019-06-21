@@ -22,18 +22,19 @@ Guo, P.; Tanaka, H. (2001). "Fuzzy DEA: A Perceptual Evaluation Method", Fuzzy S
 data("Guo_Tanaka_2001")
 }
 \description{
-Data of 5 DMUs with two symmetric triangular fuzzy inputs, Xj = (xj, alphaj), and two symmetric triangular fuzzy outputs, Yj=(yj,betaj).
+Data of 5 DMUs with two symmetric triangular fuzzy inputs, Xj=(xj,alphaj), and two symmetric triangular fuzzy outputs, Yj=(yj,betaj).
 }
 \examples{
 data("Guo_Tanaka_2001")
 data_example <- read_data_fuzzy(Guo_Tanaka_2001,
-                                inputs.mL = 2:3,
-                                inputs.dL = 4:5,
-                                outputs.mL = 6:7,
-                                outputs.dL = 8:9)
+                                dmus=1,
+                                inputs.mL=2:3,
+                                inputs.dL=4:5,
+                                outputs.mL=6:7,
+                                outputs.dL=8:9)
 result <- modelfuzzy_guotanaka(data_example,
-                               h = seq(0, 1, by = 0.1),
-                               orientation = "io")
+                               h = seq(0,1,by=0.1),
+                               orientation="io")
 efficiencies(result)
 
 }

@@ -20,7 +20,7 @@ data("Tone2003")
 Data of 9 DMUs producing 2 outputs, being second ouput undesirable, by using 1 input.
 }
 \examples{
-# Example. Replication of results in Tone (2003), pp 10-11 case 1:1.
+# Example. Replication of results in Tone (2003), pp 10-11.
 data("Tone2003")
 data_example <- read_data(Tone2003,
                           ni = 1,

@@ -27,8 +27,9 @@ Data of 37 R&D project proposal relating to the Turkish iron and steel industry.
 # Input-oriented model under variable returns-to-scale.
 data("Lim_Zhu_2015")
 data_example <- read_data(Lim_Zhu_2015,
-                          ni = 1,
-                          no = 5)
+                          dmus=1,
+                          ni=1,
+                          no=5)
 cross <- cross_efficiency(data_example,
                           epsilon = 0,
                           orientation = "io",

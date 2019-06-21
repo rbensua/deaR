@@ -34,8 +34,8 @@ data_example <- read_data(Power_plants,
                           ni = 4,
                           no = 2)
 result <- model_supereff(data_example,
-                         orientation = "io",
-                         rts = "crs")
+                         orientation="io",
+                         rts="crs")
 eff <- efficiencies(result)
 eff
 
@@ -45,8 +45,8 @@ data_example <- read_data(Power_plants,
                           ni = 4,
                           no = 2)
 result2 <- model_sbmsupereff(data_example,
-                             orientation = "io",
-                             rts = "crs")
+                             orientation="io",
+                             rts="crs")
 efficiencies(result2)
 slacks(result2)$input
 references(result2)

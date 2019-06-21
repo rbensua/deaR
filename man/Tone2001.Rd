@@ -27,7 +27,7 @@ data_example <- read_data(Tone2001,
                           ni = 2,
                           no = 2)
 result <- model_sbmeff(data_example,
-                       orientation = "no",
+                       orientation ="no",
                        rts = "crs")
 efficiencies(result)
 slacks(result)

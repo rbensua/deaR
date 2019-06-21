@@ -59,7 +59,7 @@
 #'                           ni = 4,
 #'                           no = 2)
 #' result <- model_sbmcomposite(data_example,
-#'                              compute_rho = TRUE) 
+#'                              compute_alt = TRUE) 
 #' 
 #' @seealso \code{\link{model_sbmsupereff}}, \code{\link{model_sbmeff}}, \code{\link{model_supereff}}, \code{\link{model_addsupereff}}
 #' 

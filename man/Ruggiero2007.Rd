@@ -24,12 +24,12 @@ Simulated data of 35 DMUs with two inputs and one output.
 data("Ruggiero2007")
 # the second input is a non-discretionary input
 datadea <- read_data(Ruggiero2007,
-                     ni = 2,
-                     no = 1,
-                     nd_inputs = 2)
+                     ni=2,
+                     no=1,
+                     nd_inputs=2)
 result <- model_basic(datadea,
-                      orientation = "io",
-                      rts = "crs")
+                      orientation="io",
+                      rts="crs")
 efficiencies(result)
 slacks(result)
 

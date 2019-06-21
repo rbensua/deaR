@@ -27,16 +27,17 @@ Data of five DMUs with two inputs and one output. Prices for inputs are availabl
 # Cost efficiency model.
 data("Coelli_1994")
 # Selection of prices: data_prices is the trasnpose where the prices for inputs are. 
-data_prices <- t(Coelli_1998[, 5:6]) 
+data_prices <- t(Coelli_1998[,5:6]) 
 
 data_example <- read_data(Coelli_1998,
-                          ni = 2,
-                          no = 1)
+                          dmus=1,
+                          ni=2,
+                          no=1)
 result <- model_profit(data_example,
-                       price_input = data_prices,
-                       rts = "crs", 
-                       restricted_optimal = FALSE) 
-# notice that the option by default is restricted_optimal = TRUE
+                       price_input=data_prices,
+                       rts="crs", 
+                       restricted_optimal=FALSE) 
+# notice that the option by default is restricted_optimal=TRUE
 efficiencies(result)
 
 }
