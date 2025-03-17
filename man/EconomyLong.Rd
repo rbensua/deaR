@@ -4,14 +4,18 @@
 \name{EconomyLong}
 \alias{EconomyLong}
 \title{Data: Wang and Lan (2011).}
-\format{Data frame with 155 rows and 5 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 155 rows and 5 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1 = Capital}{Total assets (in 100 million RMB)}
   \item{x2 = Labor}{Annual average employed persons (in 10000 persons)}
   \item{y1 = GIOV}{Gross industrial output value (in 100 million RMB)}
-}}
+}
+}
 \source{
-Wang, Y.; Lan, Y. (2011). "Measuring Malmquist Productiviy Index: A New Approach Based on Double Frontiers Data Envelopment Analysis". Mathematical and Computer Modelling, 54, 2760-2771. \code{doi}: 10.1016/j.mcm.2011.06.064
+Wang, Y.; Lan, Y. (2011). "Measuring Malmquist Productiviy Index: A
+New Approach Based on Double Frontiers Data Envelopment Analysis". Mathematical
+and Computer Modelling, 54, 2760-2771. \doi{10.1016/j.mcm.2011.06.064}
 }
 \usage{
 data("EconomyLong")
@@ -23,16 +27,16 @@ Data of the industrial economy of China in 2005-2009 (data in long format).
 # Example. Data in long format.
 # Replication of results in Wang and Lan (2011, p. 2768)
 data("EconomyLong")
-data_example <- read_malmquist(EconomyLong,
-                               percol=2,
-                               arrangement="vertical",
+data_example <- make_malmquist(EconomyLong,
+                               percol = 2,
+                               arrangement = "vertical",
                                ni = 2,
                                no = 1)
 result <- malmquist_index(data_example)
 
 }
 \seealso{
-\code{\link{read_malmquist}}, \code{\link{malmquist_index}}
+\code{\link{make_malmquist}}, \code{\link{malmquist_index}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

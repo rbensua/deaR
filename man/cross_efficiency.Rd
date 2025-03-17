@@ -2,55 +2,81 @@
 % Please edit documentation in R/cross_efficiency.R
 \name{cross_efficiency}
 \alias{cross_efficiency}
-\title{Cross efficiency tables}
+\title{Cross efficiency analysis}
 \usage{
 cross_efficiency(datadea,
                  dmu_eval = NULL,
                  dmu_ref = NULL,
                  epsilon = 0, 
                  orientation = c("io", "oo"),
-                 rts = c("crs", "vrs"),
+                 rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
+                 L = 1,
+                 U = 1,
                  selfapp = TRUE,
+                 correction = FALSE,
                  M2 = TRUE,
                  M3 = TRUE)
 }
 \arguments{
-\item{datadea}{An object of class \code{dea} or \code{deadata}. If it is of class \code{dea} it must have
-been obtained with some of the multiplier DEA models.}
+\item{datadea}{An object of class \code{dea} or \code{deadata}. If it is of
+class \code{dea} it must have been obtained with some of the multiplier DEA models.}
 
-\item{dmu_eval}{A numeric vector. Only the multipliers of DMUs in \code{dmu_eval} are computed.}
+\item{dmu_eval}{A numeric vector. Only the multipliers of DMUs in \code{dmu_eval}
+are computed. If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference
+set. If \code{NULL} (default), all DMUs are considered.}
 
 \item{epsilon}{Numeric, multipliers must be >= \code{epsilon}.}
 
 \item{orientation}{A string, equal to "io" (input-oriented) or "oo" (output-oriented).}
 
-\item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant) or
-"vrs" (variable).}
+\item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant),
+"vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).}
 
-\item{selfapp}{Logical. If it is \code{TRUE}, self-appraisal is included in the average scores of
-\code{A} and \code{e}.}
+\item{L}{Lower bound for the generalized returns to scale (grs).}
 
-\item{M2}{Logical. If it is \code{TRUE}, it computes Method II for aggresive/benevolent estimations.}
+\item{U}{Upper bound for the generalized returns to scale (grs).}
 
-\item{M3}{Logical. If it is \code{TRUE}, it computes Method III for aggresive/benevolent estimations.}
+\item{selfapp}{Logical. If it is \code{TRUE}, self-appraisal is included in the
+average scores of \code{A} and \code{e}.}
+
+\item{correction}{Logical. If it is \code{TRUE}, a correction is applied in the
+"vrs" input-oriented model in order to avoid negative cross-efficiencies,
+according to Lim & Zhu (2015).}
+
+\item{M2}{Logical. If it is \code{TRUE}, it computes Method II for aggresive/benevolent
+estimations.}
+
+\item{M3}{Logical. If it is \code{TRUE}, it computes Method III for aggresive/benevolent
+estimations.}
 }
 \description{
-Computes arbitrary, benevolent and aggressive formulation of cross-efficiency under constant and variable returns-to-scale. Doyle and Green (1994) present three alternatives ways of formulating the secondary goal (wich will minimize or maximize the other DMUs' cross-efficiencies in some way). Methods II and III are implemented in deaR with constant returns-to-scale. The maverick index is also calculated.
+Computes arbitrary, benevolent and aggressive formulations of
+cross-efficiency under any returns-to-scale. Doyle and Green (1994) present
+three alternatives ways of formulating the secondary goal (wich will minimize
+or maximize the other DMUs' cross-efficiencies in some way). Methods II and III
+are implemented in deaR with any returns-to-scale. The maverick index is also
+calculated.
 }
 \note{
-(1) We can obtain negative cross-efficiency in the input-oriented DEA model under variable returns to scale. However, the same does not happen in the case of the output oriented VRS DEA model. For this reason, the proposal of Lim and Zhu (2015) is implemented in deaR to calculate the input-oriented cross-efficiency model under variable returns-to-scale.
+(1) We can obtain negative cross-efficiency in the input-oriented DEA model
+under no constant returns-to-scale. However, the same does not happen in the case
+of the output-oriented VRS DEA model. For this reason, the proposal of
+Lim and Zhu (2015) is implemented in deaR to calculate the input-oriented
+cross-efficiency model under no constant returns-to-scale.
 
-(2) The multiplier model can have alternate optimal solutions (see note 1 in model_multiplier). So, depending on the optimal weights selected we can obtain different cross-efficinecy scores.
+(2) The multiplier model can have alternate optimal solutions (see note 1 in
+model_multiplier). So, depending on the optimal weights selected we can obtain
+different cross-efficiency scores.
 }
 \examples{
 # Example 1.
 # Arbitrary formulation. Input-oriented model under constant returns-to-scale.
 data("Golany_Roll_1989")
-data_example <- read_data(datadea = Golany_Roll_1989, 
-                          inputs = 2:4, 
-                          outputs = 5:6)
+data_example <- make_deadata(datadea = Golany_Roll_1989, 
+                             inputs = 2:4, 
+                             outputs = 5:6)
 result <- cross_efficiency(data_example, 
                            orientation = "io", 
                            rts = "crs", 
@@ -61,9 +87,9 @@ result$Arbitrary$e
 # Example 2.
 # Benevolent formulation (method II). Input-oriented.
 data("Golany_Roll_1989")
-data_example <- read_data(datadea = Golany_Roll_1989, 
-                          inputs = 2:4, 
-                          outputs = 5:6)
+data_example <- make_deadata(datadea = Golany_Roll_1989, 
+                             inputs = 2:4, 
+                             outputs = 5:6)
 result <- cross_efficiency(data_example, 
                            orientation = "io", 
                            selfapp = TRUE)
@@ -73,9 +99,9 @@ result$M2_ben$e
 # Example 3.
 # Benevolent formulation (method III). Input-oriented.
 data("Golany_Roll_1989")
-data_example <- read_data(datadea = Golany_Roll_1989, 
-                          inputs = 2:4, 
-                          outputs = 5:6)
+data_example <- make_deadata(datadea = Golany_Roll_1989, 
+                             inputs = 2:4, 
+                             outputs = 5:6)
 result <- cross_efficiency(data_example, 
                            orientation = "io", 
                            selfapp = TRUE)
@@ -85,9 +111,9 @@ result$M3_ben$e
 # Example 4.
 # Arbitrary formulation. Output-oriented.
 data("Golany_Roll_1989")
-data_example <- read_data(datadea = Golany_Roll_1989,
-                          inputs = 2:4, 
-                          outputs = 5:6)
+data_example <- make_deadata(datadea = Golany_Roll_1989,
+                             inputs = 2:4, 
+                             outputs = 5:6)
 result <- cross_efficiency(data_example, 
                            orientation = "oo", 
                            selfapp = TRUE)
@@ -97,9 +123,9 @@ result$Arbitrary$e
 # Example 5.
 # Arbitrary formulation. Input-oriented model under vrs returns-to-scale.
 data("Lim_Zhu_2015")
-data_example <- read_data(Lim_Zhu_2015,
-                          ni = 1, 
-                          no = 5)
+data_example <- make_deadata(Lim_Zhu_2015,
+                             ni = 1, 
+                             no = 5)
 cross <- cross_efficiency(data_example,
                           epsilon = 0,
                           orientation = "io",
@@ -111,13 +137,22 @@ cross$Arbitrary$e
 
 }
 \references{
-Sexton, T.R., Silkman, R.H.; Hogan, A.J. (1986). Data envelopment analysis: critique and extensions. In: Silkman RH (ed) Measuring efficiency: an assessment of data envelopment analysis, vol 32. Jossey-Bass, San Francisco, pp 73–104. \url{https://doi.org/10.1002/ev.1441}  
+Sexton, T.R., Silkman, R.H.; Hogan, A.J. (1986). Data envelopment analysis: critique
+and extensions. In: Silkman RH (ed) Measuring efficiency: an assessment of data
+envelopment analysis, vol 32. Jossey-Bass, San Francisco, pp 73–104. \doi{10.1002/ev.1441}  
 
-Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA: derivations, meanings and the uses”,  Journal of Operational Research Society, 45(5), 567–578. DOI: \url{10.2307/2584392} 
+Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA: derivations,
+meanings and the uses”,  Journal of Operational Research Society, 45(5), 567–578.
+\doi{10.2307/2584392} 
  
-Cook, W.D.; Zhu, J. (2015). DEA Cross Efficiency. In: Zhu, J. (ed) Data Envelopment Analysis. A Handbook of Models and Methods. International Series in Operations Research & Management Science, vol 221. Springer, Boston, MA, 23-43 \url{https://doi.org/10.1007/978-1-4899-7553-9_2} 
+Cook, W.D.; Zhu, J. (2015). DEA Cross Efficiency. In: Zhu, J. (ed) Data Envelopment
+Analysis. A Handbook of Models and Methods. International Series in Operations
+Research & Management Science, vol 221. Springer, Boston, MA, 23-43.
+\doi{10.1007/978-1-4899-7553-9_2} 
  
-Lim, S.; Zhu, J. (2015). "DEA Cross-Efficiency Under Variable Returns to Scale". Journal of Operational Research Society, 66(3), p. 476-487. \url{https://doi.org/10.1057/jors.2014.13}
+Lim, S.; Zhu, J. (2015). "DEA Cross-Efficiency Under Variable Returns to Scale".
+Journal of Operational Research Society, 66(3), p. 476-487.
+\doi{10.1057/jors.2014.13}
 }
 \seealso{
 \code{\link{model_multiplier}}, \code{\link{cross_efficiency_fuzzy}}

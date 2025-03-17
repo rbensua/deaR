@@ -1,19 +1,25 @@
 #' @title Fuzzy DEA model
 #'
-#' @description Solve the Fuzzy input-oriented and output-oriented DEA model proposed by Guo and Tanaka (2001) under constant returns-to-scale.
-#' In deaR is implemented the LP poblem given by the model (16) in Guo and Tanaka (2001, p.155).
-#' The fuzzy efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001, p.155).
-#' The (crisp) relative efficiencies and multipliers for the case \code{h} = 1 are obtained from the CCR model (\code{model_multiplier}).
+#' @description Solve the Fuzzy input-oriented and output-oriented DEA model proposed
+#' by Guo and Tanaka (2001) under constant returns to scale. In deaR is implemented
+#' the LP poblem given by the model (16) in Guo and Tanaka (2001, p.155). The fuzzy
+#' efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001, p.155).
+#' The (crisp) relative efficiencies and multipliers for the case \code{h} = 1 are
+#' obtained from the CCR model (\code{model_multiplier}).
+#' 
 #' @note The optimal solution of model (16) is not unique. 
+#' 
 #' @usage modelfuzzy_guotanaka(datadea,
 #'                      dmu_eval = NULL,
 #'                      dmu_ref = NULL,
 #'                      orientation = c("io", "oo"),
 #'                      h = 1)
 #' 
-#' @param datadea The data, including DMUs, inputs and outputs.
+#' @param datadea A \code{deadata_fuzzy} object, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param orientation A string, equal to "io" (input oriented) or "oo" (output oriented).
 #' @param h A numeric vector with the h-levels (in [0,1]).
 #'   
@@ -32,11 +38,17 @@
 #' University of Valencia (Spain)
 #'  
 #' @references 
-#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.), Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness and Soft Computing 309. Springer, Berlin. \url{https://doi.org/10.1007/978-3-642-41372-8_1}
+#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art
+#' in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.),
+#' Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness
+#' and Soft Computing 309. Springer, Berlin. \doi{10.1007/978-3-642-41372-8_1}
 #' 
-#' Guo, P.; Tanaka, H. (2001). "Fuzzy DEA: A Perceptual Evaluation Method", Fuzzy Sets and Systems, 119, 149–160. \url{https://doi.org/10.1016/S0165-0114(99)00106-2}
+#' Guo, P.; Tanaka, H. (2001). "Fuzzy DEA: A Perceptual Evaluation Method", Fuzzy
+#' Sets and Systems, 119, 149–160. \doi{10.1016/S0165-0114(99)00106-2}
 #' 
-#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making", European Journal of Operational Research, 214, 457–472. \url{https://doi.org/10.1016/j.ejor.2011.02.001}
+#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review
+#' of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making",
+#' European Journal of Operational Research, 214, 457–472. \doi{10.1016/j.ejor.2011.02.001}
 #' 
 #' @examples
 #' # Example 1.
@@ -44,11 +56,11 @@
 #' # In deaR is implemented the LP poblem given by the model 16 in Guo and Tanaka (2001, p. 155).
 #' # The fuzzy efficiencies are calculated according to equations in (17) (Guo and Tanaka, 2001,p.155).
 #' data("Guo_Tanaka_2001")
-#' data_example <- read_data_fuzzy(Guo_Tanaka_2001, 
-#'                                 inputs.mL = 2:3, 
-#'                                 inputs.dL = 4:5, 
-#'                                 outputs.mL = 6:7,
-#'                                 outputs.dL = 8:9)
+#' data_example <- make_deadata_fuzzy(Guo_Tanaka_2001, 
+#'                                    inputs.mL = 2:3, 
+#'                                    inputs.dL = 4:5, 
+#'                                    outputs.mL = 6:7,
+#'                                    outputs.dL = 8:9)
 #' result <- modelfuzzy_guotanaka(data_example, 
 #'                                h = c(0, 0.5, 0.75, 1), 
 #'                                orientation = "io")
@@ -56,17 +68,19 @@
 #'  
 #' # Example 2. 
 #' data("Guo_Tanaka_2001")
-#' data_example <- read_data_fuzzy(Guo_Tanaka_2001, 
-#'                                 inputs.mL = 2:3, 
-#'                                 inputs.dL = 4:5, 
-#'                                 outputs.mL = 6:7, 
-#'                                 outputs.dL = 8:9)
+#' data_example <- make_deadata_fuzzy(Guo_Tanaka_2001, 
+#'                                    inputs.mL = 2:3, 
+#'                                    inputs.dL = 4:5, 
+#'                                    outputs.mL = 6:7, 
+#'                                    outputs.dL = 8:9)
 #' result2 <- modelfuzzy_guotanaka(data_example, 
 #'                                 h = seq(0, 1, by = 0.1), 
 #'                                 orientation = "io")
 #' efficiencies(result2)
 #' 
-#' @seealso \code{\link{model_basic}}, \code{\link{model_multiplier}}, \code{\link{modelfuzzy_kaoliu}}, \code{\link{modelfuzzy_possibilistic}}, \code{\link{cross_efficiency_fuzzy}}
+#' @seealso \code{\link{model_basic}}, \code{\link{model_multiplier}},
+#' \code{\link{modelfuzzy_kaoliu}}, \code{\link{modelfuzzy_possibilistic}},
+#' \code{\link{cross_efficiency_fuzzy}}
 #' 
 #' @import lpSolve
 #' 
@@ -81,7 +95,7 @@ function(datadea,
  
   # Cheking whether datadea is of class "deadata_fuzzy" or not...  
   if (!is.deadata_fuzzy(datadea)) {
-    stop("Data should be of class deadata_fuzzy. Run read_data_fuzzy function first!")
+    stop("Data should be of class deadata_fuzzy. Run make_deadata_fuzzy function first!")
   }
   
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
@@ -103,7 +117,7 @@ function(datadea,
   
   if (is.null(dmu_eval)) {
     dmu_eval <- 1:nd
-  } else if (all(dmu_eval %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_eval %in% (1:nd))) {
     stop("Invalid set of DMUs to be evaluated (dmu_eval).")
   }
   names(dmu_eval) <- dmunames[dmu_eval]
@@ -111,7 +125,7 @@ function(datadea,
   
   if (is.null(dmu_ref)) {
     dmu_ref <- 1:nd
-  } else if (all(dmu_ref %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_ref %in% (1:nd))) {
     stop("Invalid set of reference DMUs (dmu_ref).")
   }
   names(dmu_ref) <- dmunames[dmu_ref]
@@ -149,7 +163,9 @@ function(datadea,
   no <- length(outputnames) # number of outputs
   
   # Checking h
-  if (any(h > 1) || any(h < 0)){
+  if ((length(h) == 1) && (h > 1)){
+    h <- seq(from = 0, to = 1, length.out = h)
+  } else if (any(h > 1) || any(h < 0)){
     stop("Invalid h vector.")
   }
   h <- sort(unique(h))
@@ -163,8 +179,8 @@ function(datadea,
   names(DMU) <- dmunames[dmu_eval]
   
   if (h[nh] == 1) {
-    datadea_crisp <- structure(list(input = input.m,
-                                    output = output.m,
+    datadea_crisp <- structure(list(input = datadea$input$mL,
+                                    output = datadea$output$mL,
                                     dmunames = dmunames),
                               class = "deadata")
     deasol_crisp <- do.call(model_multiplier, list(datadea = datadea_crisp,
@@ -178,8 +194,8 @@ function(datadea,
                        multiplier_input = deasol_crisp$DMU[[j]]$multiplier_input,
                        multiplier_output = deasol_crisp$DMU[[j]]$multiplier_output)
     }
-    hlevel[[nh]] <- list(input = list(Lower = input.m, Upper = input.m),
-                         output = list(Lower = output.m, Upper = output.m),
+    hlevel[[nh]] <- list(input = list(Lower = datadea$input$mL, Upper = datadea$input$mL),
+                         output = list(Lower = datadea$output$mL, Upper = datadea$output$mL),
                          DMU = DMU)
     nh <- nh - 1
   }
@@ -216,15 +232,15 @@ function(datadea,
         g0.con <- rbind(input.L[, jj], input.U[, jj])
         g0 <- lp(objg0, g0.obj, g0.con, g0.dir, g0.rhs)$objval
         
-        # Vector de coeficientes de la función objetivo
+        # Objective function coefficients
         f.obj <- c(rep(0, ni), output.L[, jj])
         
-        # Matriz técnica
+        # Constraints matrix
         f.con.1 <- c(g0.obj, rep(0, no))
         f.con.2 <- cbind(g0.con, matrix(0, nrow = 2, ncol = no))
         f.con <- rbind(f.con.1, f.con.2, f.con.3, f.con.4)
         
-        # Vector de términos independientes
+        # Right hand side vector
         f.rhs <- c(g0, orient * c(one.L, one.U), rep(0, ndr + ndr))
         
         res <- lp("max", f.obj, f.con, f.dir, f.rhs)$solution

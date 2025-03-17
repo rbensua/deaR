@@ -2,31 +2,39 @@
 % Please edit documentation in R/efficiencies.dea.R
 \name{efficiencies.dea}
 \alias{efficiencies.dea}
-\title{Efficiencies}
+\title{Objective scores}
 \usage{
 \method{efficiencies}{dea}(x, ...)
 }
 \arguments{
-\item{x}{Object of class dea or dea_fuzzy obtained with some of the dea model functions.}
+\item{x}{Object of class \code{dea} obtained with some of the conventional DEA
+\code{model_*} functions.}
 
-\item{...}{Other options (for compatibility reasons)}
+\item{...}{Other options (for compatibility reasons).}
 }
 \description{
-Extract the efficiencies of the DMUs from a dea solution.
+Extract the scores (optimal objective values) of the evaluated
+DMUs from a conventional DEA solution. Note that these scores may not always be
+interpreted as efficiencies.
 }
 \examples{
 # Replication results model DEA1 in Tomkins and Green (1988)
 data("Departments")
 # Calculate Total income
 Departments$Total_income <- Departments[, 5] + Departments[, 6] + Departments[, 7] 
-data_DEA1 <- read_data(Departments,
-                       inputs = 9,
-                       outputs = c(2, 3, 4, 12))
+data_DEA1 <- make_deadata(Departments,
+                          inputs = 9,
+                          outputs = c(2, 3, 4, 12))
 result <- model_basic(data_DEA1,
                       orientation = "io",
                       rts = "crs")
 efficiencies(result) # Table 3 (p.156) 
- 
+
+}
+\references{
+Tomkins, C.; Green, R. (1988). “An Experiment in the Use of Data Envelopment
+Analysis for Evaluating the Efficiency of UK University Departments of
+Accounting”. Financial Accountability and Management 4(2): 147.
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

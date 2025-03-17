@@ -1,22 +1,24 @@
 #' @title Undesirable inputs and outputs for basic DEA model.
 #'  
-#' @description This function transforms a deadata or deadata_fuzzy class with inputs and outputs into a
-#' deadata or deadata_fuzzy class with good inputs and/or outputs, and bad (undesirable) inputs and/or outputs.
-#' Onwards, it is recommended to use a dea model with variable returns to scale (vrs).
+#' @description This function transforms a deadata or deadata_fuzzy class with
+#' undesirable inputs/outputs according to Seiford and Zhu (2002).
+#' Onwards, it is recommended to use a DEA model with variable returns to scale (vrs).
 #'
 #' @usage undesirable_basic(datadea,
 #'                   vtrans_i = NULL,
 #'                   vtrans_o = NULL)
 #' 
-#' @param datadea The data, including DMUs, inputs and outputs.
+#' @param datadea A \code{deadata} object, including DMUs, inputs and outputs.
 #' @param vtrans_i Numeric vector of translation for undesirable inputs. If \code{vtrans_i[i]} is
-#'  \code{NA}, then it applies the "max + 1" translation to the i-th undesirable input. If \code{vtrans_i} is
-#'  a constant, then it applies the same translation to all undesirable inputs. If \code{vtrans_i} is \code{NULL},
-#'  then it applies the "max + 1" translation to all undesirable inputs.
+#' \code{NA}, then it applies the "max + 1" translation to the i-th undesirable input.
+#' If \code{vtrans_i} is a constant, then it applies the same translation to all
+#' undesirable inputs. If \code{vtrans_i} is \code{NULL}, then it applies the
+#' "max + 1" translation to all undesirable inputs.
 #' @param vtrans_o Numeric vector of translation for undesirable outputs, analogous to
 #'  \code{vtrans_i}, but applied to outputs.
 #'
-#' @return An object of class \code{deadata} or \code{deadata_fuzzy}.
+#' @return An list with the transformed object of class \code{deadata} or \code{deadata_fuzzy}
+#' and the corresponding translation vectors \code{vtrans_i} and \code{vtrans_o}.
 #' 
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -30,14 +32,21 @@
 #'
 #' University of Valencia (Spain)
 #' 
+#' @references 
+#' Seiford, L.M.; Zhu, J. (2002). “Modeling undesirable factors in efficiency evaluation”,
+#' European Journal of Operational Research 142, 16-20.
+#' 
+#' Hua Z.; Bian Y. (2007). DEA with Undesirable Factors. In: Zhu J., Cook W.D. (eds)
+#' Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis.
+#' Springer, Boston, MA. 
+#' 
 #' @examples
 #' data("Hua_Bian_2007")
 #' # The third output is an undesirable output.
-#' data_example <- read_data(Hua_Bian_2007,
-#'                           ni = 2, 
-#'                           no = 3, 
-#'                           ud_outputs = 3) 
-
+#' data_example <- make_deadata(Hua_Bian_2007,
+#'                              ni = 2, 
+#'                              no = 3, 
+#'                              ud_outputs = 3) 
 #' # rts must be "vrs" for undesirable inputs/outputs:
 #' # Translation parameter is set to (max + 1)
 #' result <- model_basic(data_example,
@@ -66,10 +75,11 @@ undesirable_basic <- function(datadea,
   
     if (is.null(vtrans_i)) {
       vtrans_i <- rep(NA, nui)
-    } else if ((length(vtrans_i == 1)) && (nui > 1)) {
+    } else if ((length(vtrans_i) == 1) && (nui > 1)) {
       vtrans_i <- rep(vtrans_i, nui)
     } else if (length(vtrans_i) != nui) {
-      stop("Translation vector vtrans_i must be NULL, a constant or a vector of the same length as ud_inputs.")
+      stop("Translation vector vtrans_i must be NULL, a constant or a vector of the
+           same length as ud_inputs.")
     }
   
     if (nui > 0) {
@@ -84,7 +94,7 @@ undesirable_basic <- function(datadea,
     for (j in ud_inputs) {
       input[j, ] <- vtrans_i[i] - input[j, ]
       if (length(input[j, input[j, ] < 0] > 0)) {
-        stop("There is at least one negative bad input. Change translation vector vtrans_i.")
+        stop("There is at least one negative good input. Change translation vector vtrans_i.")
       }
       i <- i + 1
     }
@@ -103,10 +113,11 @@ undesirable_basic <- function(datadea,
   
     if (is.null(vtrans_o)) {
       vtrans_o <- rep(NA, nuo)
-    } else if ((length(vtrans_o == 1)) && (nuo > 1)) {
+    } else if ((length(vtrans_o) == 1) && (nuo > 1)) {
       vtrans_o <- rep(vtrans_o, nuo)
     } else if (length(vtrans_o) != nuo) {
-      stop("Translation vector vtrans_o must be NULL, a constant or a vector of the same length as ud_outputs.")
+      stop("Translation vector vtrans_o must be NULL, a constant or a vector of the
+           same length as ud_outputs.")
     }
   
     if (nuo > 0) {
@@ -131,7 +142,7 @@ undesirable_basic <- function(datadea,
     u_datadea$output <- output
     
     return(list(
-      u_datadea = structure(u_datadea, class = "deadata"),
+      u_datadea = u_datadea,
       vtrans_i = vtrans_i,
       vtrans_o = vtrans_o))
   
@@ -151,10 +162,11 @@ undesirable_basic <- function(datadea,
     
     if (is.null(vtrans_i)) {
       vtrans_i <- rep(NA, nui)
-    } else if ((length(vtrans_i == 1)) && (nui > 1)) {
+    } else if ((length(vtrans_i) == 1) && (nui > 1)) {
       vtrans_i <- rep(vtrans_i, nui)
     } else if (length(vtrans_i) != nui) {
-      stop("Translation vector vtrans_i must be NULL, a constant or a vector of the same length as ud_inputs.")
+      stop("Translation vector vtrans_i must be NULL, a constant or a vector of the
+           same length as ud_inputs.")
     }
     
     if (nui > 0) {
@@ -177,7 +189,7 @@ undesirable_basic <- function(datadea,
       input$mL[j, ] <- vtrans_i[i] - aux
       
       if (length(input$mL[j, (input$mL[j, ] - input$dL[j, ]) < 0] > 0)) {
-        stop("There is at least one negative bad input. Change translation vector vtrans_i.")
+        stop("There is at least one negative good input. Change translation vector vtrans_i.")
         print(j)
       }
       
@@ -198,10 +210,11 @@ undesirable_basic <- function(datadea,
     
     if (is.null(vtrans_o)) {
       vtrans_o <- rep(NA, nuo)
-    } else if ((length(vtrans_o == 1)) && (nuo > 1)) {
+    } else if ((length(vtrans_o) == 1) && (nuo > 1)) {
       vtrans_o <- rep(vtrans_o, nuo)
     } else if (length(vtrans_o) != nuo) {
-      stop("Translation vector vtrans_o must be NULL, a constant or a vector of the same length as ud_outputs.")
+      stop("Translation vector vtrans_o must be NULL, a constant or a vector of the
+           same length as ud_outputs.")
     }
     
     if (nuo > 0) {
@@ -236,15 +249,13 @@ undesirable_basic <- function(datadea,
     u_datadea$output <- output
     
     return(list(
-      u_datadea = structure(u_datadea, class = "deadata_fuzzy"),
+      u_datadea = u_datadea,
       vtrans_i = vtrans_i,
       vtrans_o = vtrans_o))
     
-    return(structure(u_datadea, class = "deadata_fuzzy"))
-    
   } else {
     stop("Data should be of class deadata or deadata_fuzzy.
-         Run read_data or read_data_fuzzy function first!")
+         Run make_deadata or make_deadata_fuzzy function first!")
   }
     
 }

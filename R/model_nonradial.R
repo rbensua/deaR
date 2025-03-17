@@ -1,6 +1,7 @@
 #' @title Non-radial DEA model.
 #'   
-#' @description Non-radial DEA model allows for non-proportional reductions in each input or augmentations in each output. 
+#' @description Non-radial DEA model allows for non-proportional reductions in
+#' each input or augmentations in each output. 
 #' 
 #' @usage model_nonradial(datadea,
 #'                 dmu_eval = NULL,
@@ -15,19 +16,26 @@
 #'                 returnlp = FALSE,
 #'                 ...)
 #' 
-#' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
+#' @param datadea A \code{deadata} object, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param orientation A string, equal to "io" (input-oriented) or "oo" (output-oriented).
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
-#'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
+#' "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
 #' @param maxslack Logical. If it is \code{TRUE}, it computes the max slack solution.
-#' @param weight_slack If input-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the length of \code{dmu_eval}) with the weights of the output slacks for the max slack solution.
-#'                     If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} with the weights of the input slacks for the max slack solution.
-#' @param compute_target Logical. If it is \code{TRUE}, it computes targets of the max slack solution. 
-#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.
+#' @param weight_slack If input-oriented, it is a value, vector of length \code{s},
+#' or matrix \code{s} x \code{ne} (where \code{ne} is the length of \code{dmu_eval})
+#' with the weights of the output slacks for the max slack solution.
+#' If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x
+#' \code{ne} with the weights of the input slacks for the max slack solution.
+#' @param compute_target Logical. If it is \code{TRUE}, it computes targets of the
+#' max slack solution. 
+#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems
+#' (objective function and constraints) of stage 1.
 #' @param ... Ignored, for compatibility issues.
 #'   
 #' @author 
@@ -43,20 +51,25 @@
 #' University of Valencia (Spain)
 #'  
 #' @references 
-#' Banker, R.D.; Morey, R.C. (1986). "Efficiency Analysis for Exogenously Fixed Inputs and Outputs", Operations Research, 34, 80-97. \url{https://doi.org/10.1287/opre.34.4.513}
+#' Banker, R.D.; Morey, R.C. (1986). "Efficiency Analysis for Exogenously Fixed
+#' Inputs and Outputs", Operations Research, 34, 80-97. \doi{10.1287/opre.34.4.513}
 #' 
-#' Färe, R.; Lovell, C.K. (1978). "Measuring the Technical Efficiency of Production", Journal of Economic Theory, 19(1), 150-162. \url{https://doi.org/10.1016/0022-0531(78)90060-1}
+#' Färe, R.; Lovell, C.K. (1978). "Measuring the Technical Efficiency of Production",
+#' Journal of Economic Theory, 19(1), 150-162. \doi{10.1016/0022-0531(78)90060-1}
 #'
-#' Wh, J.; Tsai, H.; Zhou, Z. (2011). "Improving Efficiency in International Tourist Hotels in Taipei Using a Non-Radial DEA Model", International Journal of Contemporary Hospitatlity Management, 23(1), 66-83. \url{https://doi.org/10.1108/09596111111101670} 
+#' Wu, J.; Tsai, H.; Zhou, Z. (2011). "Improving Efficiency in International Tourist
+#' Hotels in Taipei Using a Non-Radial DEA Model", International Journal of
+#' Contemporary Hospitatlity Management, 23(1), 66-83. \doi{10.1108/09596111111101670} 
 #'
-#' Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal of the Operational Research Society, 47(1), 136. DOI: 10.2307/2584258  
+#' Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal
+#' of the Operational Research Society, 47(1), 136. \doi{10.2307/2584258}
 #' 
 #' @examples 
 #' # Replication of results in Wu, Tsai and Zhou (2011)
 #' data("Hotels")
-#' data_hotels <- read_data(Hotels, 
-#'                          inputs = 2:5, 
-#'                          outputs = 6:8)
+#' data_hotels <- make_deadata(Hotels, 
+#'                             inputs = 2:5, 
+#'                             outputs = 6:8)
 #' result <- model_nonradial(data_hotels, 
 #'                           orientation = "oo", 
 #'                           rts = "vrs")
@@ -84,7 +97,7 @@ model_nonradial <-
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
-    stop("Data should be of class deadata. Run read_data function first!")
+    stop("Data should be of class deadata. Run make_deadata function first!")
   }
     
   # Checking orientation
@@ -95,11 +108,6 @@ model_nonradial <-
   rts <- tolower(rts)
   rts <- match.arg(rts)
   
-  # Checking undesirable io and rts
-  #if (((!is.null(datadea$ud_inputs)) || (!is.null(datadea$ud_outputs))) && (rts != "vrs")) {
-  #  rts <- "vrs"
-  #  warning("Returns to scale changed to variable (vrs) because there is data with undesirable inputs/outputs.")
-  #}
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
     warning("This model does not take into account the undesirable feature for inputs/outputs.")
   }
@@ -118,7 +126,7 @@ model_nonradial <-
   
   if (is.null(dmu_eval)) {
     dmu_eval <- 1:nd
-  } else if (all(dmu_eval %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_eval %in% (1:nd))) {
     stop("Invalid set of DMUs to be evaluated (dmu_eval).")
   }
   names(dmu_eval) <- dmunames[dmu_eval]
@@ -126,7 +134,7 @@ model_nonradial <-
   
   if (is.null(dmu_ref)) {
     dmu_ref <- 1:nd
-  } else if (all(dmu_ref %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_ref %in% (1:nd))) {
     stop("Invalid set of reference DMUs (dmu_ref).")
   }
   names(dmu_ref) <- dmunames[dmu_ref]
@@ -137,6 +145,7 @@ model_nonradial <-
     output <- datadea$output
     nc_inputs <- datadea$nc_inputs
     nc_outputs <- datadea$nc_outputs
+    nd_outputs <- datadea$nd_outputs
     obj <- "min"
     orient <- 1
   } else {
@@ -144,6 +153,7 @@ model_nonradial <-
     output <- -datadea$input
     nc_inputs <- datadea$nc_outputs
     nc_outputs <- datadea$nc_inputs
+    nd_outputs <- datadea$nd_inputs
     obj <- "max"
     orient <- -1
   }
@@ -175,6 +185,7 @@ model_nonradial <-
   }
   rownames(weight_slack) <- outputnames
   colnames(weight_slack) <- dmunames[dmu_eval]
+  weight_slack[nd_outputs, ] <- 0 # Non-discretionary io not taken into account for maxslack solution
 
   target_input <- NULL
   target_output <- NULL
@@ -184,7 +195,7 @@ model_nonradial <-
   
   ###########################
   
-  # Vector de coeficientes de la función objetivo stage 1
+  # Objective function coefficients stage 1
   f.obj <- c(rep(1 / (ni - nnci), ni), rep(0, ndr))
   f.obj[nc_inputs] <- 0
   
@@ -211,7 +222,7 @@ model_nonradial <-
     }
   }
   
-  # Matriz técnica del 2º y 3º bloque de restricciones stage 1
+  # Constraints matrix of 2nd and 3rd bloc of constraints stage 1
   f.con.2 <- cbind(matrix(0, nrow = no, ncol = ni), outputref)
   f.con.3 <- cbind(orient * diag(ni), matrix(0, nrow = ni, ncol = ndr))
   
@@ -219,7 +230,7 @@ model_nonradial <-
     
     nnco <- length(nc_outputs) # number of non-controllable outputs
     
-    # Matriz técnica stage 2
+    # Constraints matrix stage 2
     f.con2.1 <- cbind(inputref, matrix(0, nrow = ni, ncol = no))
     
     f.con2.2 <- cbind(outputref, -diag(no))
@@ -230,7 +241,7 @@ model_nonradial <-
     
     f.con2 <- rbind(f.con2.1, f.con2.2, f.con2.nc, f.con2.rs)
     
-    # Vector de dirección de restricciones stage 2
+    # Directions vector stage 2
     f.dir2 <- c(rep("=", ni + no + nnco), f.dir.rs)
     
   }
@@ -239,15 +250,15 @@ model_nonradial <-
     
     ii <- dmu_eval[i]
     
-    # Matriz técnica stage 1
+    # Constraints matrix stage 1
     f.con.1 <- cbind(-diag(input[, ii], nrow = ni), inputref)
     f.con <- rbind(f.con.1, f.con.2, f.con.3, f.con.rs)
     
-    # Vector de dirección de restricciones stage 1
+    # Directions vector stage 1
     f.dir <- c(rep("=", ni), rep(">=", no), rep("<=", ni), f.dir.rs)
     f.dir[ni + c(nc_outputs, no + nc_inputs)] <- "="
     
-    # Vector de términos independientes stage 1
+    # Right hand side vector stage 1
     f.rhs <- c(rep(0, ni), output[, ii], rep(orient, ni), f.rhs.rs)
     
     if (returnlp) {
@@ -257,8 +268,8 @@ model_nonradial <-
       lambda <- rep(0, ndr)
       names(lambda) <- dmunames[dmu_ref]
       var <- list(efficiency = efficiency, lambda = lambda)
-      DMU[[i]] <- list(direction = obj, objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
-                       var = var)
+      DMU[[i]] <- list(direction = obj, objective.in = f.obj, const.mat = f.con,
+                       const.dir = f.dir, const.rhs = f.rhs, var = var)
       
     } else {
       
@@ -272,10 +283,10 @@ model_nonradial <-
         
         if (maxslack) {
           
-          # Vector de coeficientes de la función objetivo stage 2
+          # Objective function coefficients stage 2
           f.obj2 <- c(rep(0, ndr), weight_slack[, i])
           
-          # Vector de términos independientes stage 2
+          # Right hand side vector stage 2
           f.rhs2 <- c(eff * input[, ii], output[, ii], rep(0, nnco), f.rhs.rs)
           
           res <- lp("max", f.obj2, f.con2, f.dir2, f.rhs2)$solution
@@ -289,9 +300,9 @@ model_nonradial <-
           if (compute_target) {
             target_input <- orient * as.vector(inputref %*% lambda)
             target_output <- orient * as.vector(outputref %*% lambda)
-            #target_input <- orient * eff * input[, ii]
+            #target_input <- orient * eff * input[, ii] # Alternative
             names(target_input) <- inputnames
-            #target_output <- orient * (output[, ii] + slack_output)
+            #target_output <- orient * (output[, ii] + slack_output) # Alternative
             names(target_output) <- outputnames
           }
           
@@ -301,7 +312,7 @@ model_nonradial <-
           names(lambda) <- dmunames[dmu_ref]
           
           target_input <- orient * as.vector(inputref %*% lambda)
-          #target_input <- orient * eff * input[, ii]
+          #target_input <- orient * eff * input[, ii] # Alternative
           names(target_input) <- inputnames
           target_output <- orient * as.vector(outputref %*% lambda)
           names(target_output) <- outputnames
@@ -341,6 +352,22 @@ model_nonradial <-
     }
     
   }
+  
+  # Checking if a DMU is in its own reference set (when rts = "grs") with coefficient != 1
+  if (rts == "grs") {
+    eps <- 1e-6
+    for (i in 1:nde) {
+      j <- which(dmu_ref == dmu_eval[i])
+      if (length(j) == 1) {
+        kk <- DMU[[i]]$lambda[j]
+        kk2 <- sum(DMU[[i]]$lambda[-j])
+        if ((kk > eps) && (kk2 > eps)) {
+          warning(paste("Under generalized returns to scale,", dmunames[dmu_eval[i]],
+                        "appears in its own reference set."))
+        }
+      }
+    }
+  }
  
   deaOutput <- list(modelname = "nonradial",
                     orientation = orientation,
@@ -350,7 +377,9 @@ model_nonradial <-
                     DMU = DMU,
                     data = datadea,
                     dmu_eval = dmu_eval,
-                    dmu_ref = dmu_ref)
+                    dmu_ref = dmu_ref,
+                    maxslack = maxslack,
+                    weight_slack = weight_slack)
  
   return(structure(deaOutput, class = "dea"))
  

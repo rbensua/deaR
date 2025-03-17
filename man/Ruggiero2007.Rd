@@ -4,14 +4,18 @@
 \name{Ruggiero2007}
 \alias{Ruggiero2007}
 \title{Data: Ruggiero (2007).}
-\format{Data frame with 35 rows and 4 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 35 rows and 4 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1}{Input 1}
   \item{x2}{Input 2}
   \item{y1}{Output 1}
-}}
+}
+}
 \source{
-Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D. (eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment Analysis. Springer, Boston, MA. \code{doi}: 10.1007/978-0-387-71607-7_5
+Ruggiero J. (2007). Non-Discretionary Inputs. In: Zhu J., Cook W.D.
+(eds) Modeling Data Irregularities and Structural Complexities in Data Envelopment
+Analysis. Springer, Boston, MA. \doi{10.1007/978-0-387-71607-7_5}
 }
 \usage{
 data("Ruggiero2007")
@@ -23,19 +27,19 @@ Simulated data of 35 DMUs with two inputs and one output.
 # Example. Replication of results in Ruggiero (2007).
 data("Ruggiero2007")
 # the second input is a non-discretionary input
-datadea <- read_data(Ruggiero2007,
-                     ni=2,
-                     no=1,
-                     nd_inputs=2)
+datadea <- make_deadata(Ruggiero2007,
+                        ni = 2,
+                        no = 1,
+                        nd_inputs = 2)
 result <- model_basic(datadea,
-                      orientation="io",
-                      rts="crs")
+                      orientation = "io",
+                      rts = "crs")
 efficiencies(result)
 slacks(result)
 
 }
 \seealso{
-\code{\link{read_data}}, \code{\link{model_basic}}
+\code{\link{make_deadata}}, \code{\link{model_basic}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

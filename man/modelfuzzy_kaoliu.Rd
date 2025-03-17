@@ -7,19 +7,21 @@
 modelfuzzy_kaoliu(datadea,
                   dmu_eval = NULL,
                   kaoliu_modelname = c("basic", "additive", "addsupereff", 
-                                       "deaps", "fdh", "multiplier", "nonradial",
-                                       "sbmeff", "sbmsupereff", "supereff"),
+                    "deaps", "fdh", "multiplier", "nonradial", "profit",
+                    "rdm", "sbmeff", "sbmsupereff", "supereff"),
                   alpha = 1,
                   ...)
 }
 \arguments{
-\item{datadea}{The data, including DMUs, inputs and outputs.}
+\item{datadea}{A \code{deadata_fuzzy} object, including DMUs, inputs and outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
 \item{kaoliu_modelname}{a string containing the name of the model.}
 
-\item{alpha}{A numeric vector with the alpha-cuts (in [0,1]).}
+\item{alpha}{A numeric vector with the alpha-cuts (in [0,1]). If \code{alpha}>1,
+it determines the number of alpha-cuts, equispatially distributed in [0,1].}
 
 \item{...}{\code{dmu_ref}, \code{orientation}, \code{rts} and other model parameters.}
 }
@@ -33,11 +35,11 @@ Solve the fuzzy DEA model by Kao and Liu (2000)
 # Example 1. 
 # Replication of results in Boscá, Liern, Sala and Martínez (2011, p.125)
 data("Leon2003")
-data_example <- read_data_fuzzy(datadea = Leon2003,
-                                inputs.mL = 2, 
-                                inputs.dL = 3, 
-                                outputs.mL = 4, 
-                                outputs.dL = 5)
+data_example <- make_deadata_fuzzy(datadea = Leon2003,
+                                   inputs.mL = 2, 
+                                   inputs.dL = 3, 
+                                   outputs.mL = 4, 
+                                   outputs.dL = 5)
 result <- modelfuzzy_kaoliu(data_example,
                             kaoliu_modelname = "basic", 
                             alpha = seq(0, 1, by = 0.1), 
@@ -48,11 +50,11 @@ efficiencies(result)
 # Example 2.
 # Replication of results in Kao and Liu (2003, p.152)
 data("Kao_Liu_2003")
-data_example <- read_data_fuzzy(Kao_Liu_2003, 
-                                inputs.mL = 2, 
-                                outputs.mL = 3:7, 
-                                outputs.dL = c(NA, NA, 8, NA, 10),
-                                outputs.dR = c(NA, NA, 9, NA, 11))
+data_example <- make_deadata_fuzzy(Kao_Liu_2003, 
+                                   inputs.mL = 2, 
+                                   outputs.mL = 3:7, 
+                                   outputs.dL = c(NA, NA, 8, NA, 10),
+                                   outputs.dR = c(NA, NA, 9, NA, 11))
 result <- modelfuzzy_kaoliu(data_example, 
                             kaoliu_modelname = "basic", 
                             orientation = "oo", 
@@ -65,20 +67,32 @@ eff
 
 }
 \references{
-Boscá, J.E.; Liern, V.; Sala, R.; Martínez, A. (2011). "Ranking Decision Making Units by Means of Soft Computing DEA Models". International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems, 19(1), p.115-134. 
+Boscá, J.E.; Liern, V.; Sala, R.; Martínez, A. (2011). "Ranking Decision Making
+Units by Means of Soft Computing DEA Models". International Journal of Uncertainty,
+Fuzziness and Knowledge-Based Systems, 19(1), p.115-134. 
 
-Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.), Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness and Soft Computing 309. Springer, Berlin.
+Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art
+in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.),
+Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness
+and Soft Computing 309. Springer, Berlin.
 
-Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making", European Journal of Operational Research, 214, 457–472.
+Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review
+of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making",
+European Journal of Operational Research, 214, 457–472.
 
-Kao, C.; Liu, S.T. (2000). “Fuzzy efficiency measures in data envelopment analysis, Fuzzy Sets and Systems”, 119, 149–160.
+Kao, C.; Liu, S.T. (2000). “Fuzzy efficiency measures in data envelopment analysis,
+Fuzzy Sets and Systems”, 119, 149–160.
 
-Kao, C., Liu, S.T., (2000). “Data envelopment analysis with missing data: An application to university libraries in Taiwan”, Journal of the Operational Research Society, 51, 897–905. 
+Kao, C., Liu, S.T., (2000). “Data envelopment analysis with missing data:
+An application to university libraries in Taiwan”, Journal of the Operational
+Research Society, 51, 897–905. 
 
-Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy efficiency ranking”, International Journal of Production Economics, 85.
+Kao, C., Liu, S.T. (2003). “A mathematical programming approach to fuzzy
+efficiency ranking”, International Journal of Production Economics, 85.
 }
 \seealso{
-\code{\link{model_basic}}, \code{\link{model_multiplier}}, \code{\link{modelfuzzy_possibilistic}}, \code{\link{modelfuzzy_guotanaka}}
+\code{\link{model_basic}}, \code{\link{model_multiplier}},
+\code{\link{modelfuzzy_possibilistic}}, \code{\link{modelfuzzy_guotanaka}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

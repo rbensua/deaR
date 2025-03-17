@@ -13,24 +13,33 @@ model_sbmeff(datadea,
              rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
              L = 1,
              U = 1,
+             kaizen = FALSE,
+             maxfr = NULL,
+             tol = 1e-6,
+             silent = FALSE,
              compute_target = TRUE,
              returnlp = FALSE,
              ...)
 }
 \arguments{
-\item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
+\item{datadea}{A \code{deadata} object with \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{weight_input}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-with weights to inputs corresponding to the relative importance of items.}
+\item{weight_input}{A value, vector of length \code{m}, or matrix \code{m} x
+\code{ne} (where \code{ne} is the length of \code{dmu_eval}) with weights to
+inputs corresponding to the relative importance of items.}
 
-\item{weight_output}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-with weights to outputs corresponding to the relative importance of items.}
+\item{weight_output}{A value, vector of length \code{m}, or matrix \code{m} x
+\code{ne} (where \code{ne} is the length of \code{dmu_eval}) with weights to
+outputs corresponding to the relative importance of items.}
 
-\item{orientation}{A string, equal to "no" (non-oriented), "io" (input-oriented) or "oo" (output-oriented).}
+\item{orientation}{A string, equal to "no" (non-oriented), "io" (input-oriented)
+or "oo" (output-oriented).}
 
 \item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant),
 "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).}
@@ -39,9 +48,21 @@ with weights to outputs corresponding to the relative importance of items.}
 
 \item{U}{Upper bound for the generalized returns to scale (grs).}
 
+\item{kaizen}{Logical. If \code{TRUE}, the kaizen version of SBM (Tone 2010),
+also known as SBM-Max, is computed.}
+
+\item{maxfr}{A list with the maximal friends sets, as it is returned by function
+\code{maximal_friends}. If \code{NULL} (default) this list is computed internally.}
+
+\item{tol}{Numeric, a tolerance margin for checking efficiency (only for the kaizen version).}
+
+\item{silent}{Logical. If \code{FALSE} (default) it prints all the messages from
+function \code{maximal_friends}.}
+
 \item{compute_target}{Logical. If it is \code{TRUE}, it computes targets.}
 
-\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
+\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems
+(objective function and constraints). If \code{kaizen} is \code{TRUE} it is ignored.}
 
 \item{...}{Other options (currently not implemented)}
 }
@@ -49,11 +70,11 @@ with weights to outputs corresponding to the relative importance of items.}
 Calculate the SBM model proposed by Tone (2001).
 }
 \examples{
-# Replication of results in Tone (2001, p.505)
+# Example 1. Replication of results in Tone (2001, p.505)
 data("Tone2001")
-data_example <- read_data(Tone2001, 
-                          ni = 2, 
-                          no = 2)
+data_example <- make_deadata(Tone2001, 
+                             ni = 2, 
+                             no = 2)
 result_SBM <- model_sbmeff(data_example, 
                            orientation = "no", 
                            rts = "crs")
@@ -65,26 +86,45 @@ efficiencies(result_CCR)
 slacks(result_SBM)
 slacks(result_CCR)
  
-# Example. Replication of results in Tone (2003), pp 10-11 case 1:1.
+# Example 2. Replication of results in Tone (2003), pp 10-11 case 1:1.
 data("Tone2003")
-data_example <- read_data(Tone2003,
-                          ni = 1,
-                          no = 2,
-                          ud_outputs = 2)
+data_example <- make_deadata(Tone2003,
+                             ni = 1,
+                             no = 2,
+                             ud_outputs = 2)
 result <- model_sbmeff(data_example,
                        rts = "vrs")
 efficiencies(result)
 targets(result)
- 
+
+# Example 3. Replication of results in Aparicio (2007).
+data("Airlines")
+datadea <- make_deadata(Airlines,
+                        inputs = 4:7,
+                        outputs = 2:3)
+result <- model_sbmeff(datadea = datadea, kaizen = TRUE)
+efficiencies(result)
+targets(result)  
  
 }
 \references{
-Tone, K. (2001). "A Slacks-Based Beasure of Efficiency in Data Envelopment Analysis", European Journal of Operational Research, 130, 498-509. \url{https://doi.org/10.1016/S0377-2217(99)00407-5}
+Tone, K. (2001). "A Slacks-Based Measure of Efficiency in Data Envelopment Analysis",
+European Journal of Operational Research, 130, 498-509. \doi{10.1016/S0377-2217(99)00407-5}
 
-Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis. A Comprehensive Text with Models, Applications, References and DEA-Solver Software. 2nd Edition. Springer, New York. \url{https://doi.org/10.1007/978-0-387-45283-8}
+Tone, K. (2010). "Variations on the theme of slacks-based measure of efficiency in DEA",
+European Journal of Operational Research, 200, 901-907. \doi{10.1016/j.ejor.2009.01.027}
+
+Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis. A Comprehensive
+Text with Models, Applications, References and DEA-Solver Software. 2nd Edition. Springer,
+New York. \doi{10.1007/978-0-387-45283-8}
+
+Aparicio, J.; Ruiz, J.L.; Sirvent, I. (2007) "Closest targets and minimum
+distance to the Pareto-efficient frontier in DEA", Journal of Productivity
+Analysis, 28, 209-218. \doi{10.1007/s11123-007-0039-5}
 }
 \seealso{
-\code{\link{model_nonradial}}, \code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmsupereff}}
+\code{\link{model_nonradial}}, \code{\link{model_deaps}},
+\code{\link{model_profit}}, \code{\link{model_sbmsupereff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

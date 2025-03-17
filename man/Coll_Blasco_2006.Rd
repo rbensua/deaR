@@ -4,15 +4,18 @@
 \name{Coll_Blasco_2006}
 \alias{Coll_Blasco_2006}
 \title{Data: Coll and Blasco (2006).}
-\format{Data frame with 6 rows and 5 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 6 rows and 5 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1 = Employees}{Number of employees}
   \item{x2 = Capital}{Impairment of assets}
   \item{y1 = Vehicles}{Number of vehicles sold}
   \item{y2 = Orders}{Number of orders received at the garage}
-}}
+}
+}
 \source{
-Coll-Serrano, V.; Blasco-Blasco, O. (2006). Evaluacion de la Eficiencia mediante el Análisis Envolvente de Datos. Introduccion a los Modelos Básicos.
+Coll-Serrano, V.; Blasco-Blasco, O. (2006). Evaluacion de la Eficiencia
+mediante el Análisis Envolvente de Datos. Introduccion a los Modelos Básicos.
 }
 \usage{
 data("Coll_Blasco_2006")
@@ -23,14 +26,14 @@ Data of six authorized dealers with two inputs and two outputs.
 \examples{
 # Example. How to read data with deaR
 data("Coll_Blasco_2006")
-data_example <- read_data(Coll_Blasco_2006,
-                          dmus=1,
-                          ni=2,
-                          no=2)
+data_example <- make_deadata(Coll_Blasco_2006,
+                             dmus = 1,
+                             ni = 2,
+                             no = 2)
 
 }
 \seealso{
-\code{\link{read_data}}
+\code{\link{make_deadata}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

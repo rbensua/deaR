@@ -18,11 +18,13 @@ model_nonradial(datadea,
                 ...)
 }
 \arguments{
-\item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
+\item{datadea}{A \code{deadata} object, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.
+If \code{NULL} (default), all DMUs are considered.}
 
 \item{orientation}{A string, equal to "io" (input-oriented) or "oo" (output-oriented).}
 
@@ -35,24 +37,30 @@ model_nonradial(datadea,
 
 \item{maxslack}{Logical. If it is \code{TRUE}, it computes the max slack solution.}
 
-\item{weight_slack}{If input-oriented, it is a value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the length of \code{dmu_eval}) with the weights of the output slacks for the max slack solution.
-If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} with the weights of the input slacks for the max slack solution.}
+\item{weight_slack}{If input-oriented, it is a value, vector of length \code{s},
+or matrix \code{s} x \code{ne} (where \code{ne} is the length of \code{dmu_eval})
+with the weights of the output slacks for the max slack solution.
+If output-oriented, it is a value, vector of length \code{m}, or matrix \code{m} x
+\code{ne} with the weights of the input slacks for the max slack solution.}
 
-\item{compute_target}{Logical. If it is \code{TRUE}, it computes targets of the max slack solution.}
+\item{compute_target}{Logical. If it is \code{TRUE}, it computes targets of the
+max slack solution.}
 
-\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
+\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems
+(objective function and constraints) of stage 1.}
 
 \item{...}{Ignored, for compatibility issues.}
 }
 \description{
-Non-radial DEA model allows for non-proportional reductions in each input or augmentations in each output.
+Non-radial DEA model allows for non-proportional reductions in
+each input or augmentations in each output.
 }
 \examples{
 # Replication of results in Wu, Tsai and Zhou (2011)
 data("Hotels")
-data_hotels <- read_data(Hotels, 
-                         inputs = 2:5, 
-                         outputs = 6:8)
+data_hotels <- make_deadata(Hotels, 
+                            inputs = 2:5, 
+                            outputs = 6:8)
 result <- model_nonradial(data_hotels, 
                           orientation = "oo", 
                           rts = "vrs")
@@ -60,13 +68,18 @@ efficiencies(result)
 
 }
 \references{
-Banker, R.D.; Morey, R.C. (1986). "Efficiency Analysis for Exogenously Fixed Inputs and Outputs", Operations Research, 34, 80-97. \url{https://doi.org/10.1287/opre.34.4.513}
+Banker, R.D.; Morey, R.C. (1986). "Efficiency Analysis for Exogenously Fixed
+Inputs and Outputs", Operations Research, 34, 80-97. \doi{10.1287/opre.34.4.513}
 
-Färe, R.; Lovell, C.K. (1978). "Measuring the Technical Efficiency of Production", Journal of Economic Theory, 19(1), 150-162. \url{https://doi.org/10.1016/0022-0531(78)90060-1}
+Färe, R.; Lovell, C.K. (1978). "Measuring the Technical Efficiency of Production",
+Journal of Economic Theory, 19(1), 150-162. \doi{10.1016/0022-0531(78)90060-1}
 
-Wh, J.; Tsai, H.; Zhou, Z. (2011). "Improving Efficiency in International Tourist Hotels in Taipei Using a Non-Radial DEA Model", International Journal of Contemporary Hospitatlity Management, 23(1), 66-83. \url{https://doi.org/10.1108/09596111111101670} 
+Wu, J.; Tsai, H.; Zhou, Z. (2011). "Improving Efficiency in International Tourist
+Hotels in Taipei Using a Non-Radial DEA Model", International Journal of
+Contemporary Hospitatlity Management, 23(1), 66-83. \doi{10.1108/09596111111101670} 
 
-Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal of the Operational Research Society, 47(1), 136. DOI: 10.2307/2584258
+Zhu, J. (1996). “Data Envelopment Analysis with Preference Structure”, The Journal
+of the Operational Research Society, 47(1), 136. \doi{10.2307/2584258}
 }
 \seealso{
 \code{\link{model_deaps}}, \code{\link{model_profit}}, \code{\link{model_sbmeff}}

@@ -11,14 +11,19 @@ malmquist_index(datadealist,
                 rts = c("crs", "vrs"),
                 type1 = c("cont", "seq", "glob"),
                 type2 = c("fgnz", "rd", "gl", "bias"),
-                tc_vrs = FALSE)
+                tc_vrs = FALSE,
+                vtrans_i = NULL,
+                vtrans_o = NULL)
 }
 \arguments{
-\item{datadealist}{A list with the data at different times, including DMUs, inputs and outputs.}
+\item{datadealist}{A list with the data (\code{deadata} objects) at different
+times, including DMUs, inputs and outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.
+If \code{NULL} (default), all DMUs are considered.}
 
 \item{orientation}{A string, equal to "io" (input oriented) or "oo" (output oriented).}
 
@@ -28,27 +33,38 @@ malmquist_index(datadealist,
 \item{type1}{A string, equal to "cont" (contemporary), "seq" (sequential) or "glob"
 (global).}
 
-\item{type2}{A string, equal to "fgnz" (Färe et al. 1994), "rd" (Ray and Desli 1997),
+\item{type2}{A string, equal to "fgnz" (Fare et al. 1994), "rd" (Ray and Desli 1997),
 "gl" (generalized) or "bias" (biased).}
 
 \item{tc_vrs}{Logical. If it is \code{FALSE}, it computes the vrs bias malmquist index by using
-the technical change under crs (Färe and Grosskopf 1996). Otherwise, it uses the technical
+the technical change under crs (Fare and Grosskopf 1996). Otherwise, it uses the technical
 change under vrs.}
+
+\item{vtrans_i}{Numeric vector of translation for undesirable inputs in non-directional
+basic models. If \code{vtrans_i[i]} is \code{NA}, then it applies the "max + 1" translation
+to the i-th undesirable input. If \code{vtrans_i} is a constant, then it applies
+the same translation to all undesirable inputs. If \code{vtrans_i} is \code{NULL},
+then it applies the "max + 1" translation to all undesirable inputs.}
+
+\item{vtrans_o}{Numeric vector of translation for undesirable outputs in
+non-directional basic models, analogous to \code{vtrans_i}, but applied to outputs.}
 }
 \value{
 A numeric list with Malmquist index and other parameters.
 }
 \description{
-This function calculates the conventional input/output oriented Malmquist index under variable return-to-scale.
+This function calculates the input/output oriented
+Malmquist productivity index under constant or variable returns-to-scale.
 }
 \note{
-In the results: EC = Efficiency Change, PTEC = Pure Technical Efficiency Change, SEC = Scale Efficiency Change, TC = Technological Change, MI = Malmquist Index
+In the results: EC = Efficiency Change, PTEC = Pure Technical Efficiency Change,
+SEC = Scale Efficiency Change, TC = Technological Change, MI = Malmquist Index
 }
 \examples{
 # Example 1. With dataset in wide format.
 # Replication of results in Wang and Lan (2011, p. 2768)
 data("Economy")
-data_example <- read_malmquist(datadea = Economy,
+data_example <- make_malmquist(datadea = Economy,
                                nper = 5, 
                                arrangement = "horizontal",
                                ni = 2, 
@@ -61,7 +77,7 @@ tech <- result$tc
 # Example 2. With dataset in long format.
 # Replication of results in Wang and Lan (2011, p. 2768)
 data("EconomyLong")
-data_example2 <- read_malmquist(EconomyLong,
+data_example2 <- make_malmquist(EconomyLong,
                                 percol = 2, 
                                 arrangement = "vertical",
                                 inputs = 3:4, 
@@ -71,9 +87,9 @@ mi2 <- result2$mi
 effch2 <- result2$ec
 tech2 <- result2$tc
 
-# Example 3. Replication of results in Grifell-Tatjé and Lovell (1999, p. 100).
+# Example 3. Replication of results in Grifell-Tatje and Lovell (1999, p. 100).
 data("Grifell_Lovell_1999")
-data_example <- read_malmquist(Grifell_Lovell_1999,
+data_example <- make_malmquist(Grifell_Lovell_1999,
                                percol = 1,
                                dmus = 2,
                                inputs = 3,
@@ -102,34 +118,52 @@ mi_gl <- result_gl$mi
                               
 }
 \references{
-Caves, D.W.; Christensen, L. R.; Diewert, W.E. (1982). “The Economic Theory of Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica, 50(6), 1393-1414. 
+Caves, D.W.; Christensen, L. R.; Diewert, W.E. (1982). “The Economic Theory of
+Index Numbers and the Measurement of Input, Output, and Productivity”. Econometrica,
+50(6), 1393-1414. 
  
-Färe, R.; Grifell-Tatjé, E.; Grosskopf, S.; Lovell, C.A.K. (1997). "Biased Technical Change and the Malmquist Productivity Index". Scandinavian Journal of Economics, 99(1), 119-127.
+Fare, R.; Grifell-Tatje, E.; Grosskopf, S.; Lovell, C.A.K. (1997). "Biased Technical
+Change and the Malmquist Productivity Index". Scandinavian Journal of Economics,
+99(1), 119-127.
 
-Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1989). “Productivity Developments in Swedish Hospitals: A Malmquist Output Index Approach”. Discussion paper nº 89-3. Southern Illinois University. Illinois.
+Fare, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1989). “Productivity Developments
+in Swedish Hospitals: A Malmquist Output Index Approach”. Discussion paper n. 89-3.
+Southern Illinois University. Illinois.
 
-Färe, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1992). “Productivity changes in Swedish Pharmacies 1980-89: A nonparametric Malmquist Approach”. Journal of productivity Analysis, 3(3), 85-101. 
+Fare, R.; Grosskopf, S.; Lindgren, B.; Roos, P. (1992). “Productivity changes
+in Swedish Pharmacies 1980-89: A nonparametric Malmquist Approach”. Journal of
+productivity Analysis, 3(3), 85-101. 
 
-Färe, R.; Grosskopf, S.; Norris, M.; Zhang, Z. (1994). “Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries”. American Economic Review, 84(1), 66-83. 
+Fare, R.; Grosskopf, S.; Norris, M.; Zhang, Z. (1994). “Productivity Growth,
+Technical Progress, and Efficiency Change in Industrialized Countries”.
+American Economic Review, 84(1), 66-83. 
 
-Färe, R.; Grosskopf, S.; Roos, P. (1998), Malmquist Productivity Indexes: A Survey of Theory and Practice. In: Färe R., Grosskopf S., Russell R.R. (eds) Index Numbers: Essays in Honour of Sten Malmquist. Springer.
+Fare, R.; Grosskopf, S.; Roos, P. (1998), Malmquist Productivity Indexes: A Survey
+of Theory and Practice. In: Fare R., Grosskopf S., Russell R.R. (eds)
+Index Numbers: Essays in Honour of Sten Malmquist. Springer.
 
-Grifell-Tatjé, E.; Lovel, C.A.K. (1999). "A Generalized Malmquist productivity index". Top, 7(1), 81-101.  
+Grifell-Tatje, E.; Lovell, C.A.K. (1999). "A Generalized Malmquist productivity index".
+Top, 7(1), 81-101.  
 
-Pastor, J.T.; Lovel, C.A.k. (2005). "A global Malquist productiviyt index". Economics Letters, 88, 266-271.  
+Pastor, J.T.; Lovell, C.A.k. (2005). "A global Malmquist productiviyt index".
+Economics Letters, 88, 266-271.  
 
-Ray, S.C.; Desli, E. (1997). "Productivity Growth, Technical Progress, and Efficiency Change in Industrialized Countries: Comment". The American Economic Review, 87(5), 1033-1039.
+Ray, S.C.; Desli, E. (1997). "Productivity Growth, Technical Progress, and
+Efficiency Change in Industrialized Countries: Comment". The American Economic Review,
+87(5), 1033-1039.
 
-Shestalova, V. (2003). "Sequential Malmquist Indices of Productivity Growth: An Application to OECD Industrial Activities". Journal of Productivity Analysis, 19, 211-226.
+Shestalova, V. (2003). "Sequential Malmquist Indices of Productivity Growth:
+An Application to OECD Industrial Activities". Journal of Productivity Analysis,
+19, 211-226.
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).
 \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
 
-\strong{Vicente Bolós} (\email{vicente.bolos@uv.es}).
+\strong{Vicente Bolos} (\email{vicente.bolos@uv.es}).
 \emph{Department of Business Mathematics}
 
-\strong{Rafael Benítez} (\email{rafael.suarez@uv.es}).
+\strong{Rafael Benitez} (\email{rafael.suarez@uv.es}).
 \emph{Department of Business Mathematics}
 
 University of Valencia (Spain)

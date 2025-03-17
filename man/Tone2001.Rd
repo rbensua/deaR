@@ -4,15 +4,19 @@
 \name{Tone2001}
 \alias{Tone2001}
 \title{Data: Tone (2001).}
-\format{Data frame with 5 rows and 5 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 5 rows and 5 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1}{Input1}
   \item{x2}{Input2}
   \item{y1}{Output1}
   \item{y2}{Output2}
-}}
+}
+}
 \source{
-Tone, K. (2001). "A Slacks-Based Measure of Efficiency in Data Envelopment Analysis", European Journal of Operational Research, 130, 498-509. \code{doi}: 10.1016/S0377-2217(99)00407-5
+Tone, K. (2001). "A Slacks-Based Measure of Efficiency in Data Envelopment
+Analysis", European Journal of Operational Research, 130, 498-509.
+\doi{10.1016/S0377-2217(99)00407-5}
 }
 \usage{
 data("Tone2001")
@@ -23,18 +27,18 @@ Data of 5 DMUs producing 2 outputs by using 2 inputs
 \examples{
 # Example. Replication of results in Tone (2001, p. 505)
 data("Tone2001")
-data_example <- read_data(Tone2001,
-                          ni = 2,
-                          no = 2)
+data_example <- make_deadata(Tone2001,
+                             ni = 2,
+                             no = 2)
 result <- model_sbmeff(data_example,
-                       orientation ="no",
+                       orientation = "no",
                        rts = "crs")
 efficiencies(result)
 slacks(result)
 
 }
 \seealso{
-\code{\link{read_data}}, \code{\link{model_sbmeff}}
+\code{\link{make_deadata}}, \code{\link{model_sbmeff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

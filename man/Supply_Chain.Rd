@@ -4,14 +4,18 @@
 \name{Supply_Chain}
 \alias{Supply_Chain}
 \title{Data: Sanei and Mamizadeh Chatghayeb (2013).}
-\format{Data frame with 17 rows and 8 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 17 rows and 8 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{X1 to X3}{Inputs of buyers}
   \item{I1 to I2}{Outputs of buyers, Inputs of suppliers}
   \item{Y1 to Y2}{Outputs of suppliers}
-}}
+}
+}
 \source{
-Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models in Supply Chain Management”, International Journal of Mathematical Modelling and Computations, 3(3), 125-129.
+Sanei, M.; Mamizadeh Chatghayeb, S. (2013). “Free Disposal Hull Models
+in Supply Chain Management”, International Journal of Mathematical Modelling
+and Computations, 3(3), 125-129.
 }
 \usage{
 data("Supply_Chain")
@@ -23,17 +27,17 @@ Data of 17 supply chain (buyer-supplier relationship in manufacturing).
 # Example. FDH input-oriented.
 # Replication of results in Sanei and Mamizadeh Chatghayeb (2013)
 data("Supply_Chain")
-data_fdh1 <- read_data(Supply_Chain,
-                       dmus=1,
-                       inputs= 2:4,
-                       outputs=5:6)
-# by default orientation="io"
+data_fdh1 <- make_deadata(Supply_Chain,
+                          dmus = 1,
+                          inputs = 2:4,
+                          outputs = 5:6)
+# by default orientation = "io"
 result <- model_fdh(data_fdh1)
 efficiencies(result)
 
 }
 \seealso{
-\code{\link{read_data}}, \code{\link{model_fdh}}
+\code{\link{make_deadata}}, \code{\link{model_fdh}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

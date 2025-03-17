@@ -4,7 +4,8 @@
 #' 
 #' @usage lambdas(deasol)
 #' 
-#' @param deasol Object of class dea or dea_fuzzy obtained with some of the dea model functions.
+#' @param deasol Object of class \code{dea} or \code{dea_fuzzy} obtained with
+#' some of the DEA model functions.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -19,14 +20,14 @@
 #' University of Valencia (Spain)
 #' 
 #' @examples 
-#'  data("Coll_Blasco_2006")
-#'  data_example <- read_data(Coll_Blasco_2006,
-#'                            ni = 2, 
-#'                            no = 2)
-#'  result <- model_multiplier(data_example, 
-#'                             orientation = "io",
-#'                             rts = "crs")
-#'  lambdas(result)
+#' data("Coll_Blasco_2006")
+#' data_example <- make_deadata(Coll_Blasco_2006,
+#'                              ni = 2, 
+#'                              no = 2)
+#' result <- model_multiplier(data_example, 
+#'                            orientation = "io",
+#'                            rts = "crs")
+#' lambdas(result)
 #'  
 #' @export
 
@@ -38,7 +39,7 @@ lambdas <-
     if ("lambda" %in% names(deasol$DMU[[1]])) {
       lamb  <- do.call(rbind, lapply(deasol$DMU, function(x)
         x$lambda))
-      return(round(lamb,4))
+      return(round(lamb, 5))
     } else {
       stop("No lambda parameters in this solution!")
     }
@@ -87,7 +88,7 @@ lambdas <-
           lamb[, , i] <- do.call(rbind, lapply(deasol$hlevel[[i]]$DMU, function(x)
             x$lambda))
         }
-        return(round(lamb,4))
+        return(round(lamb, 5))
         
       } else {
         stop("No lambda parameters in this solution!")

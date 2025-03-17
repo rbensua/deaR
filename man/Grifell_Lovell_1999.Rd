@@ -4,34 +4,37 @@
 \name{Grifell_Lovell_1999}
 \alias{Grifell_Lovell_1999}
 \title{Data: Grifell-Tatjé and Lovell (1999).}
-\format{Data frame with 16 rows and 4 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 16 rows and 4 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{X}{Input}
   \item{Y}{Output}
-}}
+}
+}
 \source{
-Grifell-Tatjé, E.; Lovel, C.A.K. (1999). "A Generalized Malmquist productivity index". Top, 7(1), 81-101.
+Grifell-Tatjé, E.; Lovel, C.A.K. (1999). "A Generalized Malmquist
+productivity index". Top, 7(1), 81-101.
 }
 \usage{
-data("Grifell_Lovel_1999")
+data("Grifell_Lovell_1999")
 }
 \description{
 Data of 8 DMUs producing 1 output (Y) by using 1 input (X) for two periods of time.
 }
 \examples{
 
-# Example. Replication of results in Grifell-Tatjé and Lovel (1999, p. 100).
+# Example. Replication of results in Grifell-Tatjé and Lovell (1999, p. 100).
 data("Grifell_Lovell_1999")
-data_example <- read_malmquist(Grifell_Lovell_1999,
-                               percol=1,
+data_example <- make_malmquist(Grifell_Lovell_1999,
+                               percol = 1,
                                dmus = 2,
                                inputs = 3,
                                outputs = 4,
-                               arrangement="vertical")
+                               arrangement = "vertical")
 
 result_fgnz <- malmquist_index(data_example,
-                               orientation= "oo",
-                               rts="vrs",
+                               orientation = "oo",
+                               rts = "vrs",
                                type1 = "cont",
                                type2 = "fgnz")
 
@@ -40,7 +43,7 @@ result_fgnz$mi
 
 }
 \seealso{
-\code{\link{read_malmquist}}, \code{\link{malmquist_index}}
+\code{\link{make_malmquist}}, \code{\link{malmquist_index}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

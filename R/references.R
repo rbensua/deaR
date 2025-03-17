@@ -1,13 +1,14 @@
 #' @title References
 #'   
-#' @description Extract the reference set for each DMU (inefficient DMUs and efficicent DMUs that are combination of other efficient DMUs) from a DEA model solution.
+#' @description Extract the reference set for each DMU (inefficient DMUs and
+#' efficicent DMUs that are combination of other efficient DMUs) from a DEA model solution.
 #' 
 #' @usage references(deasol,
 #'            thr = 1e-4)
 #' 
 #' @param deasol Object of class \code{dea} obtained with some of the DEA model functions.
-#' @param thr Tolerance threshold (for avoiding missdetection of  efficient 
-#' DMUs due to roundoff errors)
+#' @param thr Tolerance threshold (for avoiding miss detection of efficient 
+#' DMUs due to round off errors)
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -25,10 +26,10 @@
 #' # Replication results model DEA1 in Tomkins and Green (1988).
 #' data("Departments")
 #' # Calculate Total income
-#' Departments$Total_income <- Departments[, 5] + Departments[, 6]+Departments[, 7] 
-#' data_DEA1 <- read_data(Departments,
-#'                        inputs = 9,
-#'                        outputs = c(2, 3, 4, 12))
+#' Departments$Total_income <- Departments[, 5] + Departments[, 6] + Departments[, 7] 
+#' data_DEA1 <- make_deadata(Departments,
+#'                           inputs = 9,
+#'                           outputs = c(2, 3, 4, 12))
 #' result <- model_basic(data_DEA1, 
 #'                       orientation = "io",
 #'                       rts = "crs")
@@ -57,40 +58,51 @@ references <- function(deasol,
       nde <- length(dmu_eval)
     }
     
+    # Alternatives in comment
+    
     if (nde > 0) {
-
-      ref <- lamb - diag(nd)[dmu_eval, dmu_ref]
-      colnames(ref) <- dmunames[dmu_ref] # psa
-      ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
-      ineff_rows <- which(ineff_rows) 
-      ineff_names <- names(ineff_rows)
+      
+      #inputref <- matrix(deasol$data$input[, dmu_ref], nrow = ni) 
+      #outputref <- matrix(deasol$data$output[, dmu_ref], nrow = no)
+      #target_input <- t(inputref %*% t(lamb))
+      #target_output <- t(outputref %*% t(lamb))
+      testref <- rowSums(lamb) - rowSums(diag(nd)[dmu_eval, dmu_ref] * lamb) # is a DMU Inefficient?
+      ineff_rows <- which(testref > thr)
+      #ref <- lamb - diag(nd)[dmu_eval, dmu_ref]
+      #colnames(ref) <- dmunames[dmu_ref] # psa
+      #ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
+      #ineff_rows <- which(ineff_rows) 
+      ineff_names <- dmunames[dmu_eval[ineff_rows]]
       nineff <- length(ineff_rows) # Number of ineff DMUs + eff DMUs that are combination of other eff DMUs
       
       referencelist <- vector(mode = "list", length = nineff) # Preallocate vector
       if (nineff == 0) {
-        stop("There are no inefficient DMUs!")
-      }
-      for (i in 1:nineff) {
-        aux <- which(ref[ineff_rows[i], ] > thr)
-        referencelist[[i]] <- ref[ineff_rows[i], aux]
+        warning("There are no inefficient DMUs!")
+        referencelist <- NULL
+      } else {
+        for (i in 1:nineff) {
+          aux <- which(lamb[ineff_rows[i], ] > thr)
+          referencelist[[i]] <- lamb[ineff_rows[i], aux]
+          
+          names(referencelist[[i]]) <- names(dmu_ref)[aux]
+          
+        }
         
-        names(referencelist[[i]]) <- names(dmu_ref)[aux]
-        
+        names(referencelist) <- ineff_names
       }
-      
-      names(referencelist) <- ineff_names
-      
+
     }
     
   } else if (is.dea_fuzzy(deasol)) {
     
-    nd <- length(deasol$data$dmunames)
+    dmunames <- deasol$data$dmunames
+    nd <- length(dmunames)
     dmu_eval <- deasol$dmu_eval
     nde <- length(dmu_eval)
     dmu_ref <- deasol$dmu_ref
     ndr <- length(dmu_ref)
-    dmunames_eval <- deasol$data$dmunames[dmu_eval]
-    dmunames_ref <- deasol$data$dmunames[dmu_ref]
+    dmunames_eval <- dmunames[dmu_eval]
+    dmunames_ref <- dmunames[dmu_ref]
     ni <- length(deasol$data$input$mL[, 1])
     no <- length(deasol$data$output$mL[, 1])
     
@@ -104,61 +116,72 @@ references <- function(deasol,
       
       for (ii in 1:nalpha) {
         
-        if(nrow(lamb$Worst[, , ii]) != nde) {
+        ##### Worst
+        
+        lambworst <- matrix(lamb$Worst[, , ii], ncol = ndr)
+        
+        if(nrow(lambworst) != nde) {
           dmu_eval <- which(sapply(deasol$alphacut[[ii]]$DMU$Worst, function(x) !is.null(x$lambda)))
           nde <- length(dmu_eval)
         }
         
         if (nde > 0) {
           
-          ##### Worst
-          
-          ref <- lamb$Worst[, , ii] - diag(nd)[dmu_eval, dmu_ref]
-          colnames(ref) <- dmunames_ref # psa
-          ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
-          ineff_rows <- which(ineff_rows) 
-          ineff_names <- names(ineff_rows)
+          testref <- rowSums(lambworst) - rowSums(diag(nd)[dmu_eval, dmu_ref] * lambworst) # is a DMU Inefficient?
+          ineff_rows <- which(testref > thr)
+          #ref <- lamb$Worst[, , ii] - diag(nd)[dmu_eval, dmu_ref]
+          #colnames(ref) <- dmunames_ref # psa
+          #ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
+          #ineff_rows <- which(ineff_rows) 
+          ineff_names <- dmunames[dmu_eval[ineff_rows]]
           nineff <- length(ineff_rows) # Number of ineff DMUs + eff DMUs that are combination of other eff DMUs
           
           reflist <- vector(mode = "list", length = nineff) # Preallocate vector
           if (nineff == 0) {
-            stop("There are no inefficient DMUs!")
-          }
-          for (i in 1:nineff) {
-            aux <- which(ref[ineff_rows[i], ] > thr)
-            reflist[[i]] <- ref[ineff_rows[i], aux]
-            
-            names(reflist[[i]]) <- names(dmu_ref)[aux]
-            
-          }
-          
-          names(reflist) <- ineff_names
-          
-          referencelist[[ii]]$Worst <- reflist
-          
-          ##### Best
-          
-          if(nrow(lamb$Best[, , ii]) != nde) {
-            dmu_eval <- which(sapply(deasol$alphacut[[ii]]$DMU$Best, function(x) !is.null(x$lambda)))
-            nde <- length(dmu_eval)
-          }
-          
-          if (nde > 0) {
-            
-            ref <- lamb$Best[, , ii] - diag(nd)[dmu_eval, dmu_ref]
-            colnames(ref) <- dmunames_ref # psa
-            ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
-            ineff_rows <- which(ineff_rows) 
-            ineff_names <- names(ineff_rows)
-            nineff <- length(ineff_rows) # Number of ineff DMUs + eff DMUs that are combination of other eff DMUs
-            
-            reflist <- vector(mode = "list", length = nineff) # Preallocate vector
-            if (nineff == 0) {
-              stop("There are no inefficient DMUs!")
-            }
+            warning("There are no inefficient DMUs!")
+          } else {
             for (i in 1:nineff) {
-              aux <- which(ref[ineff_rows[i], ] > thr)
-              reflist[[i]] <- ref[ineff_rows[i], aux]
+              aux <- which(lambworst[ineff_rows[i], ] > thr)
+              reflist[[i]] <- lambworst[ineff_rows[i], aux]
+              
+              names(reflist[[i]]) <- names(dmu_ref)[aux]
+              
+            }
+            
+            names(reflist) <- ineff_names
+            
+            referencelist[[ii]]$Worst <- reflist
+          }
+          
+        }
+        
+        ##### Best
+        
+        lambbest <- matrix(lamb$Best[, , ii], ncol = ndr)
+        
+        if(nrow(lambbest) != nde) {
+          dmu_eval <- which(sapply(deasol$alphacut[[ii]]$DMU$Best, function(x) !is.null(x$lambda)))
+          nde <- length(dmu_eval)
+        }
+        
+        if (nde > 0) {
+          
+          testref <- rowSums(lambbest) - rowSums(diag(nd)[dmu_eval, dmu_ref] * lambbest) # is a DMU Inefficient?
+          ineff_rows <- which(testref > thr)
+          #ref <- lamb$Best[, , ii] - diag(nd)[dmu_eval, dmu_ref]
+          #colnames(ref) <- dmunames_ref # psa
+          #ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
+          #ineff_rows <- which(ineff_rows) 
+          ineff_names <- dmunames[dmu_eval[ineff_rows]]
+          nineff <- length(ineff_rows) # Number of ineff DMUs + eff DMUs that are combination of other eff DMUs
+          
+          reflist <- vector(mode = "list", length = nineff) # Preallocate vector
+          if (nineff == 0) {
+            warning("There are no inefficient DMUs!")
+          } else {
+            for (i in 1:nineff) {
+              aux <- which(lambbest[ineff_rows[i], ] > thr)
+              reflist[[i]] <- lambbest[ineff_rows[i], aux]
               
               names(reflist[[i]]) <- names(dmu_ref)[aux]
               
@@ -167,7 +190,6 @@ references <- function(deasol,
             names(reflist) <- ineff_names
             
             referencelist[[ii]]$Best <- reflist
-        
           }
           
         }
@@ -184,35 +206,40 @@ references <- function(deasol,
       
       for (ii in 1:nh) {
         
-        if(nrow(lamb[, , ii]) != nde) {
+        lambmat <- matrix(lamb[, , ii], ncol = ndr)
+        
+        if(nrow(lambmat) != nde) {
           dmu_eval <- which(sapply(deasol$hlevel[[ii]]$DMU, function(x) !is.null(x$lambda)))
           nde <- length(dmu_eval)
         }
         
         if (nde > 0) {
           
-          ref <- lamb[, , ii] - diag(nd)[dmu_eval, dmu_ref]
-          colnames(ref) <- dmunames_ref # psa
-          ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
-          ineff_rows <- which(ineff_rows) 
-          ineff_names <- names(ineff_rows)
+          testref <- rowSums(lambmat) - rowSums(diag(nd)[dmu_eval, dmu_ref] * lambmat) # is a DMU Inefficient?
+          ineff_rows <- which(testref > thr)
+          #ref <- lamb[, , ii] - diag(nd)[dmu_eval, dmu_ref]
+          #colnames(ref) <- dmunames_ref # psa
+          #ineff_rows <- apply(X = ref, MARGIN = 1, FUN = function(x) any(x > thr)) # is a DMU Inefficient?
+          #ineff_rows <- which(ineff_rows) 
+          ineff_names <- dmunames[dmu_eval[ineff_rows]]
           nineff <- length(ineff_rows) # Number of ineff DMUs + eff DMUs that are combination of other eff DMUs
           
           reflist <- vector(mode = "list", length = nineff) # Preallocate vector
           if (nineff == 0) {
-            stop("There are no inefficient DMUs!")
-          }
-          for (i in 1:nineff) {
-            aux <- which(ref[ineff_rows[i], ] > thr)
-            reflist[[i]] <- ref[ineff_rows[i], aux]
+            warning("There are no inefficient DMUs!")
+          } else {
+            for (i in 1:nineff) {
+              aux <- which(lambmat[ineff_rows[i], ] > thr)
+              reflist[[i]] <- lambmat[ineff_rows[i], aux]
+              
+              names(reflist[[i]]) <- names(dmu_ref)[aux]
+              
+            }
             
-            names(reflist[[i]]) <- names(dmu_ref)[aux]
+            names(reflist) <- ineff_names
             
+            referencelist[[ii]] <- reflist
           }
-          
-          names(reflist) <- ineff_names
-          
-          referencelist[[ii]] <- reflist
           
         }
         
@@ -221,7 +248,6 @@ references <- function(deasol,
     } else {
       stop("No target parameters in this solution!")
     }
-    
     
   } else {
     

@@ -2,15 +2,17 @@
 % Please edit documentation in R/efficiencies.R
 \name{efficiencies}
 \alias{efficiencies}
-\title{Efficiencies}
+\title{Objective scores}
 \usage{
 efficiencies(x, ...)
 }
 \arguments{
-\item{x}{dea / deafuzzy object}
+\item{x}{An object of class \code{dea}, \code{dea_fuzzy} or \code{dea_stoch}.}
 
-\item{...}{ignored}
+\item{...}{ignored.}
 }
 \description{
-Extracts efficiencies from  dea/dea_fuzzy objects.
+Extract the scores (optimal objective values) of the evaluated
+DMUs from a conventional, fuzzy or stochastic DEA solution. Note that these
+scores may not always be interpreted as efficiencies.
 }

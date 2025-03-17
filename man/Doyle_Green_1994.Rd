@@ -4,7 +4,8 @@
 \name{Doyle_Green_1994}
 \alias{Doyle_Green_1994}
 \title{Data: Doyle and Green (1994).}
-\format{Data frame with 13 rows and 6 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 13 rows and 6 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{y1 = Undergraduate}{Number of undergraduates}
   \item{y2 = Postgraduates}{Number of postgraduates (taught and research)}
@@ -12,9 +13,12 @@
   \item{y4 = Publications}{Number of publications}
   \item{x1 = Salaries}{Salaries of academic and related staff}
   \item{x2 = Other_expenses}{Other expenses}
-}}
+}
+}
 \source{
-Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA: derivations, meanings and the uses”,  Journal of Operational Research Society, 45(5), 567–578. \code{doi}: 10.2307/2584392
+Doyle, J.; Green, R. (1994). “Efficiency and cross efficiency in DEA:
+derivations, meanings and the uses”,  Journal of Operational Research Society,
+45(5), 567–578. \doi{10.2307/2584392}
 }
 \usage{
 data("Doyle_Green_1994")
@@ -25,10 +29,10 @@ Data adapted from Tomkins and Green (1988).  13 DMUs using 3 inputs to produce 2
 \examples{
 # Example.
 data("Doyle_Green_1994")
-data_example <- read_data(datadea = Doyle_Green_1994,
-                         dmus = 1,
-                         inputs = 6:7,
-                         outputs = 2:5)
+data_example <- make_deadata(datadea = Doyle_Green_1994,
+                            dmus = 1,
+                            inputs = 6:7,
+                            outputs = 2:5)
 result <- cross_efficiency(data_example,
                            orientation = "io",
                            selfapp = TRUE)
@@ -41,7 +45,8 @@ result$M3_agg$cross_eff
 
 }
 \seealso{
-\code{\link{read_data}}, \code{\link{model_multiplier}}, \code{\link{cross_efficiency}}
+\code{\link{make_deadata}}, \code{\link{model_multiplier}},
+\code{\link{cross_efficiency}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

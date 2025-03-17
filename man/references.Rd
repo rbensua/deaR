@@ -10,20 +10,21 @@ references(deasol,
 \arguments{
 \item{deasol}{Object of class \code{dea} obtained with some of the DEA model functions.}
 
-\item{thr}{Tolerance threshold (for avoiding missdetection of  efficient 
-DMUs due to roundoff errors)}
+\item{thr}{Tolerance threshold (for avoiding miss detection of efficient 
+DMUs due to round off errors)}
 }
 \description{
-Extract the reference set for each DMU (inefficient DMUs and efficicent DMUs that are combination of other efficient DMUs) from a DEA model solution.
+Extract the reference set for each DMU (inefficient DMUs and
+efficicent DMUs that are combination of other efficient DMUs) from a DEA model solution.
 }
 \examples{
 # Replication results model DEA1 in Tomkins and Green (1988).
 data("Departments")
 # Calculate Total income
-Departments$Total_income <- Departments[, 5] + Departments[, 6]+Departments[, 7] 
-data_DEA1 <- read_data(Departments,
-                       inputs = 9,
-                       outputs = c(2, 3, 4, 12))
+Departments$Total_income <- Departments[, 5] + Departments[, 6] + Departments[, 7] 
+data_DEA1 <- make_deadata(Departments,
+                          inputs = 9,
+                          outputs = c(2, 3, 4, 12))
 result <- model_basic(data_DEA1, 
                       orientation = "io",
                       rts = "crs")

@@ -1,6 +1,7 @@
 #' @title Slack based measure of superefficiency model
 #'   
-#' @description Slack based measure of superefficiency model (Tone 2002) with n DMUs, m inputs, s outputs...
+#' @description Slack based measure of superefficiency model (Tone 2002) with \code{n}
+#' DMUs, \code{m} inputs and \code{s} outputs.
 #' 
 #' @usage model_sbmsupereff(datadea,
 #'                   dmu_eval = NULL,
@@ -13,23 +14,38 @@
 #'                   U = 1,
 #'                   compute_target = TRUE,
 #'                   compute_rho = FALSE,
+#'                   kaizen = FALSE,
+#'                   silent = FALSE,
 #'                   returnlp = FALSE)
 #' 
-#' @param datadea The data, including DMUs, inputs and outputs.
+#' @param datadea A \code{deadata} object, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
-#' @param weight_input A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-#'                     with weights to inputs corresponding to the relative importance of items.
-#' @param weight_output A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-#'                      with weights to outputs corresponding to the relative importance of items.
-#' @param orientation A string, equal to "no" (non-oriented), "io" (input-oriented) or "oo" (output-oriented).
+#' If \code{NULL} (default), all DMUs are considered.
+#' @param weight_input A value, vector of length \code{m}, or matrix \code{m} x
+#' \code{ne} (where \code{ne} is the length of \code{dmu_eval}) with weights to
+#' inputs corresponding to the relative importance of items.
+#' @param weight_output A value, vector of length \code{m}, or matrix \code{m} x
+#' \code{ne} (where \code{ne} is the length of \code{dmu_eval}) with weights to
+#' outputs corresponding to the relative importance of items.
+#' @param orientation A string, equal to "no" (non-oriented), "io" (input-oriented)
+#' or "oo" (output-oriented).
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
-#'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
+#' "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
-#' @param compute_target Logical. If it is \code{TRUE}, it computes targets, superslacks (\code{t_input} and \code{t_output}) and slacks.
-#' @param compute_rho Logical. If it is \code{TRUE}, it computes \code{rho} applying \code{model_sbmeff} to the DMU (\code{project_input}, \code{project_output}).
-#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).
+#' @param compute_target Logical. If it is \code{TRUE}, it computes targets,
+#' superslacks (\code{t_input} and \code{t_output}) and slacks.
+#' @param compute_rho Logical. If it is \code{TRUE}, it computes the SBM efficiency
+#' score (applying \code{model_sbmeff}) of the DMU (\code{project_input}, \code{project_output}).
+#' @param kaizen Logical. If \code{TRUE}, the kaizen version of SBM (Tone 2010),
+#' also known as SBM-Max, is computed for the efficiency score of the DMU
+#' (\code{project_input}, \code{project_output}).
+#' @param silent Logical. If \code{FALSE} (default) it prints all the messages
+#' from function \code{maximal_friends}.
+#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems
+#' (objective function and constraints).
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -45,16 +61,24 @@
 #'  
 #' @references 
 #' 
-#' Tone, K. (2002). "A slacks-based measure of super-efficiency in data envelopment analysis", European Journal of Operational Research, 143, 32-41. \url{https://doi.org/10.1016/S0377-2217(01)00324-1}  
-#' 
-#' Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis. A Comprehensive Text with Models, Applications, References and DEA-Solver Software. 2nd Edition. Springer, New York. \url{https://doi.org/10.1007/978-0-387-45283-8}
+#' Tone, K. (2002). "A slacks-based measure of super-efficiency in data envelopment
+#' analysis", European Journal of Operational Research, 143, 32-41.
+#' \doi{10.1016/S0377-2217(01)00324-1}  
+#'
+#' Tone, K. (2010). "Variations on the theme of slacks-based measure of efficiency
+#' in DEA", European Journal of Operational Research, 200, 901-907.
+#' \doi{10.1016/j.ejor.2009.01.027}
+#'   
+#' Cooper, W.W.; Seiford, L.M.; Tone, K. (2007). Data Envelopment Analysis.
+#' A Comprehensive Text with Models, Applications, References and DEA-Solver Software.
+#' 2nd Edition. Springer, New York. \doi{10.1007/978-0-387-45283-8}
 #' 
 #' @examples 
 #' # Replication of results in Tone(2002, p.39)
 #' data("Power_plants")
-#' data_example <- read_data(Power_plants,
-#'                           ni = 4,
-#'                           no = 2)
+#' data_example <- make_deadata(Power_plants,
+#'                              ni = 4,
+#'                              no = 2)
 #' result <- model_sbmsupereff(data_example,
 #'                             orientation = "io",
 #'                             rts = "crs") 
@@ -62,7 +86,8 @@
 #' slacks(result)$slack_input
 #' references(result)
 #' 
-#' @seealso \code{\link{model_sbmeff}}, \code{\link{model_supereff}}, \code{\link{model_addsupereff}}
+#' @seealso \code{\link{model_sbmeff}}, \code{\link{model_supereff}},
+#' \code{\link{model_addsupereff}}
 #' 
 #' @import lpSolve
 #' 
@@ -80,22 +105,14 @@ model_sbmsupereff <-
            U = 1,
            compute_target = TRUE,
            compute_rho = FALSE,
+           kaizen = FALSE,
+           silent = FALSE,
            returnlp = FALSE) {
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
-    stop("Data should be of class deadata. Run read_data function first!")
+    stop("Data should be of class deadata. Run make_deadata function first!")
   }
-    
-  # Checking non-controllable or non-discretionary inputs/outputs
-  #if ((!is.null(datadea$nc_inputs)) || (!is.null(datadea$nc_outputs))
-  #    || (!is.null(datadea$nd_inputs)) || (!is.null(datadea$nd_outputs))) {
-  #  warning("This model does not take into account non-controllable or non-discretionary feature for inputs/outputs.")
-  #  datadea$nc_inputs <- NULL
-  #  datadea$nc_outputs <- NULL
-  #  datadea$nd_inputs <- NULL
-  #  datadea$nd_outputs <- NULL
-  #}
     
   # Checking undesirable io and rts
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
@@ -130,7 +147,7 @@ model_sbmsupereff <-
   
   if (is.null(dmu_eval)) {
     dmu_eval <- 1:nd
-  } else if (all(dmu_eval %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_eval %in% (1:nd))) {
     stop("Invalid set of DMUs to be evaluated (dmu_eval).")
   }
   names(dmu_eval) <- dmunames[dmu_eval]
@@ -138,7 +155,7 @@ model_sbmsupereff <-
   
   if (is.null(dmu_ref)) {
     dmu_ref <- 1:nd
-  } else if (all(dmu_ref %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_ref %in% (1:nd))) {
     stop("Invalid set of reference DMUs (dmu_ref).")
   }
   names(dmu_ref) <- dmunames[dmu_ref]
@@ -225,7 +242,8 @@ model_sbmsupereff <-
   slack_input <- NULL
   slack_output <- NULL
   rho <- NULL
-  mix <- NULL
+  gamma <- NULL
+  csbm <- NULL
     
   DMU <- vector(mode = "list", length = nde)
   names(DMU) <- dmunames[dmu_eval]
@@ -253,11 +271,11 @@ model_sbmsupereff <-
     }
   }
   
-  # Matriz técnica
+  # Constraints matrix
   f.con.1 <- cbind(0, inputref, -diag(ni), matrix(0, nrow = ni, ncol = no))
   f.con.2 <- cbind(0, outputref, matrix(0, nrow = no, ncol = ni), -diag(no))
   
-  # Vector de dirección de restricciones y matriz técnica
+  # Directions vector and constraints matrix
   if (orientation == "no") {
     f.dir <- c("=", dir1, dir2, dir3, dir4)
   } else if (orientation == "io") {
@@ -270,14 +288,13 @@ model_sbmsupereff <-
   f.dir[1 + c(nc_inputs, ni + nc_outputs, ni + no + nc_inputs, ni + no + ni + nc_outputs)] <- "="
   f.dir <- c(f.dir, "=", f.dir.rs)
   
-  # Vector de términos independientes
+  # Right hand side vector
   f.rhs <- c(1, rep(0, ni + no + ni + no + 1), f.rhs.rs)
   
   for (i in 1:nde) {
     
     ii <- dmu_eval[i]
     
-    # Vector de coeficientes de la función objetivo, Matriz técnica y Vector de dirección de restricciones
     if (orientation == "no") {
       f.obj <- c(0, rep(0, ndr), weight_input[, i] / (sumwi[i] * input[, ii]), rep(0, no))
       f.con.0 <- c(0, rep(0, ndr), rep(0, ni), weight_output[, i] / (sumwo[i] * output[, ii]))
@@ -287,7 +304,7 @@ model_sbmsupereff <-
       f.obj <- c(0, rep(0, ndr), rep(0, ni), weight_output[, i] / (sumwo[i] * output[, ii]))
     }
       
-    # Matriz técnica
+    # Constraints matrix
     f.con.3 <- cbind(-input[, ii], matrix(0, nrow = ni, ncol = ndr), diag(ni), matrix(0, nrow = ni, ncol = no))
     f.con.4 <- cbind(-output[, ii], matrix(0, nrow = no, ncol = (ndr + ni)), diag(no))
     f.con.se <- rep(0, ndr)
@@ -305,9 +322,10 @@ model_sbmsupereff <-
       names(tproject_input) <- inputnames
       tproject_output <- rep(0, no)
       names(tproject_output) <- outputnames
-      var <- list(t = t, tlambda = tlambda, tproject_input = tproject_input, tproject_output = tproject_output)
-      DMU[[i]] <- list(direction = obj, objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
-                       var = var)
+      var <- list(t = t, tlambda = tlambda, tproject_input = tproject_input,
+                  tproject_output = tproject_output)
+      DMU[[i]] <- list(direction = obj, objective.in = f.obj, const.mat = f.con,
+                       const.dir = f.dir, const.rhs = f.rhs, var = var)
       
     } else {
       
@@ -349,24 +367,23 @@ model_sbmsupereff <-
         
         if (compute_rho) {
           
-          dmunames2 <- c(dmunames[ii], dmunames[-ii])
-          input2 <- cbind(matrix(project_input, nrow = ni, ncol = 1),
-                          matrix(input[, -ii], nrow = ni))
-          rownames(input2) <- inputnames
-          colnames(input2) <- dmunames2
-          output2 <- cbind(matrix(project_output, nrow = no, ncol = 1),
-                           matrix(output[, -ii], nrow = no))
-          rownames(output2) <- outputnames
-          colnames(output2) <- dmunames2
+          input2 <- input
+          input2[, ii] <- project_input
+          output2 <- output
+          output2[, ii] <- project_output
           datadea2 <- structure(list(input = input2,
                                      output = output2,
-                                     dmunames = dmunames2,
+                                     dmunames = dmunames,
                                      nc_inputs = nc_inputs,
                                      nc_outputs = nc_outputs),
                                 class = "deadata")
           
+          if ((rts == "grs") && kaizen) {
+            stop("Kaizen is not available for generalized returns to scale.")
+          }
+          
           deasol <- model_sbmeff(datadea = datadea2,
-                                 dmu_eval = 1,
+                                 dmu_eval = ii,
                                  dmu_ref = dmu_ref,
                                  weight_input = weight_input[, i],
                                  weight_output = weight_output[, i],
@@ -374,10 +391,16 @@ model_sbmsupereff <-
                                  rts = rts,
                                  L = L,
                                  U = U,
+                                 kaizen = kaizen,
+                                 silent = silent,
                                  compute_target = FALSE)
           
           rho <- deasol$DMU[[1]]$efficiency
-          mix <- rho + delta - 1
+          gamma <- rho * delta
+          s_input <- deasol$DMU[[1]]$slack_input
+          s_output <- deasol$DMU[[1]]$slack_output
+          csbm <- (1 - sum((weight_input[, i] * (s_input - t_input)) / (sumwi[i] * input[, ii]))) /
+            (1 + sum((weight_output[, i] * (s_output - t_output)) / (sumwo[i] * output[, ii])))
           
         }
         
@@ -397,15 +420,17 @@ model_sbmsupereff <-
         }
         if (compute_rho) {
           rho <- NA
-          mix <- NA
+          gamma <- NA
+          csbm <- NA
         }
         
       }
       
       DMU[[i]] <- list(delta = delta,
                        rho = rho,
-                       mix = mix,
-                       t = t,
+                       gamma = gamma,
+                       csbm = csbm,
+                       kaizen = kaizen,
                        lambda = lambda,
                        project_input = project_input, project_output = project_output,
                        target_input = target_input, target_output = target_output,

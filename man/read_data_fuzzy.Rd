@@ -71,42 +71,18 @@ rectangular or crisp, then \code{inputs.dR} must be NULL (default) or equal to
 
 \item{outputs.dR}{Analogous to \code{inputs.dR}, but relating to outputs.}
 
-\item{nc_inputs}{A numeric vector containing non-controllable inputs.}
+\item{nc_inputs}{A numeric vector containing the indices of non-controllable inputs.}
 
-\item{nc_outputs}{A numeric vector containing non-controllable outputs.}
+\item{nc_outputs}{A numeric vector containing the indices of non-controllable outputs.}
 
-\item{nd_inputs}{A numeric vector containing non-discretionary inputs.}
+\item{nd_inputs}{A numeric vector containing the indices of non-discretionary inputs.}
 
-\item{nd_outputs}{A numeric vector containing non-discretionary outputs.}
+\item{nd_outputs}{A numeric vector containing the indices of non-discretionary outputs.}
 
-\item{ud_inputs}{A numeric vector containing undesirable (good) inputs.}
+\item{ud_inputs}{A numeric vector containing the indices of undesirable (good) inputs.}
 
-\item{ud_outputs}{A numeric vector containing undesirable (bad) outputs.}
-}
-\value{
-An object of class \code{deadata_fuzzy}.
+\item{ud_outputs}{A numeric vector containing the indices of undesirable (bad) outputs.}
 }
 \description{
-This function creates, from a data frame, a \code{deadata_fuzzy} structure, which is as list with fields
-  \code{input}, \code{output} and \code{dmunames}. At the same time, \code{input} and \code{output} are lists with fields
-  \code{mL}, \code{mR}, \code{dL} and \code{dR}.
-  \figure{fuzzynumbers.jpg}{options: width="100\%" alt="Figure: fuzzynumbers.jpg"}
-}
-\examples{
-
-# Example 1. If inputs and/or outputs are symmetric triangular fuzzy numbers
-data("Leon2003")
-data_example <- read_data_fuzzy(datadea = Leon2003, 
-                                inputs.mL = 2,
-                                inputs.dL = 3,
-                                outputs.mL = 4,
-                                outputs.dL = 5)
-# Example 2. If inputs and/or outputs are non-symmetric triangular fuzzy numbers
-data("Kao_Liu_2003")
-data_example <- read_data_fuzzy(Kao_Liu_2003, 
-                                inputs.mL = 2, 
-                                outputs.mL = 3:7, 
-                                outputs.dL = c(NA, NA, 8, NA, 10),
-                                outputs.dR = c(NA, NA, 9, NA, 11))
-                                
+This function is deprecated. Use \code{make_deadata_fuzzy} instead.
 }

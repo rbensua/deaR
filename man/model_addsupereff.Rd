@@ -7,6 +7,7 @@
 model_addsupereff(datadea,
                   dmu_eval = NULL,
                   dmu_ref = NULL,
+                  orientation = NULL,
                   weight_slack_i = NULL,
                   weight_slack_o = NULL,
                   rts = c("crs", "vrs", "nirs", "ndrs", "grs"),
@@ -17,54 +18,77 @@ model_addsupereff(datadea,
                   ...)
 }
 \arguments{
-\item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
+\item{datadea}{A \code{deadata} object with \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{weight_slack_i}{A value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-with the weights of the input superslacks (\code{t_input}).
-If \code{weight_slack_i} is the matrix of the inverses of inputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
+\item{orientation}{This parameter is either \code{NULL} (default) or a string, equal to
+"io" (input-oriented) or "oo" (output-oriented). It is used to modify the weight slacks. 
+If input-oriented, \code{weight_slack_o} are taken 0.
+If output-oriented, \code{weight_slack_i} are taken 0.}
 
-\item{weight_slack_o}{A value, vector of length \code{s}, or matrix \code{s} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval})
-with the weights of the output superslacks (\code{t_output}).
-If \code{weight_slack_o} is the matrix of the inverses of outputs (of DMUS in \code{dmu_eval}), the model is unit invariant.}
+\item{weight_slack_i}{A value, vector of length \code{m}, or matrix \code{m} x
+\code{ne} (where \code{ne} is the length of \code{dmu_eval})
+with the weights of the input super-slacks (\code{t_input}).
+If 0, output-oriented.
+If \code{weight_slack_i} is the matrix of the inverses of inputs of DMUS in
+\code{dmu_eval} (default), the model is unit invariant.}
 
-\item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant),
-"vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).}
+\item{weight_slack_o}{A value, vector of length \code{s}, or matrix \code{s} x
+\code{ne} (where \code{ne} is the length of \code{dmu_eval})
+with the weights of the output super-slacks (\code{t_output}).
+If 0, input-oriented.
+If \code{weight_slack_o} is the matrix of the inverses of outputs of DMUS in
+\code{dmu_eval} (default), the model is unit invariant.}
+
+\item{rts}{A string, determining the type of returns to scale, equal to "crs"
+(constant), "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing)
+or "grs" (generalized).}
 
 \item{L}{Lower bound for the generalized returns to scale (grs).}
 
 \item{U}{Upper bound for the generalized returns to scale (grs).}
 
-\item{compute_target}{Logical. If it is \code{TRUE}, it computes targets, projections and slacks.}
+\item{compute_target}{Logical. If it is \code{TRUE}, it computes targets,
+projections and slacks.}
 
-\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints).}
+\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems
+(objective function and constraints).}
 
 \item{...}{Ignored, for compatibility issues.}
 }
 \description{
-Solve the additive super-efficiency model proposed by Du, Liang and Zhu (2010). It is an extension of the SBM super-efficiency to the additive DEA model.
+Solve the additive super-efficiency model proposed by Du, Liang
+and Zhu (2010). It is an extension of the SBM super-efficiency to the additive
+DEA model.
 }
 \examples{
 # Replication of results in Du, Liang and Zhu (2010, Table 6, p.696)
 data("Power_plants")
-Power_plants <- read_data(Power_plants, 
-                          ni = 4, 
-                          no = 2)
+Power_plants <- make_deadata(Power_plants, 
+                             ni = 4, 
+                             no = 2)
 result <- model_addsupereff(Power_plants, 
                             rts = "crs")  
 efficiencies(result)
 
 }
 \references{
-Du, J.; Liang, L.; Zhu, J. (2010). "A Slacks-based Measure of Super-efficiency in Data Envelopment Analysis. A Comment", European Journal of Operational Research, 204, 694-697. \url{https://doi.org/10.1016/j.ejor.2009.12.007}
+Du, J.; Liang, L.; Zhu, J. (2010). "A Slacks-based Measure of Super-efficiency
+in Data Envelopment Analysis. A Comment", European Journal of Operational Research,
+204, 694-697. \doi{10.1016/j.ejor.2009.12.007}
 
-Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking. Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York. Doi: 10.1007/978-3-319-06647-9.
+Zhu, J. (2014). Quantitative Models for Performance Evaluation and Benchmarking.
+Data Envelopment Analysis with Spreadsheets. 3rd Edition Springer, New York.
+\doi{10.1007/978-3-319-06647-9}
 }
 \seealso{
-\code{\link{model_additive}}, \code{\link{model_supereff}},  \code{\link{model_sbmsupereff}}
+\code{\link{model_additive}}, \code{\link{model_supereff}}, 
+\code{\link{model_sbmsupereff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

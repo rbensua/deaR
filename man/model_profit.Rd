@@ -17,15 +17,20 @@ model_profit(datadea,
              ...)
 }
 \arguments{
-\item{datadea}{The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
+\item{datadea}{A \code{deadata} object, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.}
 
-\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.}
+\item{dmu_eval}{A numeric vector containing which DMUs have to be evaluated.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.}
+\item{dmu_ref}{A numeric vector containing which DMUs are the evaluation reference set.
+If \code{NULL} (default), all DMUs are considered.}
 
-\item{price_input}{Unit prices of inputs for cost or profit efficiency models. It is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval}).}
+\item{price_input}{Unit prices of inputs for cost or profit efficiency models.
+It is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne}
+is the length of \code{dmu_eval}).}
 
-\item{price_output}{Unit prices of outputs for revenue or profit efficiency models. It is a value, vector of length \code{s}, or matrix \code{s} x \code{ne}.}
+\item{price_output}{Unit prices of outputs for revenue or profit efficiency models.
+It is a value, vector of length \code{s}, or matrix \code{s} x \code{ne}.}
 
 \item{rts}{A string, determining the type of returns to scale, equal to "crs" (constant),
 "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).}
@@ -34,10 +39,12 @@ model_profit(datadea,
 
 \item{U}{Upper bound for the generalized returns to scale (grs).}
 
-\item{restricted_optimal}{Logical. If it is \code{TRUE}, the optimal inputs are restricted to be <= inputs (for cost efficiency models) or
-the optimal outputs are restricted to be >= outputs (for revenue efficiency models).}
+\item{restricted_optimal}{Logical. If it is \code{TRUE}, the optimal inputs are
+restricted to be <= inputs (for cost efficiency models) or the optimal outputs are
+restricted to be >= outputs (for revenue efficiency models).}
 
-\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.}
+\item{returnlp}{Logical. If it is \code{TRUE}, it returns the linear problems
+(objective function and constraints) of stage 1.}
 
 \item{...}{Ignored, for compatibility issues.}
 }
@@ -51,9 +58,9 @@ data("Coelli_1998")
 # Selection of prices: input_prices is the transpose where the prices for inputs are. 
 input_prices <- t(Coelli_1998[, 5:6]) 
 
-data_example1 <- read_data(Coelli_1998,
-                           ni = 2,
-                           no = 1)
+data_example1 <- make_deadata(Coelli_1998,
+                              ni = 2,
+                              no = 1)
 result1 <- model_profit(data_example1,
                        price_input = input_prices,
                        rts = "crs", 
@@ -61,13 +68,13 @@ result1 <- model_profit(data_example1,
 # notice that the option by default is restricted_optimal = TRUE
 efficiencies(result1)
 
-Example 2. Revenue efficiency model.
+# Example 2. Revenue efficiency model.
 data("Coelli_1998")
 # Selection of prices for output: output_prices is the transpose where the prices for outputs are. 
 output_prices <- t(Coelli_1998[, 7]) 
-data_example2 <- read_data(Coelli_1998,
-                          ni = 2,
-                          no = 1)
+data_example2 <- make_deadata(Coelli_1998,
+                             ni = 2,
+                             no = 1)
 result2 <- model_profit(data_example2,
                        price_output = output_prices,
                        rts = "crs", 
@@ -75,15 +82,15 @@ result2 <- model_profit(data_example2,
 # notice that the option by default is restricted_optimal = TRUE
 efficiencies(result2)
 
-#' Example 3. Profit efficiency model.
+# Example 3. Profit efficiency model.
 data("Coelli_1998")
 # Selection of prices for inputs and outputs: input_prices and output_prices are 
 # the transpose where the prices (for inputs and outputs) are. 
 input_prices <- t(Coelli_1998[, 5:6]) 
 output_prices <- t(Coelli_1998[, 7]) 
-data_example3 <- read_data(Coelli_1998,
-                           ni = 2,
-                           no = 1)
+data_example3 <- make_deadata(Coelli_1998,
+                              ni = 2,
+                              no = 1)
 result3 <- model_profit(data_example3,
                         price_input = input_prices,
                         price_output = output_prices,
@@ -94,12 +101,12 @@ efficiencies(result3)
 
 }
 \references{
-Coelli, T.; Prasada Rao, D.S.; Battese, G.E. (1998). An introduction to efficiency and productivity analysis. Jossey-Bass, San Francisco, pp 73–104. \url{https://doi.org/10.1002/ev.1441}
-
-Coelli, T.; Prasada Rao, D.S.; Battese, G.E. An introduction to efficiency and productivity analysis. Boston: Kluwer Academic Publishers.
+Coelli, T.; Prasada Rao, D.S.; Battese, G.E. (1998). An introduction to efficiency
+and productivity analysis. Jossey-Bass, San Francisco, pp 73–104. \doi{10.1002/ev.1441}
 }
 \seealso{
-\code{\link{model_deaps}}, \code{\link{model_nonradial}}, \code{\link{model_sbmeff}}
+\code{\link{model_deaps}}, \code{\link{model_nonradial}},
+\code{\link{model_sbmeff}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

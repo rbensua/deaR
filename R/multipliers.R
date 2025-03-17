@@ -1,10 +1,12 @@
 #' @title Multipliers
 #'   
-#' @description Extract the multipliers of the DMUs from a dea or dea_fuzzy solution.
+#' @description Extract the multipliers of the DMUs from a \code{dea} or
+#' \code{dea_fuzzy} solution.
 #' 
 #' @usage multipliers(deasol)
 #' 
-#' @param deasol Object of class dea or dea_fuzzy obtained with some of the dea model functions.
+#' @param deasol Object of class \code{dea} or \code{dea_fuzzy} obtained with
+#' some of the DEA model functions.
 #'   
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
@@ -19,14 +21,14 @@
 #' University of Valencia (Spain)
 #'
 #' @examples 
-#'  data("Coll_Blasco_2006")
-#'  data_example <- read_data(Coll_Blasco_2006,
-#'                            ni = 2, 
-#'                            no = 2)
-#'  result <- model_multiplier(data_example,
-#'                             orientation = "io", 
-#'                             rts = "crs")
-#'  multipliers(result)
+#' data("Coll_Blasco_2006")
+#' data_example <- make_deadata(Coll_Blasco_2006,
+#'                              ni = 2, 
+#'                              no = 2)
+#' result <- model_multiplier(data_example,
+#'                            orientation = "io", 
+#'                            rts = "crs")
+#' multipliers(result)
 #'  
 #' @export
 

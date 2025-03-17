@@ -4,14 +4,19 @@
 \name{Fried1993}
 \alias{Fried1993}
 \title{Data: Fried, Knox Lovell and Schmidt (1993).}
-\format{Data frame with 11 rows and 4 columns. Definition of inputs (X) and outputs (Y):
+\format{
+Data frame with 11 rows and 4 columns. Definition of inputs (X) and outputs (Y):
 \describe{
   \item{x1}{Input 1}
   \item{x2}{Input 2}
   \item{y1}{Output 1}
-}}
+}
+}
 \source{
-Ali, A.I.; Seiford, L.M. (1993). The Mathematical Programming Approach to Efficiency Analysis. In Fried, H.O.; Knox Lovell, C.A.; Schmidt, S.S.(eds.), The Measurement of Productive Efficiency. Techniques and Applications. New York: Oxford University Press.
+Ali, A.I.; Seiford, L.M. (1993). The Mathematical Programming Approach
+to Efficiency Analysis. In Fried, H.O.; Knox Lovell, C.A.; Schmidt, S.S.(eds.),
+The Measurement of Productive Efficiency. Techniques and Applications. New York:
+Oxford University Press.
 }
 \usage{
 data("Fried1993")
@@ -22,18 +27,18 @@ Data of 11 DMUs with two inputs and one output.
 \examples{
 # Example. Replication of results in Ali and (1993, p.143).
 data("Fried1993")
-data_example <- read_data(Fried1993,
-                          ni=2,
-                          no=1)
+data_example <- make_deadata(Fried1993,
+                             ni = 2,
+                             no = 1)
 result <- model_basic(data_example,
-                      orientation="oo",
-                      rts="vrs")
+                      orientation = "oo",
+                      rts = "vrs")
 efficiencies(result)
 targets(result)
 
 }
 \seealso{
-\code{\link{read_data}}, \code{\link{model_basic}}
+\code{\link{make_deadata}}, \code{\link{model_basic}}
 }
 \author{
 \strong{Vicente Coll-Serrano} (\email{vicente.coll@uv.es}).

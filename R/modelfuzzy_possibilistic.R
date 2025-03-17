@@ -8,8 +8,9 @@
 #'                          h = 1,
 #'                          ...)
 #' 
-#' @param datadea The data, including DMUs, inputs and outputs.
+#' @param datadea A \code{deadata_fuzzy} object, including DMUs, inputs and outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param poss_modelname a string containing the name of the model.
 #' @param h A numeric vector with the h-levels (in [0,1]).
 #' @param ... \code{dmu_ref}, \code{orientation}, \code{rts} and other model parameters.
@@ -31,11 +32,11 @@
 #' @examples 
 #' # Replication of results in Leon et. al (2003, p. 416)
 #' data("Leon2003")
-#' data_example <- read_data_fuzzy(Leon2003,
-#'                                 inputs.mL = 2, 
-#'                                 inputs.dL = 3, 
-#'                                 outputs.mL = 4, 
-#'                                 outputs.dL = 5)
+#' data_example <- make_deadata_fuzzy(Leon2003,
+#'                                    inputs.mL = 2, 
+#'                                    inputs.dL = 3, 
+#'                                    outputs.mL = 4, 
+#'                                    outputs.dL = 5)
 #' result <- modelfuzzy_possibilistic(data_example, 
 #'                                    h = seq(0, 1, by = 0.1), 
 #'                                    orientation = "io", 
@@ -43,13 +44,22 @@
 #' efficiencies(result)
 #'  
 #' @references
-#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.), Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness and Soft Computing 309. Springer, Berlin. \url{https://doi.org/10.1007/978-3-642-41372-8_1}
+#' Emrouznejad, A.; Tavana, M.; Hatami-Marbini, A. (2014). “The State of the Art
+#' in Fuzzy Data Envelopment Analysis”, in A. Emrouznejad and M. Tavana (eds.),
+#' Performance Measurement with Fuzzy Data Envelopment Analysis. Studies in Fuzziness
+#' and Soft Computing 309. Springer, Berlin. \doi{10.1007/978-3-642-41372-8_1}
 #' 
-#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making", European Journal of Operational Research, 214, 457–472. \url{https://doi.org/10.1016/j.ejor.2011.02.001}
+#' Hatami-Marbini, A.; Emrouznejad, A.; Tavana, M. (2011). "A Taxonomy and Review
+#' of the Fuzzy Data Envelopment Analysis Literature: Two Decades in the Making",
+#' European Journal of Operational Research, 214, 457–472.
+#' \doi{10.1016/j.ejor.2011.02.001}
 #' 
-#' Léon, T.; Liern, V. Ruiz, J.; Sirvent, I. (2003). "A Possibilistic Programming Approach to the Assessment of Efficiency with DEA Models", Fuzzy Sets and Systems, 139, 407–419. \url{https://doi.org/10.1016/S0165-0114(02)00608-5}
+#' Leon, T.; Liern, V. Ruiz, J.; Sirvent, I. (2003). "A Possibilistic Programming
+#' Approach to the Assessment of Efficiency with DEA Models", Fuzzy Sets and Systems,
+#' 139, 407–419. \doi{10.1016/S0165-0114(02)00608-5}
 #' 
-#' @seealso \code{\link{model_basic}}, \code{\link{modelfuzzy_kaoliu}}, \code{\link{modelfuzzy_guotanaka}}
+#' @seealso \code{\link{model_basic}}, \code{\link{modelfuzzy_kaoliu}},
+#' \code{\link{modelfuzzy_guotanaka}}
 
 #' 
 #' @import lpSolve
@@ -65,7 +75,7 @@ modelfuzzy_possibilistic <-
  
   # Cheking whether datadea is of class "deadata_fuzzy" or not...  
   if (!is.deadata_fuzzy(datadea)) {
-    stop("Data should be of class deadata_fuzzy. Run read_data_fuzzy function first!")
+    stop("Data should be of class deadata_fuzzy. Run make_deadata_fuzzy function first!")
   }
     
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
@@ -88,7 +98,7 @@ modelfuzzy_possibilistic <-
   
   if (is.null(dmu_eval)) {
     dmu_eval <- 1:nd
-  } else if (all(dmu_eval %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_eval %in% (1:nd))) {
     stop("Invalid set of DMUs to be evaluated (dmu_eval).")
   }
   names(dmu_eval) <- dmunames[dmu_eval]
@@ -111,7 +121,9 @@ modelfuzzy_possibilistic <-
   datadea.mR <- structure(list(input = input.mR, output = output.mR, dmunames = dmunames), class = "deadata")
   
   # Checking h
-  if (any(h > 1) || any(h < 0)){
+  if ((length(h) == 1) && (h > 1)){
+    h <- seq(from = 0, to = 1, length.out = h)
+  } else if (any(h > 1) || any(h < 0)){
     stop("Invalid h vector.")
   }
   h <- sort(unique(h))
@@ -162,13 +174,6 @@ modelfuzzy_possibilistic <-
                  lp.L$DMU[[1]]$const.rhs,
                  lp.U$DMU[[1]]$const.rhs)
       
-      #if (poss_modelname == "fdh") {
-      #  binary.vec = lp.mL$DMU[[1]]$binary.vec
-      #} else {
-      #  binary.vec = NULL
-      #}
-      #res <- lp(obj, f.obj, f.con, f.dir, f.rhs, binary.vec = binary.vec)
-      
       res <- lp(obj, f.obj, f.con, f.dir, f.rhs)
       objval <- res$objval
       names(objval) <- "objval"
@@ -185,18 +190,6 @@ modelfuzzy_possibilistic <-
           icontador <- icontador + 1
         }
       }
-      
-      #if (poss_modelname == "basic") {
-      #}
-      #if (poss_modelname == "additive") {
-      #  DMU[[j]] <- c(objval, DMU[[j]])
-      #} else if (poss_modelname == "nonradial"){
-      #  mean_efficiency <- mean(DMU[[j]]$efficiency)
-      #  DMU[[j]] <- c(mean_efficiency = mean_efficiency, DMU[[j]])
-      #} else if (poss_modelname == "deaps") {
-      #  mean_efficiency <- sum(lp.mL$weight * DMU[[j]]$efficiency) / sum(lp.mL$weight)
-      #  DMU[[j]] <- c(mean_efficiency = mean_efficiency, DMU[[j]])
-      #}
       
     }
     
@@ -215,7 +208,6 @@ modelfuzzy_possibilistic <-
                       data = datadea,
                       dmu_eval = dmu_eval,
                       dmu_ref = lp.mL$dmu_ref)
-  #}
   
   return(structure(deaOutput, class = "dea_fuzzy"))
   

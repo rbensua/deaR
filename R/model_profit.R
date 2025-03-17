@@ -1,6 +1,7 @@
 #' @title Profit efficiency DEA model.
 #'   
 #' @description Cost, revenue and profit efficiency DEA models.
+#' 
 #' @usage model_profit(datadea,
 #'              dmu_eval = NULL,
 #'              dmu_ref = NULL,
@@ -13,24 +14,31 @@
 #'              returnlp = FALSE,
 #'              ...)
 #' 
-#' @param datadea The data, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
+#' @param datadea A \code{deadata} object, including \code{n} DMUs, \code{m} inputs and \code{s} outputs.
 #' @param dmu_eval A numeric vector containing which DMUs have to be evaluated.
+#' If \code{NULL} (default), all DMUs are considered.
 #' @param dmu_ref A numeric vector containing which DMUs are the evaluation reference set.
-#' @param price_input Unit prices of inputs for cost or profit efficiency models. It is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne} is the lenght of \code{dmu_eval}).
-#' @param price_output Unit prices of outputs for revenue or profit efficiency models. It is a value, vector of length \code{s}, or matrix \code{s} x \code{ne}.
+#' If \code{NULL} (default), all DMUs are considered.
+#' @param price_input Unit prices of inputs for cost or profit efficiency models.
+#' It is a value, vector of length \code{m}, or matrix \code{m} x \code{ne} (where \code{ne}
+#' is the length of \code{dmu_eval}).
+#' @param price_output Unit prices of outputs for revenue or profit efficiency models.
+#' It is a value, vector of length \code{s}, or matrix \code{s} x \code{ne}.
 #' @param rts A string, determining the type of returns to scale, equal to "crs" (constant),
-#'            "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
+#' "vrs" (variable), "nirs" (non-increasing), "ndrs" (non-decreasing) or "grs" (generalized).
 #' @param L Lower bound for the generalized returns to scale (grs).
 #' @param U Upper bound for the generalized returns to scale (grs).
-#' @param restricted_optimal Logical. If it is \code{TRUE}, the optimal inputs are restricted to be <= inputs (for cost efficiency models) or
-#'                           the optimal outputs are restricted to be >= outputs (for revenue efficiency models).
-#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems (objective function and constraints) of stage 1.
+#' @param restricted_optimal Logical. If it is \code{TRUE}, the optimal inputs are
+#' restricted to be <= inputs (for cost efficiency models) or the optimal outputs are
+#' restricted to be >= outputs (for revenue efficiency models).
+#' @param returnlp Logical. If it is \code{TRUE}, it returns the linear problems
+#' (objective function and constraints) of stage 1.
 #' @param ... Ignored, for compatibility issues.
 #'
 #' @references
-#' Coelli, T.; Prasada Rao, D.S.; Battese, G.E. (1998). An introduction to efficiency and productivity analysis. Jossey-Bass, San Francisco, pp 73–104. \url{https://doi.org/10.1002/ev.1441}  
+#' Coelli, T.; Prasada Rao, D.S.; Battese, G.E. (1998). An introduction to efficiency
+#' and productivity analysis. Jossey-Bass, San Francisco, pp 73–104. \doi{10.1002/ev.1441}  
 #'    
-#'         
 #' @author 
 #' \strong{Vicente Coll-Serrano} (\email{vicente.coll@@uv.es}).
 #' \emph{Quantitative Methods for Measuring Culture (MC2). Applied Economics.}
@@ -42,9 +50,6 @@
 #' \emph{Department of Business Mathematics}
 #'
 #' University of Valencia (Spain)
-#'  
-#' @references 
-#' Coelli, T.; Prasada Rao, D.S.; Battese, G.E. An introduction to efficiency and productivity analysis. Boston: Kluwer Academic Publishers.
 #' 
 #' @examples 
 #' # Example 1. Replication of results in Coelli et al. (1998, p.166).
@@ -53,9 +58,9 @@
 #' # Selection of prices: input_prices is the transpose where the prices for inputs are. 
 #' input_prices <- t(Coelli_1998[, 5:6]) 
 #' 
-#' data_example1 <- read_data(Coelli_1998,
-#'                            ni = 2,
-#'                            no = 1)
+#' data_example1 <- make_deadata(Coelli_1998,
+#'                               ni = 2,
+#'                               no = 1)
 #' result1 <- model_profit(data_example1,
 #'                        price_input = input_prices,
 #'                        rts = "crs", 
@@ -63,13 +68,13 @@
 #' # notice that the option by default is restricted_optimal = TRUE
 #' efficiencies(result1)
 #' 
-#' Example 2. Revenue efficiency model.
+#' # Example 2. Revenue efficiency model.
 #' data("Coelli_1998")
 #' # Selection of prices for output: output_prices is the transpose where the prices for outputs are. 
 #' output_prices <- t(Coelli_1998[, 7]) 
-#' data_example2 <- read_data(Coelli_1998,
-#'                           ni = 2,
-#'                           no = 1)
+#' data_example2 <- make_deadata(Coelli_1998,
+#'                              ni = 2,
+#'                              no = 1)
 #' result2 <- model_profit(data_example2,
 #'                        price_output = output_prices,
 #'                        rts = "crs", 
@@ -77,15 +82,15 @@
 #' # notice that the option by default is restricted_optimal = TRUE
 #' efficiencies(result2)
 #' 
-#' #' Example 3. Profit efficiency model.
+#' # Example 3. Profit efficiency model.
 #' data("Coelli_1998")
 #' # Selection of prices for inputs and outputs: input_prices and output_prices are 
 #' # the transpose where the prices (for inputs and outputs) are. 
 #' input_prices <- t(Coelli_1998[, 5:6]) 
 #' output_prices <- t(Coelli_1998[, 7]) 
-#' data_example3 <- read_data(Coelli_1998,
-#'                            ni = 2,
-#'                            no = 1)
+#' data_example3 <- make_deadata(Coelli_1998,
+#'                               ni = 2,
+#'                               no = 1)
 #' result3 <- model_profit(data_example3,
 #'                         price_input = input_prices,
 #'                         price_output = output_prices,
@@ -94,7 +99,8 @@
 #' # notice that the option by default is restricted_optimal = TRUE
 #' efficiencies(result3)
 #' 
-#' @seealso \code{\link{model_deaps}}, \code{\link{model_nonradial}}, \code{\link{model_sbmeff}}
+#' @seealso \code{\link{model_deaps}}, \code{\link{model_nonradial}},
+#' \code{\link{model_sbmeff}}
 #'  
 #' @import lpSolve
 #' 
@@ -115,18 +121,13 @@ model_profit <-
     
   # Cheking whether datadea is of class "deadata" or not...  
   if (!is.deadata(datadea)) {
-    stop("Data should be of class deadata. Run read_data function first!")
+    stop("Data should be of class deadata. Run make_deadata function first!")
   }
     
   # Checking rts
   rts <- tolower(rts)
   rts <- match.arg(rts)
   
-  # Checking undesirable io and rts
-  #if (((!is.null(datadea$ud_inputs)) || (!is.null(datadea$ud_outputs))) && (rts != "vrs")) {
-  #  rts <- "vrs"
-  #  warning("Returns to scale changed to variable (vrs) because there is data with undesirable inputs/outputs.")
-  #}
   if (!is.null(datadea$ud_inputs) || !is.null(datadea$ud_outputs)) {
     warning("This model does not take into account the undesirable feature for inputs/outputs.")
   }
@@ -145,7 +146,7 @@ model_profit <-
   
   if (is.null(dmu_eval)) {
     dmu_eval <- 1:nd
-  } else if (all(dmu_eval %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_eval %in% (1:nd))) {
     stop("Invalid set of DMUs to be evaluated (dmu_eval).")
   }
   names(dmu_eval) <- dmunames[dmu_eval]
@@ -153,7 +154,7 @@ model_profit <-
   
   if (is.null(dmu_ref)) {
     dmu_ref <- 1:nd
-  } else if (all(dmu_ref %in% (1:nd)) == FALSE) {
+  } else if (!all(dmu_ref %in% (1:nd))) {
     stop("Invalid set of reference DMUs (dmu_ref).")
   }
   names(dmu_ref) <- dmunames[dmu_ref]
@@ -239,7 +240,7 @@ model_profit <-
     }
   }
   
-  # Matriz técnica
+  # Constraints matrix
   f.con.1 <- cbind(-diag(ni), matrix(0, nrow = ni, ncol = no), inputref)
   f.con.2 <- cbind(matrix(0, nrow = no, ncol = ni), -diag(no), outputref)
   f.con.3 <- cbind(diag(ni), matrix(0, nrow = ni, ncol = no + ndr))
@@ -253,7 +254,7 @@ model_profit <-
   }
   f.con <- rbind(f.con.1, f.con.2, f.con.3, f.con.4, f.con.rs)
   
-  # Vector de dirección de restricciones
+  # Directions vector
   if (aux_i == 0) {
     f.dir.3 <- rep("=", ni)
   } else {
@@ -279,7 +280,7 @@ model_profit <-
     
     ii <- dmu_eval[i]
     
-    # Vector de coeficientes de la función objetivo
+    # Objective function coefficients
     if (aux_o == 0) {
       f.obj <- c(-price_input[, i], rep(0, no + ndr))
     } else if (aux_i == 0) {
@@ -288,7 +289,7 @@ model_profit <-
       f.obj <- c(-price_input[, i], price_output[, i], rep(0, ndr))
     }
     
-    # Vector de términos independientes
+    # Right hand side vector
     f.rhs.3 <- input[, ii]
     f.rhs.4 <- output[, ii]
     if (!restricted_optimal) {
@@ -309,8 +310,8 @@ model_profit <-
       lambda <- rep(0, ndr)
       names(lambda) <- dmunames[dmu_ref]
       var <- list(optimal_input = optimal_input, optimal_output = optimal_output, lambda = lambda)
-      DMU[[i]] <- list(direction = "max", objective.in = f.obj, const.mat = f.con, const.dir = f.dir, const.rhs = f.rhs,
-                       var = var)
+      DMU[[i]] <- list(direction = "max", objective.in = f.obj, const.mat = f.con,
+                       const.dir = f.dir, const.rhs = f.rhs, var = var)
       
     } else {
       
@@ -359,6 +360,22 @@ model_profit <-
       
     }
     
+  }
+  
+  # Checking if a DMU is in its own reference set (when rts = "grs")
+  if (rts == "grs") {
+    eps <- 1e-6
+    for (i in 1:nde) {
+      j <- which(dmu_ref == dmu_eval[i])
+      if (length(j) == 1) {
+        kk <- DMU[[i]]$lambda[j]
+        kk2 <- sum(DMU[[i]]$lambda[-j])
+        if ((kk > eps) && (kk2 > eps)) {
+          warning(paste("Under generalized returns to scale,", dmunames[dmu_eval[i]],
+                        "appears in its own reference set."))
+        }
+      }
+    }
   }
  
   deaOutput <- list(modelname = "profit",
