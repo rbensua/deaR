@@ -18,7 +18,7 @@
   - **Kao-Liu model**: Handles fuzzy inputs and outputs using α-cuts.
   - **Guo-Tanaka model**: Considers fuzziness in both input and output data.
   - **Possibilistic model**: Utilizes possibility distributions to manage data uncertainty.
-- **Super-Efficiency Models**: Rank efficient DMUs beyond the efficiency frontier.
+- **Super-Efficiency Models**: Rank efficient DMUs beyond the efficient frontier.
 - **Cross-Efficiency Analysis**: Evaluate DMUs from multiple perspectives.
 - **Malmquist Productivity Index**: Measure productivity changes over time.
 - **Bootstrapping Methods**: Estimate confidence intervals for efficiency scores.
@@ -118,7 +118,7 @@ efficiencies(result_poss)
 
 - **Super-Efficiency Models**: Rank efficient DMUs beyond the efficiency frontier.
 - **Cross-Efficiency Analysis**: Evaluate DMUs from multiple perspectives.
-- **Bootstrapping Methods**: Estimate confidence intervals for efficiency scores.
+- **Bootstrapping Methods**: Estimate confidence intervals for efficient scores.
 - **Malmquist Productivity Index**: Measure productivity changes over time.
 - **Metafrontier Analysis**: Compare efficiency across different groups.
 
@@ -134,4 +134,4 @@ If you use `deaR` in your research, please cite:
 
 ## License
 
-This package is licensed under the MIT License.
+This package is licensed under the [GNU General Public License](https://github.com/rbensua/deaR/LICENSE.txt) (GPL). See the LICENSE file for details.
