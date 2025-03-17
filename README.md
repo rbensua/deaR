@@ -134,4 +134,4 @@ If you use `deaR` in your research, please cite:
 
 ## License
 
-This package is licensed under the [GNU General Public License](https://github.com/rbensua/deaR/LICENSE.txt) (GPL). See the LICENSE file for details.
+This package is licensed under the [GNU General Public License](https://github.com/rbensua/deaR/blob/master/LICENSE.txt) (GPL). See the LICENSE file for details.
